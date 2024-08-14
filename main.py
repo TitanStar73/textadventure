@@ -47,11 +47,17 @@ def get_char_animation_in(msg,accepted, err_msg = ""): #{'choice1':['choice1','a
         elif choice == 'save':
             filename = char_animation_in("Enter a filename: ")
             with open(filename, 'w') as f:
-                f.write(f"{situtation}\n{NAME}\n{been_in_situations}\n{morailty}\n{person_type}\n{career}")
+                f.write(f"{situtation}\n{NAME}\n{been_in_situations}\n{morailty}\n{person_type}\n{career}\n{previous_choices}\n{gold}")
         for key in accepted:
             if choice in [item.lower() for item in accepted[key]]:
                 return key
         char_animation(err_msg, end = "")
+
+def get_karma(thing):
+    try:
+        return previous_choices[thing]
+    except KeyError:
+        return 0
 
 situtation = 0
 been_in_situations = set()
@@ -59,7 +65,8 @@ morailty = 0
 NAME = "person"
 person_type = 0
 career = None
-
+previous_choices = {}
+gold = 0
 #Constants
 WIZARD = "Wizard"
 WARRIOR = "Warrior"
@@ -93,6 +100,8 @@ while True:
                 morailty = int(save_data[3])
                 person_type = int(save_data[4])
                 career = save_data[5]
+                previous_choices = {int(item) for item in save_data[6].strip('{}').split(',')}
+                gold = int(save_data[7])
         situtation = 1
     
     elif situtation == 1: #Clearing
@@ -111,13 +120,65 @@ while True:
         situtation = int(choice)
 
     elif situtation == 2: #Temple
-        char_animation("Temple")
+        char_animation("\n\nTemple")
+        if 2 not in been_in_situations:
+            char_animation("As you walk down this path you see another person walking down the path. Do you?: ")
+            char_animation("1. Ask him for help")
+            char_animation("2. Ignore him")
+            char_animation("3. Attack him")
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','ask','help'],'b':['2','ignore'],'c':['3','attack']})
+            if choice == 'a':
+                previous_choices["old man"] = 1
+                person_type += 1
+                morailty += 1
+                char_animation("You ask him for help, and he says: ")
+                char_animation("What do you mean you don't know where you are?! You are in the kingdom of Mythopes, ruled by Emporer Rahas! Child you look like you need help, I am old I don't have much but you can have this: +100 Gold")
+            elif choice == 'b':
+                previous_choices["old man"] = 0
+                person_type -= 1
+                char_animation("You ignore him and continue down the path... On your way there you see a bag of gold on the side of the path, you could've sworn it wasn't there a moment ago, +100 Gold")
+            elif choice == 'c':
+                previous_choices["old man"] = -1
+                person_type -= 1
+                morailty -= 10000
+                char_animation("You quickly overpower him, +100 Gold")
+
+            char_animation("You continue down the path and you see a temple, and you enter it. There are a few people inside who seem to put money into the temple's donation box. Do you: ")
+            char_animation("1. Put some money in the donation box")
+            char_animation("2. Ignore the donation box")
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','put','money'],'b':['2','ignore']})
+            if choice == 'a':
+                amt = char_animation_in("How much money do you put in the donation box?: ")
+                previous_choices["donation"] = amt
+                gold -= amt
+                if amt > 0:
+                    char_animation(f"You put the {amt} money in the donation box")
+                if amt > 100:
+                    char_animation("You are now in debt but you feel good :)")
+                    morailty += 1000
+                if amt > 50:
+                    morailty += 2
+                if amt > 80:
+                    morailty += 1
+                if morailty == 100:
+                    morailty += 2
+                if amt < 0:
+                    char_animation(f"You take the {amt} money from the donation box")
+                    
+            if choice == 'b' or amt == 0:
+                previous_choices["donation"] = 0
+                char_animation("You ignore the donation box and continue down the path...")
+
+
+            been_in_situations.add(2)
+
+        
 
     elif situtation == 3: #Library
-        char_animation("Library")
+        char_animation("\n\nLibrary")
 
     elif situtation == 4: #Arena
-        char_animation("Arena")
+        char_animation("\n\nArena")
 
     elif situtation == 5: #Dragon's Lair path 1
         person_type -= 1
@@ -158,7 +219,7 @@ while True:
             situtation = 1
             continue
         been_in_situations.add(8)
-        char_animation("Dragon's Lair")
+        char_animation("\n\nDragon's Lair")
         
         #AI GENERATED START
         RIDDLES = {
