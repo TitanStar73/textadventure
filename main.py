@@ -15,6 +15,8 @@ Come back every once in a while to see if there are any new updates!
 Enter quit to exit the game.
 Enter save to save your progress in the game to a file (you will need to enter a filename).
 Enter autosave to automatically save the game whenever possible.
+
+Nothing is as it seems, nothing is fixed, everything is a choice. Choose wisely.
       
 If you see a "..." click enter to continue
       
@@ -64,6 +66,10 @@ if DISABLE_ANIMATION:
 def get_char_animation_in(msg,accepted, allow_save = False,err_msg = ""): #{'choice1':['choice1','alias1','alias2'],'choice2':['choice2','alias1','alias2']}
     while True:
         choice = char_animation_in(msg).lower()
+        if choice == 'autosave':
+            autosave = not autosave
+            char_animation(f"Autosave is now {'on' if autosave else 'off'}. Enter autosave again to toggle.")
+            continue
         if choice == 'quit':
             a = char_animation_in("Are you sure? If you haven't saved your progress, you will lose it. Press enter to confirm, or anything else to cancel. You can enter 'save' to save")
             if a == '':
@@ -416,7 +422,99 @@ while True:
     elif situtation == 4: #Arena
         char_animation("\n\nThe Arena")
         if 4 not in been_in_situations:
-            #Add main scene
+            char_animation("You walk down the path and enter a large clearing")
+            char_animation("The largest building you have ever seen is in front of you.")
+            char_animation("It is a massive colosseum made of chisled white marble.")
+            char_animation("Yet on looking closer it seems to be in ruins, with cracks all over and vines appearing to grow over it")
+            char_animation("You enter the colosseum and see a large arena, with no one in the stands.")
+            
+            if gold > 0 and career != GHOST:
+                char_animation("As you walk in you see a shopkeeper, he looks at you and says would you like to purchase something: ")
+                char_animation("1. Buy a sword (66 gold)")
+                char_animation("2. Buy a potion (50 gold)")
+                char_animation("3. Buy food (50 gold)")
+                char_animation("4. Ignore him and move on")
+                choice = get_char_animation_in("Enter your choice: ",{'a':['1','sword'],'b':['2','potion'],'c':['3','food'],'d':['4','ignore']})
+                if choice == 'a':
+                    if gold >= 66:
+                        gold -= 66
+                        inventory.add("sword")
+                        char_animation("You buy a sword")
+                    else:
+                        char_animation("You don't have enough gold. The shopkeeper is annoyed and you move forward.")
+                elif choice == 'b':
+                    if gold >= 50:
+                        gold -= 50
+                        inventory.add("potion")
+                        char_animation("You buy a potion")
+                    else:
+                        char_animation("You don't have enough gold. The shopkeeper is annoyed and you move forward.")
+                elif choice == 'c':
+                    if gold >= 50:
+                        gold -= 50
+                        inventory.add("food")
+                        char_animation("You buy food")
+                    else:
+                        char_animation("You don't have enough gold. The shopkeeper is annoyed and you move forward.")
+                elif choice == 'd':
+                    char_animation("You ignore the shopkeeper and move forward.")
+                
+                if 'food' in inventory:
+                    char_animation("You continue down the path and you see a beggar who asks you for some alms. Do you:")
+                    char_animation("1. Give him all your food")
+                    char_animation("2. Give him some food")
+                    char_animation("3. Ignore him")
+                    choice = get_char_animation_in("Enter your choice: ",{'a':['1','all'],'b':['2','some'],'c':['3','ignore']})
+                    if choice == 'a':
+                        inventory.remove('food')
+                        char_animation("You give him all your food")
+                        previous_choices['beggar_arena'] = 2
+                    elif choice == 'b':
+                        char_animation("You give him some food")
+                        previous_choices['beggar_arena'] = 1
+                    elif choice == 'c':
+                        char_animation("You ignore him")
+                
+                else:
+                    char_animation("You continue down the path and you see a beggar who asks you for some alms. Do you:")
+                    char_animation("1. Give him all your gold")
+                    char_animation(f"2. Give him some gold {min(10,gold//3)}")
+                    char_animation("3. Ignore him")
+                    choice = get_char_animation_in("Enter your choice: ",{'a':['1','all'],'b':['2','some'],'c':['3','ignore']})
+                    
+                    if choice == 'a':
+                        gold = 0
+                        char_animation("You give him all your gold")
+                        previous_choices['beggar_arena'] = 2
+                    elif choice == 'b':
+                        gold -= min(10,gold//3)
+                        char_animation("You give him some gold")
+                        previous_choices['beggar_arena'] = 1
+                    elif choice == 'c':
+                        char_animation("You ignore him")
+
+                if choice == 'a' or choice == 'b':
+                    char_animation("The beggar says: ")
+                    char_animation("Remember in life,")
+                    char_animation("In chaos you'll find peace,")
+                    char_animation("Neither charging forth nor seeking release,")
+                    char_animation("With no steps forward nor backward, you'll conquer the storm.")
+                    char_animation("and you'll find out you were wrong all along.")
+
+            elif career == GHOST:
+                char_animation("An apparation appears and says: ")
+                char_animation("Remember in life,")
+                char_animation("In chaos you'll find peace,")
+                char_animation("Neither charging forth nor seeking release,")
+                char_animation("With no steps forward nor backward, you'll conquer the storm.")
+                char_animation("and you'll find out you were wrong all along.")
+                char_animation("Before you can say anything else it dissapears.")
+
+            else:
+                pass #provide some way of showing players without gold the message
+            
+            #Actual Arena fight with the guy
+
             been_in_situations.add(4)
         
         char_animation_in("Where would you like to go?: ")
