@@ -30,8 +30,15 @@ from time import sleep
 import os.path
 
 WPM = 500 #Words per minute for the text animation, 1 word = 6 characters including spaces and special characters, neglecting time for print statement
-DISABLE_ANIMATION = True
-OPENAI_API_KEY = None #Optional, if not provided make it be None, else a string with the key
+DISABLE_ANIMATION = False #Turns off text animation
+
+#Optional will not change gameplay descisons only provides a more immersive dialogue
+#If not provided make it None
+
+OPENAI_API_KEY = None 
+
+DEBUG_ALLOWED = False #Turns on debug mode | PROCEED WITH CAUTION, ARBITARY PYTHON CODE CAN BE EXECUTED
+
 
 if OPENAI_API_KEY != None:
     import openai
@@ -548,7 +555,7 @@ while True:
                 person_type -= 2
                 if 'potion' in inventory:
                     char_animation("You accidently throw your potion at him and he dissapears in a poof of smoke...")
-                elif 'sword' in inventory and previous_choices['beggar_arena'] in {1,2}:
+                elif 'sword' in inventory and get_karma('beggar_arena') in {1,2}:
                     char_animation("You fight him with your sword and you win.")
                 else:
                     char_animation("You fight him but he is too strong and you die. Better luck next time...")
@@ -582,7 +589,7 @@ while True:
         char_animation_in("Where would you like to go?: ")
         char_animation("1. Back to the clearing")
         char_animation("2. Go to the town")
-        if previous_choices['fighter_arena'] == 1:
+        if get_karma('fighter_arena') == 1:
             char_animation("3. Go to the warrior's base")
             choice = get_char_animation_in("Enter your choice: ",{'a':['1','back'],'b':['2','town'],'c':['3','warrior','base']}, allow_save=True)
         else:
@@ -655,6 +662,19 @@ while True:
         situtation = 1
 
     elif situtation == 10: #Town
+        if career == None or career == 'None':
+            if morailty > 0 and person_type > 0:
+                career = WIZARD
+            elif morailty < 0 and person_type < 0:
+                career = WARLOCK
+            elif morailty > 0 and person_type < 0:
+                career = WARRIOR
+            elif morailty < 0 and person_type > 0:
+                career = VILLIAN
+            else:
+                career = randchoice([WIZARD, WARLOCK, WARRIOR, VILLIAN])
+                previous_choices['career_choice'] = 1
+
         char_animation("\n\nTown")
         char_animation("\n\nThis is all for now! Come back later when chapter 2 is released!")
         input()
@@ -662,4 +682,36 @@ while True:
     elif situtation == 11: #Warrior's Base
         char_animation("\n\nWarrior's Base")
         char_animation("\n\nThis is all for now! Come back later when chapter 2 is released!")
-        input()
+        char_animation("Would you like to go: ")
+        char_animation("1. Back to th Arena")
+        char_animation("2. To the town")
+        choice = get_char_animation_in("Enter your choice: ",{'a':['1','back'],'b':['2','town']}, allow_save=True)
+        if choice == 'a':
+            situtation = 12
+        elif choice == 'b':
+            situtation = 10
+    
+    elif situtation == -1 and DEBUG_ALLOWED: #Debug
+        print("Debug mode")
+        print(f"Situtation: {situtation}")
+        print(f"Morailty: {morailty}")
+        print(f"Person Type: {person_type}")
+        print(f"Career: {career}")
+        print(f"Previous Choices: {previous_choices}")
+        print(f"Gold: {gold}")
+        print(f"Inventory: {inventory}")
+        print(f"Autosave: {autosave}")
+        print(f"Name: {NAME}")
+        print(f"Been in Situations: {been_in_situations}")
+        
+        print("Would you like to edit anything?")
+        choice = input("Enter your choice (y/n): ").lower()
+        if choice in {'y','yes'}:
+            while True:
+                command = input(">>> ")
+                if command == 'exit':
+                    break
+                else:
+                    exec(command)
+        
+        situtation = int(input("Enter the new situtation: "))
