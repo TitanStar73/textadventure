@@ -19,6 +19,7 @@ Enter autosave to automatically save the game whenever possible.
 If you see a "..." click enter to continue
       
 Try it out...""")
+
 input()
 print("Great! Let's get started!")
 
@@ -89,6 +90,33 @@ def get_karma(thing):
     except KeyError:
         return 0
 
+def parse_dict(dictt):
+    dictt = [item for item in dictt.strip('{}').split(',') if item != ""] #{'key1':'value1','key2':'value2'} -> ["'key1':'value1'"","'key2':'value2'"]
+    new_dict = {}
+    for item in dictt:
+        key, value = item.split(':') #key = "'key1'", value = "'value1'"
+        key = key.strip()
+        value = value.strip()
+        try:
+            key = int(key) #Try int
+        except ValueError:
+            try:
+                key = float(key) #Try float
+            except ValueError:
+                key = key[1:-1] #Remove quotes
+
+        try:
+            value = int(value) #Try int
+        except ValueError:
+            try:
+                value = float(value) #Try float
+            except ValueError:
+                value = value[1:-1] #Remove quotes
+
+        new_dict[key] = value
+    return new_dict
+
+
 situtation = 0
 been_in_situations = set()
 morailty = 0
@@ -97,7 +125,7 @@ person_type = 0
 career = None
 previous_choices = {}
 gold = 0
-inventory = {}
+inventory = set()
 autosave = False
 #Constants
 WIZARD = "Wizard"
@@ -160,7 +188,7 @@ while True:
                 morailty = int(save_data[3])
                 person_type = int(save_data[4])
                 career = save_data[5]
-                previous_choices = {int(item) for item in save_data[6].strip('{}').split(',')}
+                previous_choices = parse_dict(save_data[6]) #Fix change to properly parse dictionary
                 gold = int(save_data[7])
                 inventory = {int(item) for item in save_data[8].strip('{}').split(',')}
                 autosave = save_data[9] == 'True'
@@ -194,69 +222,84 @@ while True:
                 person_type += 1
                 morailty += 1
                 char_animation("You ask him for help, and he says: ")
-                char_animation("What do you mean you don't know where you are?! You are in the kingdom of Mythopes, ruled by Emporer Rahas! Child you look like you need help, I am old I don't have much but you can have this: +100 Gold")
+                char_animation("What do you mean you don't know where you are?! You are in the kingdom of Mythopes, ruled by Emporer Rahas! Child you look like you need help, I am old I don't have much but you can have this: he hands you a bag of gold")
+                if career == GHOST:
+                    char_animation("You are a ghost, you can't hold the gold :(")
+                else:
+                    char_animation("You take the gold and thank him + 100 Gold")
+                    gold += 100
             elif choice == 'b':
                 previous_choices["old man"] = 0
                 person_type -= 1
-                char_animation("You ignore him and continue down the path... On your way there you see a bag of gold on the side of the path, you could've sworn it wasn't there a moment ago, +100 Gold")
+                if career != GHOST:
+                    char_animation("You ignore him and continue down the path... On your way there you see a bag of gold on the side of the path, you could've sworn it wasn't there a moment ago, +100 Gold")
+                    gold += 100
             elif choice == 'c':
                 previous_choices["old man"] = -1
                 person_type -= 1
                 morailty -= 10000
-                char_animation("You quickly overpower him, +100 Gold")
+                if career == GHOST:
+                    char_animation("You attack him but float right through him lol.")
+                else:
+                    char_animation("You attack him and quickly overpower him. +100 Gold")
+                    gold += 100
 
-            char_animation("You continue down the path and you see a temple, and you enter it. There are a few people inside who seem to put money into the temple's donation box. Do you: ")
-            char_animation("1. Put some money in the donation box")
-            char_animation("2. Ignore the donation box")
-            choice = get_char_animation_in("Enter your choice: ",{'a':['1','put','money'],'b':['2','ignore']})
-            if choice == 'a':
-                amt = int(char_animation_in("How much money do you put in the donation box?: "))
-                previous_choices["donation"] = amt
-                gold -= amt
-                if amt > 0:
-                    char_animation(f"You put the {amt} money in the donation box")
-                if gold < 0:
-                    char_animation("You are now in debt but you feel good :)")
-                    morailty += 1000
-                if amt > 50:
-                    morailty += 2
-                if amt > 80:
-                    morailty += 1
-                if morailty == 100:
-                    morailty += 2
-                if amt < 0:
-                    char_animation(f"You take the {amt} money from the donation box", end="")
-                    char_animation(f".{' '*150}.{' '*150}.{' '*150}\nYou suddenly feel a sharp pain in you head. You hear a nasty voice in your head 'hahaha you think you can fool me!!'")
-                    char_animation(f"Do you wish to explain yourself? (yes/no)")
-                    choice = get_char_animation_in("Enter your choice: ",{'a':['1','yes','explain', 'y'],'b':['2','no','ignore', 'n']})
-                    if choice == 'a':
-                        the_explanation = char_animation_in("[Explain youself]: ").lower()
-                        if 'sorry' in the_explanation:
-                            the_explanation = the_explanation.split('sorry')
-                            the_explanation = the_explanation[0].split('not')
-                            if len(the_explanation)%2 == 0:
-                                char_animation("Intersting explanation, *not* an apology though.")
-                            else:
-                                char_animation("You explain yourself... ")
-                                char_animation("The voice in your head says 'I will let you go this time... if you solve my riddle'")
-                                riddle = randchoice(list(RIDDLES.keys()))
-                                char_animation("    " + riddle)
-                                ans = char_animation_in("Answer: ").lower()
-                                if ans in RIDDLES[riddle]:
-                                    char_animation("You are correct... surprising for a mortal... to bad you still have to go")
+            if career != GHOST:
+                char_animation("You continue down the path and you see a temple, and you enter it. There are a few people inside who seem to put money into the temple's donation box. Do you: ")
+                char_animation("1. Put some money in the donation box")
+                char_animation("2. Ignore the donation box")
+                choice = get_char_animation_in("Enter your choice: ",{'a':['1','put','money'],'b':['2','ignore']})
+                if choice == 'a':
+                    amt = int(char_animation_in("How much money do you put in the donation box?: "))
+                    previous_choices["donation"] = amt
+                    gold -= amt
+                    if amt > 0:
+                        char_animation(f"You put the {amt} money in the donation box")
+                    if gold < 0:
+                        char_animation("You are now in debt but you feel good :)")
+                        morailty += 1000
+                    if amt > 50:
+                        morailty += 2
+                    if amt > 80:
+                        morailty += 1
+                    if morailty == 100:
+                        morailty += 2
+                    if amt < 0:
+                        char_animation(f"You take the {amt} money from the donation box", end="")
+                        char_animation(f".{' '*150}.{' '*150}.{' '*150}\nYou suddenly feel a sharp pain in you head. You hear a nasty voice in your head 'hahaha you think you can fool me!!'")
+                        char_animation(f"Do you wish to explain yourself? (yes/no)")
+                        choice = get_char_animation_in("Enter your choice: ",{'a':['1','yes','explain', 'y'],'b':['2','no','ignore', 'n']})
+                        if choice == 'a':
+                            the_explanation = char_animation_in("[Explain youself]: ").lower()
+                            if 'sorry' in the_explanation:
+                                the_explanation = the_explanation.split('sorry')
+                                the_explanation = the_explanation[0].split('not')
+                                if len(the_explanation)%2 == 0:
+                                    char_animation("Intersting explanation, *not* an apology though.")
                                 else:
-                                    char_animation("You're wrong... bye!")
-                        else:
-                            char_animation("You don't even say sorry... some apology!")
-                    char_animation("The sharp pain in your head multiplies hundred fold and you die... no worse... you are neither here nor there, you are a ghost.")
-                    career = GHOST
-            if choice == 'b' or amt == 0:
-                previous_choices["donation"] = 0
-                char_animation("You ignore the donation box and continue down the path...")
-            
-            if choice == 'a' and amt > 0:
-                char_animation("PROVIDE INFO 1") #To be added Info 1
-
+                                    char_animation("You explain yourself... ")
+                                    char_animation("The voice in your head says 'I will let you go this time... if you solve my riddle'")
+                                    riddle = randchoice(list(RIDDLES.keys()))
+                                    char_animation("    " + riddle)
+                                    ans = char_animation_in("Answer: ").lower()
+                                    if ans in RIDDLES[riddle]:
+                                        char_animation("You are correct... surprising for a mortal... to bad you still have to go")
+                                    else:
+                                        char_animation("You're wrong... bye!")
+                            else:
+                                char_animation("You don't even say sorry... some apology!")
+                        char_animation("The sharp pain in your head multiplies hundred fold and you die... no worse... you are neither here nor there, you are a ghost.")
+                        career = GHOST
+                if choice == 'b' or amt == 0:
+                    previous_choices["donation"] = 0
+                    char_animation("You ignore the donation box and continue down the path...")
+                
+                if choice == 'a' and amt > 0:
+                    char_animation("PROVIDE INFO 1") #To be added Info 1
+            else:
+                char_animation("You enter the temple and you feel a deep chill... You feel a similar dark presence.")
+                char_animation("A familiar voice says: ")
+                char_animation("PROVIDE INFO 1")
 
             been_in_situations.add(2)
 
@@ -352,6 +395,7 @@ while True:
                 char_animation("You feel a tug in your gut and you feel your entire body being compressed into a tiny ball.")
                 char_animation("You wake up and are now in...") #Arena
                 situtation = 4
+                been_in_situations.add(3)
                 continue
             if lib_loc > 0:
                 char_animation("You see a librarian, who looks as old as time itself. She looks at you and says: ")
@@ -371,6 +415,25 @@ while True:
 
     elif situtation == 4: #Arena
         char_animation("\n\nThe Arena")
+        if 4 not in been_in_situations:
+            #Add main scene
+            been_in_situations.add(4)
+        
+        char_animation_in("Where would you like to go?: ")
+        char_animation("1. Back to the clearing")
+        char_animation("2. Go to the town")
+        if previous_choices['fighter_arena'] == 1:
+            char_animation("3. Go to the warrior's base")
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','back'],'b':['2','town'],'c':['3','warrior','base']}, allow_save=True)
+        else:
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','back'],'b':['2','town']}, allow_save=True)
+
+        if choice == 'a':
+            situtation = 1
+        elif choice == 'b':
+            situtation = 10
+        elif choice == 'c':
+            situtation = 11
 
     elif situtation == 5: #Dragon's Lair path 1
         person_type -= 1
@@ -407,7 +470,7 @@ while True:
     
     elif situtation == 8: #Dragon's Lair
         if 8 in been_in_situations:
-            char_animation("You have already been here before...")
+            char_animation("You have already been here before... You are too scared to go back in.")
             situtation = 1
             continue
         been_in_situations.add(8)
@@ -434,3 +497,6 @@ while True:
     elif situtation == 10: #Town
         char_animation("\n\nTown")
         char_animation("\n\nThis is all for now! Come back later when chapter 2 is released!")
+    
+    elif situtation == 11: #Warrior's Base
+        char_animation("\n\nWarrior's Base")
