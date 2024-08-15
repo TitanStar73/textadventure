@@ -176,7 +176,7 @@ while True:
                 gold -= amt
                 if amt > 0:
                     char_animation(f"You put the {amt} money in the donation box")
-                if amt > 100:
+                if gold < 0:
                     char_animation("You are now in debt but you feel good :)")
                     morailty += 1000
                 if amt > 50:
@@ -218,6 +218,7 @@ while True:
             if choice == 'a' and amt > 0:
                 char_animation("PROVIDE INFO 1") #To be added Info 1
 
+
             been_in_situations.add(2)
 
         char_animation("Where do you chose to go?")
@@ -229,9 +230,81 @@ while True:
         elif choice == 'b':
             situtation = 10
         
-
     elif situtation == 3: #Library
-        char_animation("\n\nLibrary")
+        if 3 not in been_in_situations:
+            char_animation("\n\nLibrary")
+            char_animation("You walk down the path for what seems like ages. You finally reach the library.")
+            char_animation("Its a grand structurem, so tall you cant see the top. It so huge you cant see where it ends.")
+            char_animation("Yet it appears abandoned, the building is covered in vines.")
+            char_animation("You enter the library and see huge lines of bookshelves filled with thousands of dusty books.")
+            
+            lib_loc = 0
+            char_animation("You continue foraward and see two paths, one up a ladder and one down steep stairs.")
+            char_animation("Do you: ")
+            char_animation("1. Go up the ladder")
+            char_animation("2. Go down the stairs")
+            choice = get_char_animation_in("Enter your choice: ",{'1':['1','up','ladder'],'-1':['2','down','stairs']},allow_save=True)
+            lib_loc += int(choice)
+            
+            char_animation("You continue foraward and see two more paths, one up a spiral staircase and one down a trapdoor.")
+            char_animation("Do you: ")
+            char_animation("1. Go up the stairs")
+            char_animation("2. Go down the trapdoor")
+            choice = get_char_animation_in("Enter your choice: ",{'1':['1','up','stairs'],'-1':['2','down','trapdoor']})
+            lib_loc += int(choice)
+            if choice == '1':
+                person_type += 1
+            else:
+                person_type -= 1
+            
+            char_animation("You continue foraward and see two more paths, left towards a large shelf of boooks, same yet different from what you've seen so far or right towards a set of glowing spheres on the bookshelves.")
+            char_animation("Do you: ")
+            char_animation("1. Go left towards a large shelf of boooks")
+            char_animation("2. Go right towards a set of glowing spheres on the bookshelves")
+            choice = get_char_animation_in("Enter your choice: ",{'1':['1','left'],'-1':['2','right']})
+            lib_loc += int(choice)
+            if choice == '1':
+                person_type -= 1
+            else:
+                person_type += 2
+
+
+            char_animation("You continue foraward and see two more paths, each with a huge archway and a single word on the top.")
+            char_animation("Do you: ")
+            char_animation("1. Go left towards the archway with the word 'Power' on the top")
+            char_animation("2. Go right towards the archway with the word 'Knowledge' on the top")
+            choice = get_char_animation_in("Enter your choice: ",{'1':['1','left'],'-1':['2','right']})
+            lib_loc += int(choice)
+            if choice == '1':
+                morailty -= 2
+            if choice == '2':
+                morailty += 1
+                person_type += 1
+
+            lib_loc //= 2
+            
+            if lib_loc == 0:
+                choice = char_animation_in("Now what?: ")
+                if choice == 'BA':
+                    char_animation(f".{' '*150}.{' '*150}.{' '*150}\nYou have broken out of the matrix... Just kidding but you can chose either path: ")
+                    char_animation("1. Meet the librarian")
+                    char_animation("2. Meet the priest")
+                    choice = get_char_animation_in("Enter your choice: ",{'a':['1','librarian'],'b':['2','priest']})
+                    if choice == 'a':
+                        lib_loc = 1
+                    elif choice == 'b':
+                        lib_loc = -1
+                    char_animation("Great choice, also heres +100 Gold for being smart :)")
+            
+            if lib_loc < 0:
+                pass
+
+            if lib_loc > 0:
+                pass
+
+            
+
+            been_in_situations.add(3)
 
     elif situtation == 4: #Arena
         char_animation("\n\nArena")
