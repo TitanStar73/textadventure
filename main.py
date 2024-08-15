@@ -128,7 +128,7 @@ been_in_situations = set()
 morailty = 0
 NAME = "person"
 person_type = 0
-career = None
+career = 'None'
 previous_choices = {}
 gold = 0
 inventory = set()
@@ -419,7 +419,7 @@ while True:
         elif choice == 'b':
             situtation = 10
 
-    elif situtation == 4: #Arena
+    elif situtation == 4: #Arena entrance
         char_animation("\n\nThe Arena")
         if 4 not in been_in_situations:
             char_animation("You walk down the path and enter a large clearing")
@@ -440,6 +440,7 @@ while True:
                         gold -= 66
                         inventory.add("sword")
                         char_animation("You buy a sword")
+                        person_type -= 1
                     else:
                         char_animation("You don't have enough gold. The shopkeeper is annoyed and you move forward.")
                 elif choice == 'b':
@@ -447,6 +448,7 @@ while True:
                         gold -= 50
                         inventory.add("potion")
                         char_animation("You buy a potion")
+                        person_type += 1
                     else:
                         char_animation("You don't have enough gold. The shopkeeper is annoyed and you move forward.")
                 elif choice == 'c':
@@ -468,12 +470,15 @@ while True:
                     if choice == 'a':
                         inventory.remove('food')
                         char_animation("You give him all your food")
+                        morailty += 3
                         previous_choices['beggar_arena'] = 2
                     elif choice == 'b':
                         char_animation("You give him some food")
                         previous_choices['beggar_arena'] = 1
+                        morailty += 1
                     elif choice == 'c':
                         char_animation("You ignore him")
+                        morailty -= 1
                 
                 else:
                     char_animation("You continue down the path and you see a beggar who asks you for some alms. Do you:")
@@ -486,12 +491,15 @@ while True:
                         gold = 0
                         char_animation("You give him all your gold")
                         previous_choices['beggar_arena'] = 2
+                        morailty += 3
                     elif choice == 'b':
                         gold -= min(10,gold//3)
                         char_animation("You give him some gold")
                         previous_choices['beggar_arena'] = 1
+                        morailty += 1
                     elif choice == 'c':
                         char_animation("You ignore him")
+                        morailty -= 1
 
                 if choice == 'a' or choice == 'b':
                     char_animation("The beggar says: ")
@@ -511,12 +519,66 @@ while True:
                 char_animation("Before you can say anything else it dissapears.")
 
             else:
-                pass #provide some way of showing players without gold the message
+                char_animation("You feel a deep sense that you would be better off coming back later...")
+                char_animation("Do you: ")
+                char_animation("1. Go back to the clearing")
+                char_animation("2. Continue forward")
+                choice = get_char_animation_in("Enter your choice: ",{'a':['1','back'],'b':['2','forward']})
+                if choice == 'a':
+                    situtation = 1
+                    continue
+                elif choice == 'b':
+                    char_animation("You continue forward")
             
-            #Actual Arena fight with the guy
-
             been_in_situations.add(4)
         
+        situtation = 12
+    
+    elif situtation == 12: #Arena
+        if 12 not in been_in_situations:
+            char_animation("You walk into the arena and see it in its glory. ")
+            char_animation("You can almost see the warriors fighting in the arena, the crowd cheering.")
+            char_animation("And then you see a large man, 7ft tall, 300 pounds of pure muscle, barelling at you.")
+            char_animation("Do you: ")
+            char_animation("1. Stay and fight him")
+            char_animation("2. Run away")
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','fight'],'b':['2','run'],'c':['stay','still','none','nothing','peace']})
+            if choice == 'a':
+                char_animation("You stay and fight him...")
+                person_type -= 2
+                if 'potion' in inventory:
+                    char_animation("You accidently throw your potion at him and he dissapears in a poof of smoke...")
+                elif 'sword' in inventory and previous_choices['beggar_arena'] in {1,2}:
+                    char_animation("You fight him with your sword and you win.")
+                else:
+                    char_animation("You fight him but he is too strong and you die. Better luck next time...")
+                    char_animation("Game over.... not yet...")
+                    char_animation_in("You can go back a step if you would like... Press enter to go back...")
+                    input()
+                    situtation = 12
+                    continue
+
+            elif choice == 'b':
+                char_animation("You run away as fast as you can, as strong as he looks you are faster.")
+                char_animation("You run and run until you reach the clearing.")
+                person_type += 1
+                situtation = 1
+                continue
+            
+            elif choice == 'c':
+                char_animation("You stay still and do nothing... He continues running forward... You still do nothing, you stay still...")
+                char_animation("You remember the beggar's words...")
+                char_animation("In chaose you'll find peace... Neither charging forth nor seeking release... With no steps forward nor backward, you'll conquer the storm.")
+                char_animation("He is still running at you....")
+                char_animation("And he runs right at you and stops... He looks at you and says: ")
+                char_animation("You are the first one who hasn't run away or fought me...")
+                char_animation("Intriguing...")
+                char_animation("Most find my appearance terrifying... I am the guardian of the arena... I am here to test you and all who come for all of enternity.")
+                char_animation("You have passed the test...")
+                previous_choices['fighter_arena'] = 1
+
+            been_in_situations.add(12)
+            
         char_animation_in("Where would you like to go?: ")
         char_animation("1. Back to the clearing")
         char_animation("2. Go to the town")
@@ -595,6 +657,9 @@ while True:
     elif situtation == 10: #Town
         char_animation("\n\nTown")
         char_animation("\n\nThis is all for now! Come back later when chapter 2 is released!")
+        input()
     
     elif situtation == 11: #Warrior's Base
         char_animation("\n\nWarrior's Base")
+        char_animation("\n\nThis is all for now! Come back later when chapter 2 is released!")
+        input()
