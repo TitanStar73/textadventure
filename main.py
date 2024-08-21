@@ -249,6 +249,11 @@ while True:
             choice = get_char_animation_in("Enter your choice: ",{'a':['1','start','new'],'b':['2','load']}, "")
 
         if choice == 'a':
+            autosave = char_animation_in("Do you want to enable autosave? (yes/no): ").lower() in {'yes','y','true'}
+            if autosave:
+                char_animation("Autosave is now on. You can turn it off by entering 'autosave' in the game.")
+            else:
+                char_animation("Autosave is off. You can turn it on by entering 'autosave' in the game. (Only works towards the end of a stage)")
             situtation = 1
         elif choice == 'b' or choice == 'c':
             if choice == 'b':
@@ -1001,18 +1006,62 @@ while True:
                 else:
                     char_animation("Its a mysterious figure, he quickly disarms and ties up the three bandits.")
                     char_animation("He introduces himself as a warrior recently freed from the Arena")
-                char_animation("He returns your gold and says: Why are you out here?")
-                char_animation_in("You reply: ")
-                char_animation("He says: 'I see... You should be more careful next time!")
-                if get_karma("fighter_arena") == 1:
-                    previous_choices['fighter_arena'] = 1
-                    char_animation("Come meet me at the warrior's base at the arena whenever you want.")
-                    been_in_situations.add(12)
-
+                char_animation("He returns your gold ")
+                
             elif choice == 'b':
-                pass
+                char_animation("You continue walking down the road...")
+                char_animation("and you walk {PAUSE} and walk {PAUSE} and {PAUSE} walk... {PAUSE}")
+                char_animation("Its night time...")
+                char_animation("A giant wolf jumps out of the bushes and runs towards you...")
+                char_animation_in("Quick, do you: ")
+                char_animation("1. Run")
+                char_animation("2. Fight")
+                choice = get_char_animation_in("Enter your choice: ",{'a':['1','run'],'b':['2','fight']})
+                if choice == 'a':
+                    char_animation("You run as fast as you can towards a tree, the wolf is faster...")
+                    char_animation("{PAUSE} you are about the reach the tree when you trip and fall...")
+                    char_animation("The wolf is about to pounce on you when you hear a loud roar...")
+                    char_animation("The wolf is thrown back and you see a large figure standing in front of you...")
+                    if previous_choices['fighter_arena'] == 1:
+                        char_animation("Its your friend from the arena, he picks up the wolf and hurls it a few yards away. It runs away")
+                    else:
+                        char_animation("Its a mysterious figure, he picks up the wolf and hurls it a few yards away. It runs away")
+                        char_animation("He introduces himself as a warrior recently freed from the Arena")    
+
+                elif choice == 'b':
+                    if 'sword' in inventory:
+                        char_animation("You fight the wolf with your sword, but it snaps as soon as it hits the wolf's hide. You realise its metallic.")
+                        inventory.remove('sword')
+                    elif 'potion' in inventory:
+                        char_animation("You throw your potion at the wolf but it is impervious to it.")
+                        inventory.remove('potion')
+                    else:
+                        char_animation("You pick up a stick and try to scare away the wolf but it looks deep into your eyes. You realise you are in trouble")
+
+                    char_animation("As you are about to be pounced on, you hear a loud roar... you see a flash of metal and the wolf is bleeding blue blood. It quickly runs away.")
+                    if previous_choices['fighter_arena'] == 1:
+                        char_animation("Its your friend from the arena!")
+                    else:
+                        char_animation("Its a mysterious figure, he introduces himself as a warrior recently freed from the Arena!")
+
+                char_animation("That was a blood wolf, impervious to most things, but not Excalibur here!")
+            
+            char_animation("Why are you out here?")
+            char_animation_in("You reply: ")
+            char_animation("He says: 'I see... You should be more careful next time!")
+            if get_karma("fighter_arena") == 1:
+                previous_choices['fighter_arena'] = 1
+                char_animation("Come meet me at the warrior's base at the arena whenever you want.")
+                been_in_situations.add(12)
             been_in_situations.add(13)
-        
+            char_animation("You continue down the road, and you see the farm in the distance...")
+            char_animation("You see a large barn, a few cows, and a farmer working in the fields.")
+            char_animation("Ready to go there?")
+            char_animation("1. Yes")
+            char_animation("2. YESSSSS")
+            char_animation("3. Too late to turn back now ;-;")
+            choice = get_char_animation_in(">> ", {'y':['yes','1'],'2':['ofc','2'],'3':['too late','3']})
+
         situtation = 16 # Actual farm
     
     elif situtation == 16: #Farm
