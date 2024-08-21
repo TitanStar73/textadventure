@@ -8,6 +8,7 @@ Users will be given the option to provide an OpenAI API key to create a more ime
 
 #Stuff to do later
 #Finish up games
+#Inventory to be shown
 """
 """Here are the settings you should edit:"""
 WPM = 350 #Words speed text animation, recommended: 350
@@ -85,6 +86,14 @@ def get_char_animation_in(msg,accepted:dict, allow_save = False,err_msg = ""): #
             autosave = not autosave
             char_animation(f"Autosave is now {'on' if autosave else 'off'}. Enter autosave again to toggle.")
             continue
+        elif choice == 'foresight':
+            global inventory
+            if 'potion_of_foresight' in inventory:
+                char_animation("You see a vision of the future...")
+                char_animation("You see yourself in a dark space, surrounded with nothing but black space... A seering pain through your heart")
+                inventory.remove('potion_of_foresight')
+            else:
+                char_animation("You don't have the potion of foresight")
         if choice == 'quit':
             a = char_animation_in("Are you sure? If you haven't saved your progress, you will lose it. Press enter to confirm, or anything else to cancel. You can enter 'save' to save")
             if a == '':
@@ -1032,6 +1041,7 @@ while True:
                     if 'sword' in inventory:
                         char_animation("You fight the wolf with your sword, but it snaps as soon as it hits the wolf's hide. You realise its metallic.")
                         inventory.remove('sword')
+                        inventory.add('broken_sword')
                     elif 'potion' in inventory:
                         char_animation("You throw your potion at the wolf but it is impervious to it.")
                         inventory.remove('potion')
@@ -1070,8 +1080,67 @@ while True:
     
     
     elif situtation == 14: #City Journey
-        if 14 not in been_in_situations:
-            pass
+        if 14 not in been_in_situations and career != GHOST:
+            char_animation("You start walking towards the city...")
+            char_animation("Before long you see people walking on the path")
+        
+            if career in {WARLOCK, WARRIOR}:
+                char_animation("\nYou see a perosn in black, dusty robes. Do you approach him?")
+                char_animation("1. Yes")
+                char_animation("2. No")
+                choice = get_char_animation_in("Enter your choice: ",{'a':['1','yes'],'b':['2','no']})
+                if choice == 'a':
+                    pass
+
+            else:
+                char_animation("You continue down the path and see a old man in dark faded blue robes with a wooden staff. Do you approach him?")
+                char_animation("1. Yes")
+                char_animation("2. No")
+                choice = get_char_animation_in("Enter your choice: ",{'a':['1','yes'],'b':['2','no']})
+                if choice == 'a':
+                    pass
+
+            char_animation("You continue down the path and see a woman dressed in a bright colourflul dress. Do you approach her?")
+            char_animation("1. Yes")
+            char_animation("2. No")
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','yes'],'b':['2','no']})
+            if choice == 'a':
+                pass
+
+            char_animation("You continue down the path and see a street vendor selling stuff. Do you approach him?")
+            char_animation("1. Yes")
+            char_animation("2. No")
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','yes'],'b':['2','no']})
+            if choice == 'a':
+                if career in {WIZARD, VILLIAN}:
+                    char_animation("The vendor shows you the following items for sale: ")
+                    char_animation("1. Potion of Harming (one use) (4 gold)")
+                    char_animation("2. Potion of Foresight (one use) (3 gold)")
+                    char_animation("3. Potion of Stulus (one use) (12 gold)")
+                    char_animation("What would you like to buy?")
+                    choice = get_char_animation_in("Enter your choice: ",{'a':['1','harming'],'b':['2','foresight'],'c':['3','stulus']})            
+                    if choice == 'a':
+                        if gold >= 4:
+                            gold -= 4
+                            inventory.add("potion_of_harming")
+                            char_animation("You buy a potion of harming")
+                        else:
+                            char_animation("You don't have enough gold. The vendor is annoyed and you move forward.")
+                    elif choice == 'b':
+                        if gold >= 3:
+                            gold -= 3
+                            inventory.add("potion_of_foresight")
+                            char_animation("You buy a potion of foresight. Tip: to activate it type 'foresight'")
+                        else:
+                            char_animation("You don't have enough gold. The vendor is annoyed and you move forward.")
+                    elif choice == 'c':
+                        if gold >= 12:
+                            gold -= 12
+                            inventory.add("potion_of_stulus")
+                            char_animation("You buy a potion of stulus")
+                        else:
+                            char_animation("You don't have enough gold. The vendor is annoyed and you move forward.")
+
             been_in_situations.add(14)
         
         situtation = 17 # Actual city
