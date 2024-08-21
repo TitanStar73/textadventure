@@ -131,9 +131,11 @@ def parse_dict(dictt):
     return new_dict
 
 def play_wordle():
+    char_animation("This feature is not here yet. Sorry!")
     return 0
 
 def play_hangman():
+    char_animation("This feature is not here yet. Sorry!")
     return 0
 
 def play_quiz():
@@ -165,6 +167,7 @@ def play_quiz():
 
 
 def play_slot_machine():
+    char_animation("This feature is not here yet. Sorry!")
     return 0
 
 situtation = 0
@@ -708,6 +711,7 @@ while True:
 
         if career != GHOST:
             char_animation("Where do you want to go?")
+            char_animation("0. Shop")
             char_animation("1. Quiz for gold!!")
             char_animation("2. Slot Machine, try your luck out, win upto 1000x your bet")
             char_animation("3. Hangman, guess the word and win 10 gold")
@@ -717,8 +721,64 @@ while True:
             char_animation("7. Library")
             char_animation("8. Arena")
             char_animation("9. Temple")
-            choice = get_char_animation_in("Enter your choice: ",{'a':['1','quiz'],'b':['2','slot','machine'],'c':['3','hangman'],'d':['4','wordle'],'e':['5','farm'],'f':['6','city'],'g':['7','library'],'h':['8','arena'],'i':['9','temple']}, allow_save=True)
-            if choice == 'a':
+            choice = get_char_animation_in("Enter your choice: ",{'s':['0','shop'],'a':['1','quiz'],'b':['2','slot','machine'],'c':['3','hangman'],'d':['4','wordle'],'e':['5','farm'],'f':['6','city'],'g':['7','library'],'h':['8','arena'],'i':['9','temple']}, allow_save=True)
+            if choice == 's':
+                if career == WIZARD or VILLIAN:
+                    char_animation("Welcome to the Magik shop!")
+                    char_animation("1. Buy a spellbook of Stun (unlimited uses) (350 gold)")
+                    char_animation("2. Buy a potion of poison (1 use) (30 gold)")
+                    char_animation("3. Buy a potion of healing (1 use) (10 gold)")
+                    char_animation("4. Buy a potion of invisibility (1 use) (100 gold)")
+                    char_animation("5. I'm feeling lucky (25 gold)")
+                    choice = get_char_animation_in("Enter your choice: ",{'a':['1','spellbook'],'b':['2','poison'],'c':['3','healing'],'d':['4','invisibility'],'e':['5','lucky']})
+                    
+                    if choice == 'e':
+                        if gold >= 25:
+                            gold -= 25
+                            char_animation("You buy a mystery item")
+                            choice = randint(1,20)
+                            if choice <= 1:
+                                choice = 'a'
+                            elif choice <= 5:
+                                choice = 'd'
+                            elif choice <= 12:
+                                choice = 'b'
+                            else:
+                                choice = 'c'
+                        else:
+                            char_animation("You don't have enough gold")
+
+                    if choice == 'a':
+                        if gold >= 350:
+                            gold -= 350
+                            inventory.add("spellbook_of_stun")
+                            char_animation("You buy a spellbook of Stun")
+                        else:
+                            char_animation("You don't have enough gold")
+                    elif choice == 'b':
+                        if gold >= 30:
+                            gold -= 30
+                            inventory.add("potion")
+                            char_animation("You buy a potion of poison")
+                        else:
+                            char_animation("You don't have enough gold")
+                    elif choice == 'c':
+                        if gold >= 10:
+                            gold -= 10
+                            inventory.add("potion_of_healing")
+                            char_animation("You buy a potion of healing")
+                        else:
+                            char_animation("You don't have enough gold")
+                    elif choice == 'd':
+                        if gold >= 100:
+                            gold -= 100
+                            inventory.add("potion_of_invisibility")
+                            char_animation("You buy a potion of invisibility")
+                        else:
+                            char_animation("You don't have enough gold")
+                    
+
+            elif choice == 'a':
                 gold += play_quiz()
             elif choice == 'b':
                 gold += play_slot_machine()
