@@ -26,8 +26,10 @@ input()
 print("Great! Let's get started!")
 
 from random import choice as randchoice
+from random import randint, shuffle
 from time import sleep
 import os.path
+from gamedata import MYTHOLOGY_QUESTIONS, RIDDLES
 
 WPM = 500 #Words per minute for the text animation, 1 word = 6 characters including spaces and special characters, neglecting time for print statement
 DISABLE_ANIMATION = False #Turns off text animation
@@ -55,7 +57,6 @@ else:
     def get_openai_response(prompt):
         return "Roses are red, Violets are blue, to get a better response, provide an OpenAI API key too!"
 
-
 def char_animation(msg, end = "\n"):
     for char in msg:
         print(char, end = "", flush = True)
@@ -70,7 +71,7 @@ if DISABLE_ANIMATION:
     char_animation = print
     char_animation_in = input
 
-def get_char_animation_in(msg,accepted, allow_save = False,err_msg = ""): #{'choice1':['choice1','alias1','alias2'],'choice2':['choice2','alias1','alias2']}
+def get_char_animation_in(msg,accepted:dict, allow_save = False,err_msg = ""): #{'choice1':['choice1','alias1','alias2'],'choice2':['choice2','alias1','alias2']}
     while True:
         choice = char_animation_in(msg).lower()
         if choice == 'autosave':
@@ -129,6 +130,42 @@ def parse_dict(dictt):
         new_dict[key] = value
     return new_dict
 
+def play_wordle():
+    return 0
+
+def play_hangman():
+    return 0
+
+def play_quiz():
+    if randint(0,1) == 0:
+        question,answer = randchoice(RIDDLES)
+        char_animation(f"Question: {question}")
+        response = char_animation_in("Answer: ").lower()
+        if response in answer:
+            char_animation("Correct!")
+            return 10
+        else:
+            char_animation(f"Incorrect! The answer was {next(iter(answer))}")
+            return 0
+    else:
+        question, answers = randchoice(MYTHOLOGY_QUESTIONS)
+        char_animation(f"Question: {question}")
+        correct_answer = answers[0]
+        answers = shuffle(answers)
+        for i,item in answers:
+            char_animation(f"{i+1}. {item}")
+
+        response = get_char_animation_in("Answer: ",accepted={1:["1"],2:["2"],3:["3"],4:["4"]})-1
+        if answers[response] == correct_answer:
+            char_animation("Correct!")
+            return 10
+        else:
+            char_animation(f"Incorrect! The answer was {correct_answer}")
+            return 0
+
+
+def play_slot_machine():
+    return 0
 
 situtation = 0
 been_in_situations = set()
@@ -146,21 +183,6 @@ WARRIOR = "Warrior"
 VILLIAN = "Villian"
 WARLOCK = "Warlock"
 GHOST = "Ghost"
-
-#AI GENERATED START
-RIDDLES = {
-    'What has keys but can’t open locks?': {'piano', 'keyboard'},
-    'What has to be broken before you can use it?': {'egg'},
-    'I’m tall when I’m young, and I’m short when I’m old. What am I?': {'candle'},
-    'What is full of holes but still holds water?': {'sponge'},
-    'What gets wet while drying?': {'towel'},
-    'What can you catch, but not throw?': {'cold'},
-    'What goes up but never comes down?': {'age'},
-    'I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?': {'echo'},
-    'What has a head, a tail, is brown, and has no legs?': {'penny'},
-    'What runs all around a backyard, yet never moves?': {'fence'}
-}
-#AI GENERATED END
 
 
 while True:
@@ -292,10 +314,10 @@ while True:
                                 else:
                                     char_animation("You explain yourself... ")
                                     char_animation("The voice in your head says 'I will let you go this time... if you solve my riddle'")
-                                    riddle = randchoice(list(RIDDLES.keys()))
-                                    char_animation("    " + riddle)
+                                    question,answers = randchoice(RIDDLES)
+                                    char_animation("    " + question)
                                     ans = char_animation_in("Answer: ").lower()
-                                    if ans in RIDDLES[riddle]:
+                                    if ans in answers:
                                         char_animation("You are correct... surprising for a mortal... to bad you still have to go")
                                     else:
                                         char_animation("You're wrong... bye!")
@@ -303,16 +325,18 @@ while True:
                                 char_animation("You don't even say sorry... some apology!")
                         char_animation("The sharp pain in your head multiplies hundred fold and you die... no worse... you are neither here nor there, you are a ghost.")
                         career = GHOST
+                        inventory = {}
+                        gold = 0
                 if choice == 'b' or amt == 0:
                     previous_choices["donation"] = 0
                     char_animation("You ignore the donation box and continue down the path...")
                 
                 if choice == 'a' and amt > 0:
-                    char_animation("PROVIDE INFO 1") #To be added Info 1
+                    char_animation("Good Job adventurer!")
             else:
-                char_animation("You enter the temple and you feel a deep chill... You feel a similar dark presence.")
+                char_animation("You enter the temple and you feel a deep chill... You feel a dark presence.")
                 char_animation("A familiar voice says: ")
-                char_animation("PROVIDE INFO 1")
+                char_animation("ha ha ha, you are growing weaker by the second...")
 
             been_in_situations.add(2)
 
@@ -412,8 +436,8 @@ while True:
                 continue
             if lib_loc > 0:
                 char_animation("You see a librarian, who looks as old as time itself. She looks at you and says: ")
-                char_animation("Its been a long time since I've seen a mortal here... You must be special.")
-                char_animation("INFO 1") #To be added info 1
+                char_animation("Its been a long time since I've seen a mortal here... You must be special...")
+                char_animation("Good Luck Adventurer!")
             
             been_in_situations.add(3)
         
@@ -647,16 +671,18 @@ while True:
         char_animation("In the most petrifying voice you here it speak... Wait its speaking not to you but in you... You can hear its voice in your head.")
         char_animation("It voice loathes of pure evil and it speaks to you.")
         char_animation("\"You can only leave if you answer my riddle correctly.\"")
-        riddle = randchoice(list(RIDDLES.keys()))
+        question,answers = randchoice(RIDDLES)
         char_animation("")
-        char_animation("    " + riddle)
+        char_animation("    " + question)
         ans = char_animation_in("Answer: ").lower()
-        if ans in RIDDLES[riddle]:
+        if ans in answers:
             char_animation("The dragon lets out a laugh, yesss you have answer correctly... To bad you still have to die.")
             
         char_animation("The shadowy figure lets out a loud roar and you feel a searing pain in your head.")
         char_animation("You are now... not dead but not alive. You are something worse - a ghost. Not in the mortal plane but not in the afterlife. Neither here nor there")
         career = GHOST
+        inventory = {}
+        gold = 0
         char_animation("You leave to go back to the clearing...")
         input("")
         situtation = 1
@@ -676,9 +702,43 @@ while True:
                 previous_choices['career_choice'] = 1
 
         char_animation("\n\nTown")
-        char_animation("\n\nThis is all for now! Come back later when chapter 2 is released!")
-        input()
     
+        if 10 not in been_in_situations:
+            pass
+
+        if career != GHOST:
+            char_animation("Where do you want to go?")
+            char_animation("1. Quiz for gold!!")
+            char_animation("2. Slot Machine, try your luck out, win upto 1000x your bet")
+            char_animation("3. Hangman, guess the word and win 10 gold")
+            char_animation("4. Wordle, guess the word in 6 tries and win 10 gold")
+            char_animation("5. Farm")
+            char_animation("6. City")
+            char_animation("7. Library")
+            char_animation("8. Arena")
+            char_animation("9. Temple")
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','quiz'],'b':['2','slot','machine'],'c':['3','hangman'],'d':['4','wordle'],'e':['5','farm'],'f':['6','city'],'g':['7','library'],'h':['8','arena'],'i':['9','temple']}, allow_save=True)
+            if choice == 'a':
+                gold += play_quiz()
+            elif choice == 'b':
+                gold += play_slot_machine()
+            elif choice == 'c':
+                gold += play_hangman()
+            elif choice == 'd':
+                gold += play_wordle()
+            elif choice == 'e':
+                situtation = 13
+            elif choice == 'f':
+                situtation = 14
+            elif choice == 'g':
+                situtation = 3
+            elif choice == 'h':
+                situtation = 12
+            elif choice == 'i':
+                situtation = 2
+        else:
+            char_animation("Come back later, thats all for now")
+
     elif situtation == 11: #Warrior's Base
         char_animation("\n\nWarrior's Base")
         char_animation("\n\nThis is all for now! Come back later when chapter 2 is released!")
@@ -691,6 +751,16 @@ while True:
         elif choice == 'b':
             situtation = 10
     
+    elif situtation == 13: #Farm
+        char_animation("\n\nFarm")
+        input()
+
+    
+    elif situtation == 14: #City
+        char_animation("\n\nCity")
+        input()
+
+
     elif situtation == -1 and DEBUG_ALLOWED: #Debug
         print("Debug mode")
         print(f"Situtation: {situtation}")
