@@ -9,6 +9,17 @@ Users will be given the option to provide an OpenAI API key to create a more ime
 #Stuff to do later
 #Finish up games
 """
+"""Here are the settings you should edit:"""
+WPM = 350 #Words speed text animation, recommended: 350
+DISABLE_ANIMATION = False #Turns off text animation
+
+#Optional | Will not change gameplay descisons only provides a more immersive dialogue
+#If not provided make it None
+OPENAI_API_KEY = None 
+
+
+#Great! Now start playing! (or feel free to check out the source code!), beware though, spoilers ahead!
+
 
 print("""
 Welcome to the Text Based Adventure!
@@ -34,13 +45,6 @@ from time import sleep
 import os.path
 from gamedata import MYTHOLOGY_QUESTIONS, RIDDLES
 
-WPM = 500 #Words per minute for the text animation, 1 word = 6 characters including spaces and special characters, neglecting time for print statement
-DISABLE_ANIMATION = False #Turns off text animation
-
-#Optional will not change gameplay descisons only provides a more immersive dialogue
-#If not provided make it None
-
-OPENAI_API_KEY = None 
 
 DEBUG_ALLOWED = False #Turns on debug mode | PROCEED WITH CAUTION, ARBITARY PYTHON CODE CAN BE EXECUTED
 
@@ -218,6 +222,8 @@ VILLIAN = "Villian"
 WARLOCK = "Warlock"
 GHOST = "Ghost"
 
+PAUSE = "\033[0m" * (WPM//12) #Creates an approx. 1-2 second dramatic pause in certain places, can be turned off though by disbaling text animations
+
 
 while True:
     if career == None: #Standard Careers (not including ghost)
@@ -339,7 +345,7 @@ while True:
                         morailty += 2
                     if amt < 0:
                         char_animation(f"You take the {amt} money from the donation box", end="")
-                        char_animation(f".{' '*150}.{' '*150}.{' '*150}\nYou suddenly feel a sharp pain in you head. You hear a nasty voice in your head 'hahaha you think you can fool me!!'")
+                        char_animation(f".{PAUSE}.{PAUSE}.{PAUSE}\nYou suddenly feel a sharp pain in you head. You hear a nasty voice in your head 'hahaha you think you can fool me!!'")
                         char_animation(f"Do you wish to explain yourself? (yes/no)")
                         choice = get_char_animation_in("Enter your choice: ",{'a':['1','yes','explain', 'y'],'b':['2','no','ignore', 'n']})
                         if choice == 'a':
@@ -450,7 +456,7 @@ while True:
             if lib_loc == 0:
                 choice = char_animation_in("Now what?: ")
                 if choice == 'BA':
-                    char_animation(f".{' '*150}.{' '*150}.{' '*150}\nYou have broken out of the matrix... Just kidding but you can chose either path: ")
+                    char_animation(f".{PAUSE}.{PAUSE}.{PAUSE}\nYou have broken out of the matrix... Just kidding but you can chose either path: ")
                     char_animation("1. Meet the librarian")
                     char_animation("2. Meet the priest")
                     choice = get_char_animation_in("Enter your choice: ",{'a':['1','librarian'],'b':['2','priest']})
@@ -465,8 +471,8 @@ while True:
                     lib_loc = randchoice([-1,1])
 
             if lib_loc < 0:
-                char_animation("You continue down the path and you see a priest, he looks at you with eyes that seem thousands of years old yet like those of a newborn.")
-                char_animation(f"He looks at you mysteriously and says: 'Better {' '*150}elsewhere {' '*150}you {' '*150}will {' '*150}do!'")
+                char_animation("You continue down the path and you see a cloaked man, he looks at you and you can only see his piercing eyes that seem thousands of years old yet like those of a newborn.")
+                char_animation(f"He looks at you mysteriously and says: 'Better {PAUSE}elsewhere {PAUSE}you {PAUSE}will {PAUSE}do!'")
                 char_animation("You feel a tug in your gut and you feel your entire body being compressed into a tiny ball.")
                 char_animation("You wake up and are now in...") #Arena
                 situtation = 4
@@ -749,41 +755,40 @@ while True:
             
             char_animation("You walk into the first shop you see, the Warrior's Den.")
             char_animation("You see the shopkeeper and he says: ")
+            char_animation("Welcome to the Warrior's Den! I've been expecting you.")
+            char_animation("We have everything you could want but I suppose you have some questions?")
+            potential_questions = [
+                ("Who are you?", "I am the shopkeeper of the Warrior's Den. As for my name... you can call me Tom"),
+                ("Why were you expecting me?", "I was expecting you because you are special... why? Don't worry all will become clear..."),
+                ("What do you want?", "I want to help you... I want to help you find your way..."),
+                ("Where is this place?", "You are in a seperate plane of existence, far beyond your realm, how you got here I do not know. This is Mythopes, the kingdom ruled by Emporer Rahas."),
+            ]
             if career == GHOST:
-                pass #To be added in later chapters
-            else:
-                char_animation("Welcome to the Warrior's Den! I've been expecting you.")
-                char_animation("We have everything you could want but I suppose you have some questions?")
-                potential_questions = [
-                    ("Who are you?", "I am the shopkeeper of the Warrior's Den. As for my name... you can call me Tom"),
-                    ("Why were you expecting me?", "I was expecting you because you are special... why? Don't worry all will become clear..."),
-                    ("What do you want?", "I want to help you... I want to help you find your way..."),
-                    ("Where is this place?", "You are in a seperate plane of existence, far beyond your realm, how you got here I do not know. This is Mythopes, the kingdom ruled by Emporer Rahas."),
-                ]
+                previous_choices['told_ghost'] = 1
+                potential_questions.append(("What happened to me?", "You are a ghost, you are in a different plane of existence... I don't know much about ghosts but you should try finding the priest of the Castle of the Day Before."))
+            while True:
+                char_animation("\n\n")
+                for i,question in enumerate(potential_questions):
+                    char_animation(f"{(i+1)}) {question[0]}")
+                char_animation("What would you like to ask?")
                 while True:
-                    char_animation("\n\n")
-                    for i,question in enumerate(potential_questions):
-                        char_animation(f"{(i+1)}) {question[0]}")
-                    char_animation("What would you like to ask?")
-                    while True:
-                        choice = char_animation_in("Enter your choice: ")
-                        try:
-                            choice = int(choice)
-                            if choice >= 1 and choice <= len(potential_questions):
-                                break
-                        except:
-                            pass
-                        char_animation("Invalid choice.")
+                    choice = char_animation_in("Enter your choice: ")
+                    try:
+                        choice = int(choice)
+                        if choice >= 1 and choice <= len(potential_questions):
+                            break
+                    except:
+                        pass
+                    char_animation("Invalid choice.")
 
-                    char_animation("You ask: " + potential_questions[choice-1][0])
-                    char_animation("He replies: " + potential_questions[choice-1][1])
-                    potential_questions.pop(choice-1)
-                    if len(potential_questions) == 0:
-                        break
-                
-                pass              
-
+                char_animation("You ask: " + potential_questions[choice-1][0])
+                char_animation("He replies: " + potential_questions[choice-1][1])
+                potential_questions.pop(choice-1)
+                if len(potential_questions) == 0:
+                    break
             
+            char_animation("\n\nGood Luck Adventurer!")
+           
             char_animation("You walk through the town and see a few paths: ")
 
         if career != GHOST:
@@ -945,8 +950,12 @@ while True:
             elif choice == 'i':
                 situtation = 2
         else:
-            char_animation("Come back later, thats all for now")
+            if previous_choices['told_ghost'] != 1:
+                char_animation("You walk into the shop and the shopkeeper looks at you and say, what happened to you! You are a ghost, you are in a different plane of existence... I don't know much about ghosts but you should try finding the priest of the Castle of the Day Before.")
 
+            char_animation("\nYou walk back to the main street and ask around for the Castle of the Day Before... An old man shows you the direction and you start your journey there...")
+            situtation = 15
+            
     elif situtation == 11: #Warrior's Base
         char_animation("\n\nWarrior's Base")
         char_animation("\n\nThis is all for now! Come back later when chapter 2 is released!")
@@ -959,15 +968,72 @@ while True:
         elif choice == 'b':
             situtation = 10
     
-    elif situtation == 13: #Farm
+    elif situtation == 13: #Farm Journey
+        if 13 not in been_in_situations:
+            char_animation("You start walking towards the farm...")
+            char_animation(f"and walk {PAUSE} and walk {PAUSE} and {PAUSE} walk... {PAUSE}")
+            char_animation("Its been hours, you see a cart coming down the road...")
+            char_animation("Do you: ")
+            char_animation("1. Ask for a ride")
+            char_animation("2. Ignore it")
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','ride'],'b':['2','ignore']})
+            if choice == 'a':
+                char_animation("You ask for a ride and they agree. You get in and they start taking you to the farm.")
+                char_animation("There are 3 people in the cart,")
+                char_animation("A large man with a handlebar mustache driving the cart")
+                char_animation("A thin man with a large hat")
+                char_animation("A woman with a large basket")
+                char_animation("The thin man looks at you and friendly says: ")
+                char_animation("\n  Hello there! Where are you headed?")
+                char_animation_in("  You reply: ")
+                char_animation("  He says: 'Wow! Doesn't seem like you are from around here... where are you from?'")
+                char_animation_in("  You reply: ")
+                char_animation(f"  He says: 'Wow! Interesting...{PAUSE}")
+                char_animation("  You wouldn't happen to have some gold on you, for our troubles you know?")
+                char_animation("\nBefore you can reply he pulls out a knife out of his hat and points it at you.")
+                char_animation("The woman pulls out another knife and holds it at your throat.")
+                char_animation("The large man silently stops on the side of the road and turns around slowly.")
+                char_animation("He starts going through your pockets and finds your gold.")
+                char_animation(f"-{gold} Gold")
+                char_animation(f"You are thrown onto the road. As they are about to run off, you see a blur run past you.")
+                if get_karma("fighter_arena") == 1:
+                    char_animation("Its your friend from the arena, he quickly disarms and ties up the three bandits.")
+                else:
+                    char_animation("Its a mysterious figure, he quickly disarms and ties up the three bandits.")
+                    char_animation("He introduces himself as a warrior recently freed from the Arena")
+                char_animation("He returns your gold and says: Why are you out here?")
+                char_animation_in("You reply: ")
+                char_animation("He says: 'I see... You should be more careful next time!")
+                if get_karma("fighter_arena") == 1:
+                    previous_choices['fighter_arena'] = 1
+                    char_animation("Come meet me at the warrior's base at the arena whenever you want.")
+                    been_in_situations.add(12)
+
+            elif choice == 'b':
+                pass
+            been_in_situations.add(13)
+        
+        situtation = 16 # Actual farm
+    
+    elif situtation == 16: #Farm
         char_animation("\n\nFarm")
         input()
-
     
-    elif situtation == 14: #City
+    
+    elif situtation == 14: #City Journey
+        if 14 not in been_in_situations:
+            pass
+            been_in_situations.add(14)
+        
+        situtation = 17 # Actual city
+    
+    elif situtation == 17: #City
         char_animation("\n\nCity")
         input()
 
+    elif situtation == 15: #Castle
+        char_animation("\n\nCastle of the Day Before")
+        input()
 
     elif situtation == -1 and DEBUG_ALLOWED: #Debug
         print("Debug mode")
