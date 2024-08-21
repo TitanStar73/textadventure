@@ -173,12 +173,11 @@ def play_slot_machine():
     char_animation("This feature is not here yet. Sorry!")
     return 0
 
-
 class InventoryManager:
     def __init__(self, inventory = {}):
         self.inventory = inventory
     
-    def add_item(self, item, amt = 1):
+    def add(self, item, amt = 1):
         if item in self.inventory:
             self.inventory[item] += amt
         else:
@@ -187,7 +186,22 @@ class InventoryManager:
     def __str__ (self):
         return str(self.inventory)
 
-situtation = 0
+    def __contains__(self,item):
+        if item in self.inventory:
+            return self.inventory[item] > 0
+        return False
+    
+    def remove(self,item, amt = 1):
+        self.inventory[item] -= amt
+        if self.inventory[item] < 0:
+            self.inventory[item] = 0
+    
+    def count(self,item):
+        if item in self.inventory:
+            return self.inventory[item]
+        return 0
+    
+situtation = 10
 been_in_situations = set()
 morailty = 0
 NAME = "person"
@@ -728,7 +742,49 @@ while True:
         char_animation("\n\nTown")
     
         if 10 not in been_in_situations:
-            pass
+            char_animation("You walk down the path and enter a large town.")
+            char_animation("The town is filled with people, you see shops, and children playing in the gardens.")
+            char_animation("You see a sign that says: ")
+            char_animation("Welcome to the Township of the Center, where happiness is found.")
+            
+            char_animation("You walk into the first shop you see, the Warrior's Den.")
+            char_animation("You see the shopkeeper and he says: ")
+            if career == GHOST:
+                pass #To be added in later chapters
+            else:
+                char_animation("Welcome to the Warrior's Den! I've been expecting you.")
+                char_animation("We have everything you could want but I suppose you have some questions?")
+                potential_questions = [
+                    ("Who are you?", "I am the shopkeeper of the Warrior's Den. As for my name... you can call me Tom"),
+                    ("Why were you expecting me?", "I was expecting you because you are special... why? Don't worry all will become clear..."),
+                    ("What do you want?", "I want to help you... I want to help you find your way..."),
+                    ("Where is this place?", "You are in a seperate plane of existence, far beyond your realm, how you got here I do not know. This is Mythopes, the kingdom ruled by Emporer Rahas."),
+                ]
+                while True:
+                    char_animation("\n\n")
+                    for i,question in enumerate(potential_questions):
+                        char_animation(f"{(i+1)}) {question[0]}")
+                    char_animation("What would you like to ask?")
+                    while True:
+                        choice = char_animation_in("Enter your choice: ")
+                        try:
+                            choice = int(choice)
+                            if choice >= 1 and choice <= len(potential_questions):
+                                break
+                        except:
+                            pass
+                        char_animation("Invalid choice.")
+
+                    char_animation("You ask: " + potential_questions[choice-1][0])
+                    char_animation("He replies: " + potential_questions[choice-1][1])
+                    potential_questions.pop(choice-1)
+                    if len(potential_questions) == 0:
+                        break
+                
+                pass              
+
+            
+            char_animation("You walk through the town and see a few paths: ")
 
         if career != GHOST:
             char_animation("Where do you want to go?")
