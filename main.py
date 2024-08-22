@@ -66,6 +66,8 @@ else:
         return "Roses are red, Violets are blue, to get a better response, provide an OpenAI API key too!"
 
 def char_animation(msg, end = "\n"):
+    global previous_choices
+    msg = msg.replace("sword", f"{previous_choices['sword_color']}{previous_choices['sword_name']}{DEFAULT_COLOR}")
     for char in msg:
         print(char, end = "", flush = True)
         sleep(10/WPM)
@@ -199,6 +201,9 @@ class InventoryManager:
     def __str__ (self):
         return str(self.inventory)
 
+    def get_formated(self):
+        pass #print out, everything > 1Mil becomes infinite symbol
+
     def __contains__(self,item):
         if item in self.inventory:
             return self.inventory[item] > 0
@@ -218,9 +223,10 @@ situtation = 10
 been_in_situations = set()
 morailty = 0
 NAME = "person"
+DEFAULT_COLOR = "\033[0m"
 person_type = 0
 career = 'None'
-previous_choices = {}
+previous_choices = {'sword_color':DEFAULT_COLOR, "sword_name":"sword"}
 gold = 0
 inventory = InventoryManager()
 autosave = False
@@ -231,7 +237,7 @@ VILLIAN = "Villian"
 WARLOCK = "Warlock"
 GHOST = "Ghost"
 
-PAUSE = "\033[0m" * (WPM//12) #Creates an approx. 1-2 second dramatic pause in certain places, can be turned off though by disbaling text animations
+PAUSE = DEFAULT_COLOR * (WPM//12) #Creates an approx. 1-2 second dramatic pause in certain places, can be turned off though by disbaling text animations
 
 
 while True:
@@ -1250,7 +1256,90 @@ while True:
                     char_animation("You don't have enough gold")
 
         elif choice == 'b':
-            pass
+            char_animation("Welcome to the Blacksmith!")
+            char_animation("1. Fix sword (2 gold)")
+            char_animation("2. Fix armor (5 gold)")
+            char_animation("3. Buy a CUSTOM sword (30+ gold) (Can still break, applies to all swords, past and future)")
+
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','sword'],'b':['2','armor'],'c':['3','custom']})
+            if choice == 'a':
+                if gold >= 2:
+                    if 'broken_sword' in inventory:
+                        gold -= 2
+                        inventory.remove("broken_sword")
+                        inventory.add("sword")
+                        char_animation("Your sword is fixed")
+                    else:
+                        char_animation("You don't have a broken sword")
+
+                else:
+                    char_animation("You don't have enough gold")
+            
+            elif choice == 'b':
+                if gold >= 5:
+                    if 'broken_armor' in inventory:
+                        gold -= 5
+                        inventory.remove("broken_armor")
+                        inventory.add("armor")
+                        char_animation("You armor is fixed")
+                    else:
+                        char_animation("You don't have broken armor")
+                else:
+                    char_animation("You don't have enough gold")
+            
+            elif choice == 'c':
+                if gold >= 30:
+                    char_animation("Let's build your sword!")
+                    current_price = 30
+                    stuff = [
+                        "Name your sword (10 gold)",
+                        "Color your sword (25 gold)",
+                        "Make your sword Extra Sharp (50 gold)",
+                        "Enchantment your sword (100 gold + Enchantment book required)"
+                    ]
+                    options = {'a':['1','name'],'b':['2','color'],'c':['3','sharp'],'d':['4','enchantment'], 'e':['5','done','buy'], 'f':['6','cancel']}
+                    bought_items = []
+                    while True:
+                        char_animation(f"Your have {gold-current_price} gold left.")
+                        char_animation("What would you like to add: ")
+                        
+                        for i,thing in enumerate(stuff):
+                            char_animation(f"{i+1}. {thing}")
+                        char_animation("5. Done and buy")
+                        char_animation("6. Cancel")
+
+                        choice = get_char_animation_in("Enter your choice: ",options)
+                        if choice == 'a':
+                            if gold >= current_price + 10:
+                                current_price += 10
+                                char_animation("You name your sword")
+                            else:
+                                char_animation("You don't have enough gold")
+                            bought_items.append(("name", char_animation_in("Enter the name of your sword: ")))
+
+
+                        if choice == 'e':
+                            if gold >= current_price:
+                                gold -= current_price
+                                char_animation("You buy the sword!")
+                                #Enact changes
+                                inventory.add("sword", amt = 9999999)
+                                break
+                            else:
+                                char_animation("You don't have enough gold")
+                        
+                        if choice == 'f':
+                            char_animation("You cancel the transaction")
+                            break
+                        
+                        
+                        choice = get_char_animation_in("Enter your choice: ",options)
+
+                        
+                else:
+                    char_animation("You don't have enough gold :(")
+
+
         elif choice == 'c':
             pass
         elif choice == 'd':
