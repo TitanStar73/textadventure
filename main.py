@@ -82,6 +82,7 @@ if DISABLE_ANIMATION:
     char_animation_in = input
 
 def get_char_animation_in(msg,accepted:dict, allow_save = False,err_msg = ""): #{'choice1':['choice1','alias1','alias2'],'choice2':['choice2','alias1','alias2']}
+    global situtation, NAME, been_in_situations, morailty, person_type, career, previous_choices, gold, inventory, autosave, credits
     while True:
         choice = char_animation_in(msg).lower()
         if choice == 'autosave':
@@ -89,7 +90,6 @@ def get_char_animation_in(msg,accepted:dict, allow_save = False,err_msg = ""): #
             char_animation(f"Autosave is now {'on' if autosave else 'off'}. Enter autosave again to toggle.")
             continue
         elif choice == 'foresight':
-            global inventory
             if 'potion_of_foresight' in inventory:
                 char_animation("You see a vision of the future...")
                 char_animation("You see yourself in a dark space, surrounded with nothing but black space... A seering pain through your heart")
@@ -109,7 +109,7 @@ def get_char_animation_in(msg,accepted:dict, allow_save = False,err_msg = ""): #
             else:
                 filename = char_animation_in("Enter a filename: ")
             with open(filename, 'w') as f:
-                f.write(f"{situtation}\n{NAME}\n{been_in_situations}\n{morailty}\n{person_type}\n{career}\n{previous_choices}\n{gold}\n{inventory}\n{autosave}")
+                f.write(f"{situtation}\n{NAME}\n{been_in_situations}\n{morailty}\n{person_type}\n{career}\n{previous_choices}\n{gold}\n{inventory}\n{autosave}\n{credits}")
 
         for key in accepted:
             if choice in [item.lower() for item in accepted[key]]:
@@ -238,6 +238,7 @@ person_type = 0
 career = 'None'
 previous_choices = {'sword_color':DEFAULT_COLOR, "sword_name":"sword"}
 gold = 0
+credits = 0
 inventory = InventoryManager()
 autosave = False
 #Constants
@@ -311,6 +312,7 @@ while True:
                     gold = int(save_data[7])
                     inventory = InventoryManager(parse_dict(save_data[8]))
                     autosave = save_data[9] == 'True'
+                    credits = int(save_data[10])
                 except Exception as e:
                     char_animation(f"Invalid save file! {e}")
                     continue
@@ -1232,63 +1234,83 @@ while True:
     elif situtation == 17: #City
         char_animation("\n\nCity")
         if 17 not in been_in_situations:
-            pass #main city scene
+            char_animation("You walk towards the towering gates of the city and see the guards standing there.")
+            char_animation("They ask you for your name and purpose of visit.")
+            char_animation("You tell them your name and that you are here to explore the city.")
+            char_animation("They tell you that you must solve a riddle to enter the city.")
+        
+            while True:
+                question,answers = randchoice(RIDDLES)
+                char_animation("")
+                char_animation(question)
+                ans = char_animation_in("Answer: ").lower()
+                if ans in answers:
+                    char_animation("The guards let you in.")
+                    break
+                char_animation(f"The guards shake their heads and tell you the answer was {next(iter(answers))}. They tell you to try again.")
+
+            char_animation("You walk into the city and see a large dystopian city. There are flying cars everywhere. There seems to be no difference between tech and magic")
+            char_animation("You see a sign that says: Tech + Magic = Life")
+            char_animation("You try to buy some food but they only accept credits not gold. You ask around and find out that you can earn credits by doing tasks.")
+
+            been_in_situations.add(17)
 
         char_animation("Where would you like to go?")
         char_animation("1. Flower Shop")
-        char_animation("2. Blacksmith")
+        char_animation("2. High-tech Blacksmith")
         char_animation("3. Cleric")
         char_animation("4. Town")
-        choice = get_char_animation_in("Enter your choice: ",{'a':['1','flower'],'b':['2','blacksmith'],'c':['3','cleric'],'d':['4','town']}, allow_save=True)
+        char_animation("5. Earn Credits")
+        choice = get_char_animation_in("Enter your choice: ",{'a':['1','flower'],'b':['2','blacksmith'],'c':['3','cleric'],'d':['4','town'],'e':['5','credits']}, allow_save=True)
 
         if choice == 'a':
             char_animation("Welcome to the Flower Shop!")
-            char_animation("1. Buy a flower (1 gold)")
-            char_animation("2. Buy 10 flowers (8 gold)")
-            char_animation("3. Buy flower bouquet (20 gold)")
-            char_animation("4. Buy a mega flower (99 gold)")
+            char_animation("1. Buy a flower (1 credit)")
+            char_animation("2. Buy 10 flowers (8 credits)")
+            char_animation("3. Buy flower bouquet (20 credits)")
+            char_animation("4. Buy a mega flower (99 credits)")
             char_animation("5. Nothing, just browsing")
             choice = get_char_animation_in("Enter your choice: ",{'a':['1','flower'],'b':['2','flowers'],'c':['3','bouquet'],'d':['4','mega'],'e':['5','nothing','browse']})
             if choice == 'a':
-                if gold >= 1:
-                    gold -= 1
+                if credits >= 1:
+                    credits -= 1
                     inventory.add("flower")
                     char_animation("You buy a flower")
                 else:
-                    char_animation("You don't have enough gold")
+                    char_animation("You don't have enough credits")
             if choice == 'b':
-                if gold >= 8:
-                    gold -= 8
+                if credits >= 8:
+                    credits -= 8
                     inventory.add("flower", amt=10)
                     char_animation("You buy 10 flowers")
                 else:
-                    char_animation("You don't have enough gold")
+                    char_animation("You don't have enough credits")
             if choice == 'c':
-                if gold >= 20:
-                    gold -= 20
+                if credits >= 20:
+                    credits -= 20
                     inventory.add("flower_bouquet")
                     char_animation("You buy a flower bouquet")
                 else:
-                    char_animation("You don't have enough gold")
+                    char_animation("You don't have enough credits")
             if choice == 'd':
-                if gold >= 99:
-                    gold -= 99
+                if credits >= 99:
+                    credits -= 99
                     inventory.add("mega_flower")
                     char_animation("You buy a mega flower")
                 else:
-                    char_animation("You don't have enough gold")
+                    char_animation("You don't have enough credits")
 
         elif choice == 'b':
             char_animation("Welcome to the Blacksmith!")
-            char_animation("1. Fix sword (2 gold)")
-            char_animation("2. Fix armor (5 gold)")
-            char_animation("3. Buy a CUSTOM sword (30+ gold) (Doesn't break!)")
+            char_animation("1. Fix sword (2 credits)")
+            char_animation("2. Fix armor (5 credits)")
+            char_animation("3. Buy a CUSTOM sword (30+ credits) (Doesn't break!)")
 
             choice = get_char_animation_in("Enter your choice: ",{'a':['1','sword'],'b':['2','armor'],'c':['3','custom']})
             if choice == 'a':
-                if gold >= 2:
+                if credits >= 2:
                     if 'broken_sword' in inventory:
-                        gold -= 2
+                        credits -= 2
                         inventory.remove("broken_sword")
                         inventory.add("sword")
                         char_animation("Your sword is fixed")
@@ -1296,34 +1318,34 @@ while True:
                         char_animation("You don't have a broken sword")
 
                 else:
-                    char_animation("You don't have enough gold")
+                    char_animation("You don't have enough credits")
             
             elif choice == 'b':
-                if gold >= 5:
+                if credits >= 5:
                     if 'broken_armor' in inventory:
-                        gold -= 5
+                        credits -= 5
                         inventory.remove("broken_armor")
                         inventory.add("armor")
                         char_animation("You armor is fixed")
                     else:
                         char_animation("You don't have broken armor")
                 else:
-                    char_animation("You don't have enough gold")
+                    char_animation("You don't have enough credits")
             
             elif choice == 'c':
-                if gold >= 30:
+                if credits >= 30:
                     char_animation("Let's build your sword!")
                     current_price = 30
                     stuff = [
-                        "Name your sword (10 gold)",
-                        "Color your sword (25 gold)",
-                        "Make your sword Extra Sharp (50 gold)",
-                        "Enchantment your sword (100 gold + Enchantment book required)"
+                        "Name your sword (10 credits)",
+                        "Color your sword (25 credits)",
+                        "Make your sword Extra Sharp (50 credits)",
+                        "Enchantment your sword (100 credits + Enchantment book required)"
                     ]
                     options = {'a':['1','name'],'b':['2','color'],'c':['3','sharp'],'d':['4','enchantment'], 'e':['5','done','buy'], 'f':['6','cancel']}
                     bought_items = {"name":None, "color":None, "sharp":None, "enchantment":[]}
                     while True:
-                        char_animation(f"Your have {gold-current_price} gold left.")
+                        char_animation(f"Your have {credits-current_price} credits left.")
                         char_animation("What would you like to add: ")
                         
                         for i,thing in enumerate(stuff):
@@ -1333,16 +1355,16 @@ while True:
 
                         choice = get_char_animation_in("Enter your choice: ",options)
                         if choice == 'a':
-                            if gold >= current_price + 10:
+                            if credits >= current_price + 10:
                                 if bought_items["name"] == None:
                                     current_price += 10
                                 bought_items["name"] = char_animation_in("Enter the name of your sword: ")
                                 char_animation(f"You name your sword {bought_items['name']}")
                             else:
-                                char_animation("You don't have enough gold")
+                                char_animation("You don't have enough credits")
 
                         if choice == 'b':
-                            if gold >= current_price + 25:
+                            if credits >= current_price + 25:
                                 if bought_items["color"] == None:
                                     current_price += 25
                                 char_animation("Pick a color: ")
@@ -1355,10 +1377,10 @@ while True:
                                 bought_items["color"] = get_char_animation_in("Enter the color of your sword: ",{RED:['1','red'],BLUE:['2','blue'],GREEN:['3','green'],YELLOW:['4','yellow'],PURPLE:['5','purple'],WHITE:['6','white']})
                                 char_animation(f"{bought_items['color']}You color your sword this color{DEFAULT_COLOR}")
                             else:
-                                char_animation("You don't have enough gold")
+                                char_animation("You don't have enough credits")
 
                         if choice == 'c':
-                            if gold >= current_price + 50:
+                            if credits >= current_price + 50:
                                 if bought_items["sharp"] != None:
                                     char_animation("You already made your sword extra sharp")
                                 else:
@@ -1366,7 +1388,7 @@ while True:
                                     bought_items["sharp"] = True
                                     char_animation("You make your sword extra sharp")
                             else:
-                                char_animation("You don't have enough gold")
+                                char_animation("You don't have enough credits")
 
                         if choice == 'd':
                             possible_books = []
@@ -1376,8 +1398,8 @@ while True:
                             
                             if len(possible_books) == 0:
                                 char_animation("You don't have any enchantment books!")
-                            elif gold < current_price + 100:
-                                char_animation("You don't have enough gold")
+                            elif credits < current_price + 100:
+                                char_animation("You don't have enough credits")
                             else:
                                 for i,thing in enumerate(possible_books):
                                     item,description = thing
@@ -1392,8 +1414,8 @@ while True:
                                 char_animation(f"Enchanting your sword with {ENCHANTMENT_BOOKS[item]}")                             
 
                         if choice == 'e':
-                            if gold >= current_price:
-                                gold -= current_price
+                            if credits >= current_price:
+                                credits -= current_price
                                 char_animation("You buy the sword!\n\nHere are its details: ")
                                 if bought_items["name"] != None:
                                     previous_choices['sword_name'] = bought_items["name"]
@@ -1412,11 +1434,11 @@ while True:
                                 for item in bought_items["enchantment"]:
                                     inventory.remove(item) #Remove the enchantment books
                                 
-                                char_animation(f"Price: {current_price} gold")
+                                char_animation(f"Price: {current_price} credits")
                                 inventory.add("sword", amt = 9999999)
                                 break
                             else:
-                                char_animation("You don't have enough gold")
+                                char_animation("You don't have enough credits")
                         
                         if choice == 'f':
                             char_animation("You cancel the transaction")
@@ -1426,16 +1448,23 @@ while True:
                         choice = get_char_animation_in("Enter your choice: ",options)
 
                 else:
-                    char_animation("You don't have enough gold :(")
-
+                    char_animation("You don't have enough credits :(")
 
         elif choice == 'c':
-            pass
+            char_animation("Welcome to the Cleric's!")
+            char_animation("Nothing here for now!")
+            char_animation("Come back later!")
+
         elif choice == 'd':
             situtation = 10
 
+        elif choice == 'e':
+            char_animation("Earn Credits!")
+            char_animation("Come back later!")
+
     elif situtation == 15: #Castle
         char_animation("\n\nCastle of the Day Before")
+        char_animation("Come back later!")
         input()
 
     elif situtation == -1 and DEBUG_ALLOWED: #Debug
