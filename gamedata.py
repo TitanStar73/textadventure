@@ -1,7 +1,7 @@
 #Much of this is AI generated data
 #This file only stores the riddles and quiz q/a s for the game
 
-
+#This is not requried to run main.py anymore, this is now only archival in nature and for easy access to riddles and quiz questions
 
 RIDDLES = [
     ("What has keys but can’t open locks?", {"piano", "keyboard"}),
