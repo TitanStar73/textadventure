@@ -1196,12 +1196,65 @@ while True:
                             char_animation("You don't have enough gold. The vendor is annoyed and you move forward.")
                 
             been_in_situations.add(14)
+            char_animation("You continue down the road and see the city's sky high walls...")
         
         situtation = 17 # Actual city
     
     elif situtation == 17: #City
         char_animation("\n\nCity")
-        input()
+        if 17 not in been_in_situations:
+            pass #main city scene
+
+        char_animation("Where would you like to go?")
+        char_animation("1. Flower Shop")
+        char_animation("2. Blacksmith")
+        char_animation("3. Cleric")
+        char_animation("4. Town")
+        choice = get_char_animation_in("Enter your choice: ",{'a':['1','flower'],'b':['2','blacksmith'],'c':['3','cleric'],'d':['4','town']}, allow_save=True)
+
+        if choice == 'a':
+            char_animation("Welcome to the Flower Shop!")
+            char_animation("1. Buy a flower (1 gold)")
+            char_animation("2. Buy 10 flowers (8 gold)")
+            char_animation("3. Buy flower bouquet (20 gold)")
+            char_animation("4. Buy a mega flower (99 gold)")
+            char_animation("5. Nothing, just browsing")
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','flower'],'b':['2','flowers'],'c':['3','bouquet'],'d':['4','mega'],'e':['5','nothing','browse']})
+            if choice == 'a':
+                if gold >= 1:
+                    gold -= 1
+                    inventory.add("flower")
+                    char_animation("You buy a flower")
+                else:
+                    char_animation("You don't have enough gold")
+            if choice == 'b':
+                if gold >= 8:
+                    gold -= 8
+                    inventory.add("flower", amt=10)
+                    char_animation("You buy 10 flowers")
+                else:
+                    char_animation("You don't have enough gold")
+            if choice == 'c':
+                if gold >= 20:
+                    gold -= 20
+                    inventory.add("flower_bouquet")
+                    char_animation("You buy a flower bouquet")
+                else:
+                    char_animation("You don't have enough gold")
+            if choice == 'd':
+                if gold >= 99:
+                    gold -= 99
+                    inventory.add("mega_flower")
+                    char_animation("You buy a mega flower")
+                else:
+                    char_animation("You don't have enough gold")
+
+        elif choice == 'b':
+            pass
+        elif choice == 'c':
+            pass
+        elif choice == 'd':
+            situtation = 10
 
     elif situtation == 15: #Castle
         char_animation("\n\nCastle of the Day Before")
