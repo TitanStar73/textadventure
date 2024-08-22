@@ -1090,22 +1090,46 @@ while True:
                 char_animation("2. No")
                 choice = get_char_animation_in("Enter your choice: ",{'a':['1','yes'],'b':['2','no']})
                 if choice == 'a':
-                    pass
-
+                    char_animation(f"You approach saying 'Hello there! I am {NAME}.'")
+                    char_animation("Hey I'm John, the Blacksmith. I make and fix weapons and armor for the warriors of the town.")
+                    char_animation("If you come across any broken weapons or armor, bring them to me in the city and I'll fix them for you.")
+                
             else:
                 char_animation("You continue down the path and see a old man in dark faded blue robes with a wooden staff. Do you approach him?")
                 char_animation("1. Yes")
                 char_animation("2. No")
                 choice = get_char_animation_in("Enter your choice: ",{'a':['1','yes'],'b':['2','no']})
                 if choice == 'a':
-                    pass
+                    char_animation("You approach him and say 'Hello there! I am {NAME}.'")
+                    char_animation("He looks at you and says 'Hello {NAME}, I am the cleric of the town. I help the people of the town with their magical needs.'")
+                    char_animation("If you ever need help with anything, come to me in the city.")
+                    char_animation("Want anything else right now?")
+                    if char_animation_in("You reply: ").lower() in {'teach', 'learn', 'magic', 'help'}:
+                        char_animation("He says: 'I can teach you a thing or two I suppose.'")
+                        char_animation("He teaches you how to make the potion of harming. You now have unlimited potions of harming!")
+                        inventory.add("potion", amt=9999999) #Technically just under 10 Million
+                    char_animation("He says: Bye for now!")
 
             char_animation("You continue down the path and see a woman dressed in a bright colourflul dress. Do you approach her?")
             char_animation("1. Yes")
             char_animation("2. No")
             choice = get_char_animation_in("Enter your choice: ",{'a':['1','yes'],'b':['2','no']})
             if choice == 'a':
-                pass
+                char_animation("You approach her and say 'Hello there! I am {NAME}.'")
+                char_animation("She looks at you and says 'Hello {NAME}, I am the florist of the city.'")
+                char_animation("What do you say?")
+                char_animation("1. Ask for information about the city")
+                char_animation("2. Ask for a flower")
+                choice = get_char_animation_in("Enter your choice: ",{'a':['1','info'],'b':['2','flower']})
+                if choice == 'a':
+                    char_animation("She tells you about the city and its history. You learn a lot about the city.")
+                elif choice == 'b':
+                    char_animation("Haha sure! She gives you a flower.")
+                    char_animation("'How much do I owe you?', you ask.")
+                    char_animation("'Oh no, its free! Don't worry about it!'")
+                    char_animation("If you ever want a flower, come to me in the city!")
+                    inventory.add("flower")
+                    char_animation("You thank her and continue down the path.")
 
             char_animation("You continue down the path and see a street vendor selling stuff. Do you approach him?")
             char_animation("1. Yes")
@@ -1141,6 +1165,36 @@ while True:
                         else:
                             char_animation("You don't have enough gold. The vendor is annoyed and you move forward.")
 
+                elif career in {WARRIOR, WARLOCK}:
+                    char_animation("The vendor shows you the following items: ")
+                    char_animation("1. Totem of escape (one use) (50 gold)")
+                    char_animation("2. Beads of Fortune (one use) (3 gold)")
+                    char_animation("3. Potion of Stulus (one use) (12 gold)")
+
+                    char_animation("What would you like to buy?")
+                    choice = get_char_animation_in("Enter your choice: ",{'a':['1','escape'],'b':['2','fortune'],'c':['3','stulus']})
+                    if choice == 'a':
+                        if gold >= 50:
+                            gold -= 50
+                            inventory.add("totem_of_escape")
+                            char_animation("You buy a totem of escape")
+                        else:
+                            char_animation("You don't have enough gold. The vendor is annoyed and you move forward.")
+                    elif choice == 'b':
+                        if gold >= 3:
+                            gold -= 3
+                            inventory.add("beads_of_fortune")
+                            char_animation("You buy beads of fortune")
+                        else:
+                            char_animation("You don't have enough gold. The vendor is annoyed and you move forward.")
+                    elif choice == 'c':
+                        if gold >= 12:
+                            gold -= 12
+                            inventory.add("potion_of_stulus")
+                            char_animation("You buy a potion of stulus")
+                        else:
+                            char_animation("You don't have enough gold. The vendor is annoyed and you move forward.")
+                
             been_in_situations.add(14)
         
         situtation = 17 # Actual city
