@@ -1,4 +1,4 @@
-#Much of this is AI generated code
+#Much of this is AI generated data
 #This file only stores the riddles and quiz q/a s for the game
 
 
@@ -164,4 +164,45 @@ MYTHOLOGY_QUESTIONS = [
     ("In Egyptian mythology, who is the goddess of cats?", ["Bastet", "Hathor", "Isis", "Nut"]),
     ("Who is the Greek god of dreams?", ["Morpheus", "Hypnos", "Thanatos", "Phobos"]),
     ("In Norse mythology, what is the name of the realm of fire?", ["Muspelheim", "Asgard", "Midgard", "Helheim"]),
+]
+
+LOGIC_PUZZLES = [
+    ("Which number should come next in the pattern: 2, 4, 8, 16, ...?", ["32", "20", "24", "30"]),
+    ("If you rearrange the letters 'CIFAIPC', you would have the name of a(n):", ["Ocean", "City", "Animal", "Country"]),
+    ("What is the missing number in the sequence: 1, 3, 6, 10, 15, ...?", ["21", "18", "20", "22"]),
+    ("Which word does not belong in the following list: Apple, Banana, Cherry, Carrot?", ["Carrot", "Banana", "Apple", "Cherry"]),
+    ("If some cats are lions and some lions are tigers, are some cats definitely tigers?", ["No", "Yes", "Cannot be determined", "Sometimes"]),
+    ("John is standing behind Mary, and Mary is standing behind John. How is this possible?", ["They are standing back-to-back", "John is taller", "Mary is shorter", "They are in a line"]),
+    ("If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?", ["5 minutes", "100 minutes", "50 minutes", "10 minutes"]),
+    ("How many sides does a cube have?", ["6", "8", "4", "12"]),
+    ("Which one of the following is the odd one out: 2, 3, 5, 7, 9?", ["9", "3", "5", "7"]),
+    ("A clock shows the time as 3:15. What is the angle between the hour and minute hand?", ["7.5 degrees", "0 degrees", "15 degrees", "90 degrees"]),
+    ("A bat and a ball cost $1.10 in total. The bat costs $1 more than the ball. How much does the ball cost?", ["5 cents", "10 cents", "15 cents", "1 cent"]),
+    ("If it takes 12 men 12 hours to build a wall, how long would it take 6 men to build the same wall?", ["12 hours", "6 hours", "24 hours", "18 hours"]),
+    ("If you have a 5-liter jug and a 3-liter jug, how can you measure exactly 4 liters of water?", ["Fill the 5-liter jug, pour into the 3-liter jug twice", "Fill the 3-liter jug twice", "Fill the 5-liter jug once", "Fill the 3-liter jug once"]),
+    ("In a race, you overtake the person in second place. What position are you now in?", ["Second", "First", "Third", "Last"]),
+    ("A farmer has 17 sheep, and all but 9 die. How many sheep does the farmer have left?", ["9", "8", "0", "17"]),
+    ("What can travel around the world while staying in the same spot?", ["A stamp", "The wind", "A satellite", "A cloud"]),
+    ("How many months have 28 days?", ["All of them", "1", "12", "6"]),
+    ("I am an odd number. Take away one letter, and I become even. What number am I?", ["Seven", "Eleven", "Nine", "Three"]),
+    ("You see a boat filled with people. It has not sunk, but when you look again you don’t see a single person. Why?", ["All the people were married", "The boat left", "The people jumped", "The boat capsized"]),
+    ("What comes next in the sequence: 1, 1, 2, 3, 5, 8, ...?", ["13", "10", "12", "15"]),
+    ("What is the next number in the series: 5, 10, 20, 40, ...?", ["80", "60", "100", "70"]),
+    ("If A is the father of B and C is the mother of B, what is the relationship of A to C?", ["Husband", "Brother", "Uncle", "Cousin"]),
+    ("In a race, you overtake the person in second place. What position are you in?", ["Second", "First", "Third", "Fourth"]),
+    ("Which one of the following is a prime number?", ["17", "18", "20", "22"]),
+    ("Which of the following does not belong in this group: Dog, Cat, Hamster, Whale?", ["Whale", "Dog", "Cat", "Hamster"]),
+    ("If you have 3 apples and you take away 2, how many do you have?", ["2", "1", "0", "3"]),
+    ("If you multiply a number by 6 and then add 2, you get 20. What is the number?", ["3", "4", "2", "5"]),
+    ("Which number is missing from the sequence: 2, 3, 5, 7, 11, ...?", ["13", "9", "15", "17"]),
+    ("What letter comes next in the sequence: J, F, M, A, M, ...?", ["J", "A", "M", "J"]),
+    ("What number comes next: 1, 4, 9, 16, 25, ...?", ["36", "30", "32", "40"]),
+    ("If all bloogs are shmoogs and all shmoogs are kroogs, are all bloogs definitely kroogs?", ["Yes", "No", "Cannot be determined", "Sometimes"]),
+    ("What is the odd one out: Fork, Spoon, Knife, Plate?", ["Plate", "Fork", "Spoon", "Knife"]),
+    ("A man is looking at a picture of someone. His friend asks, 'Who is it you are looking at?' The man replies, 'Brothers and sisters, I have none. But that man's father is my father's son.' Who is the man in the picture?", ["His son", "His father", "His uncle", "His nephew"]),
+    ("A farmer has 17 sheep and all but 9 die. How many are left?", ["9", "8", "0", "17"]),
+    ("Which word is closest in meaning to 'opaque'?", ["Cloudy", "Clear", "Bright", "Transparent"]),
+    ("Which of the following numbers is a multiple of 3?", ["15", "14", "10", "25"]),
+    ("If 3 people can paint 3 fences in 3 hours, how many fences can 6 people paint in 6 hours?", ["12", "9", "6", "3"]),
+    ("What number is missing: 7, 14, 21, ..., 35?", ["28", "24", "30", "27"])
 ]
