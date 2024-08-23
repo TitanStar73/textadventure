@@ -12,7 +12,8 @@ Users will be given the option to provide an OpenAI API key to create a more ime
 """
 """Here are the settings you should edit:"""
 WPM = 350 #Words speed text animation, recommended: 350
-DISABLE_ANIMATION = False #Turns off text animation
+DISABLE_ANIMATION = False #Turns off text animation if enabled
+DISABLE_COLORS = False #Turns off colors if enabled
 
 #Optional | Will not change gameplay descisons only provides a more immersive dialogue
 #If not provided make it None
@@ -214,10 +215,6 @@ def play_wordle():
     char_animation("You lost! The word was: " + the_word)
     return 0
 
-def play_hangman():
-    char_animation("This feature is not here yet. Sorry!")
-    return 0
-
 def play_quiz():
     if randint(0,1) == 0:
         question,answer = randchoice(RIDDLES)
@@ -269,8 +266,109 @@ def play_trivia():
 
 
 def play_slot_machine():
-    char_animation("This feature is not here yet. Sorry!")
-    return 0
+    for item in SLOT_ASSETS:
+        if len(item.split('\n')) != len(SLOT_ASSETS[0].split('\n')):
+            print("Error: All assets must have the same number of lines. | This is likely a bug in the source code.")
+            print("Exiting slot machine.")
+            return 0
+
+    def special_print(texts):
+        total = ""
+        dubs = texts[0].split('\n')
+        dubs2 = []
+        #No idea what causes this bug but it took me ages to debug :(
+        for text in dubs:
+            if text != '':
+                dubs2.append(text)
+
+        for row_no in range(0,len(dubs2)):
+            for text in texts:
+                total += text.split('\n')[row_no] + " "
+            total += "\n"
+        print(total[:-1])
+    
+    def get_spliced_asset(a1,a2,ratio): #ratio to ratio + 1 shown, e.g. 0.5 to 1.5
+        total = a1 + "\n" + a2
+        total = total.split("\n")
+
+        final = ""
+        start_line = int(len(a1.split('\n')) * ratio)
+
+        for line_no in range(start_line, start_line + len(a1.split('\n'))):
+            final += total[line_no] + "\n"
+
+        return final
+
+    def create_roll(a1,a2, previous = []):
+        frames_for_roll = int(SLOT_FPS*SLOT_ANIMATION_TIME[2])
+        for i in range(0,frames_for_roll-1):
+            previous.append(get_spliced_asset(a1,a2,i/frames_for_roll))
+            special_print(previous)
+            previous.pop()
+            sleep(SLOT_SLEEP)
+            print(SLOT_REFRESH, flush=True)
+        
+        previous.append(get_spliced_asset(a1,a2,1))
+        special_print(previous)
+        sleep(SLOT_SLEEP)
+        
+    char_animation(f"Slot machine! Get 3 {GREEN}$${DEFAULT_COLOR} to win 888x your bet! Get 3 of a kind to win 69x your bet!")
+    while True:
+        try:
+            bet = int(char_animation_in("How much money would you like to bet?: "))
+            break
+        except:
+            char_animation("Please enter a whole number.")
+
+    s1 = randchoice(SLOT_1_ROLLS) #randchoice(SLOT_1_ROLLS)
+    s2 = randchoice(SLOT_2_ROLLS)
+    s3 = randchoice(SLOT_3_ROLLS)
+    
+    a2 = randchoice(SLOT_1_ROLLS)
+    for i in range(0, SLOT_ANIMATION_TIME[1]):
+        a1 = a2
+        a2 = randchoice(SLOT_1_ROLLS)
+        create_roll(a1,a2, previous=[])
+        print(SLOT_REFRESH, flush=True)
+
+    create_roll(a2,s1, previous=[])
+    sleep(SLOT_ANIMATION_TIME[0])
+
+    print(SLOT_REFRESH, flush=True)
+    a2 = randchoice(SLOT_2_ROLLS)
+    for i in range(0, SLOT_ANIMATION_TIME[1]):
+        a1 = a2
+        a2 = randchoice(SLOT_2_ROLLS)
+        create_roll(a1,a2, previous=[s1])
+        print(SLOT_REFRESH, flush=True)
+
+    create_roll(a2,s2, previous=[s1])
+    sleep(SLOT_ANIMATION_TIME[0])
+
+    print(SLOT_REFRESH, flush=True)
+    a2 = randchoice(SLOT_3_ROLLS)
+    for i in range(0, SLOT_ANIMATION_TIME[1]):
+        a1 = a2
+        a2 = randchoice(SLOT_3_ROLLS)
+        create_roll(a1,a2, previous=[s1,s2])
+        print(SLOT_REFRESH, flush=True)
+
+    create_roll(a2,s3, previous=[s1,s2])
+    sleep(SLOT_ANIMATION_TIME[0])
+    
+        
+    if s1 == s2 == s3 == SLOT_WINNING:
+        char_animation(f"Congratulations! You won {bet*888} gold!")
+        return bet*888
+
+    if s1 == s2 == s3:
+        char_animation(f"Congratulations! You won {bet*69} gold!")
+        return bet*69
+    
+    char_animation(f"You lost! Sorry :(")
+    char_animation(f"-{bet} gold")
+    return -bet
+
 
 class InventoryManager:
     def __init__(self, inventory = {}):
@@ -311,12 +409,12 @@ been_in_situations = set()
 morailty = 0
 NAME = "person"
 DEFAULT_COLOR = "\033[0m"
-RED = "\033[31m"
-BLUE = "\033[34m"
-GREEN = "\033[32m"
-YELLOW = "\033[33m"
-WHITE = "\033[37m"
-PURPLE = "\033[35m"
+RED = DEFAULT_COLOR if DISABLE_COLORS else "\033[31m"
+BLUE = DEFAULT_COLOR if DISABLE_COLORS else "\033[34m"
+GREEN = DEFAULT_COLOR if DISABLE_COLORS else "\033[32m"
+YELLOW = DEFAULT_COLOR if DISABLE_COLORS else "\033[33m"
+WHITE = DEFAULT_COLOR if DISABLE_COLORS else "\033[37m"
+PURPLE = DEFAULT_COLOR if DISABLE_COLORS else "\033[35m"
 
 person_type = 0
 career = 'None'
@@ -342,6 +440,161 @@ WORDLE_NUM_LETTERS = 5
 BLOCKED_LETTERS = {'A': "\n .----------------. \n| .--------------. |\n| |      __      | |\n| |     /  \\     | |\n| |    / /\\ \\    | |\n| |   / ____ \\   | |\n| | _/ /    \\ \\_ | |\n| ||____|  |____|| |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'B': "\n .----------------. \n| .--------------. |\n| |   ______     | |\n| |  |_   _ \\    | |\n| |    | |_) |   | |\n| |    |  __'.   | |\n| |   _| |__) |  | |\n| |  |_______/   | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'C': "\n .----------------. \n| .--------------. |\n| |     ______   | |\n| |   .' ___  |  | |\n| |  / .'   \\_|  | |\n| |  | |         | |\n| |  \\ `.___.'\\  | |\n| |   `._____.'  | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'D': "\n .----------------. \n| .--------------. |\n| |  ________    | |\n| | |_   ___ `.  | |\n| |   | |   `. \\ | |\n| |   | |    | | | |\n| |  _| |___.' / | |\n| | |________.'  | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'E': "\n .----------------. \n| .--------------. |\n| |  _________   | |\n| | |_   ___  |  | |\n| |   | |_  \\_|  | |\n| |   |  _|  _   | |\n| |  _| |___/ |  | |\n| | |_________|  | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'F': "\n .----------------. \n| .--------------. |\n| |  _________   | |\n| | |_   ___  |  | |\n| |   | |_  \\_|  | |\n| |   |  _|      | |\n| |  _| |_       | |\n| | |_____|      | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'G': "\n .----------------. \n| .--------------. |\n| |    ______    | |\n| |  .' ___  |   | |\n| | / .'   \\_|   | |\n| | | |    ____  | |\n| | \\ `.___]  _| | |\n| |  `._____.'   | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'H': "\n .----------------. \n| .--------------. |\n| |  ____  ____  | |\n| | |_   ||   _| | |\n| |   | |__| |   | |\n| |   |  __  |   | |\n| |  _| |  | |_  | |\n| | |____||____| | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'I': "\n .----------------. \n| .--------------. |\n| |     _____    | |\n| |    |_   _|   | |\n| |      | |     | |\n| |      | |     | |\n| |     _| |_    | |\n| |    |_____|   | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'J': "\n .----------------. \n| .--------------. |\n| |     _____    | |\n| |    |_   _|   | |\n| |      | |     | |\n| |   _  | |     | |\n| |  | |_' |     | |\n| |  `.___.'     | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'K': "\n .----------------. \n| .--------------. |\n| |  ___  ____   | |\n| | |_  ||_  _|  | |\n| |   | |_/ /    | |\n| |   |  __'.    | |\n| |  _| |  \\ \\_  | |\n| | |____||____| | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'L': "\n .----------------. \n| .--------------. |\n| |   _____      | |\n| |  |_   _|     | |\n| |    | |       | |\n| |    | |   _   | |\n| |   _| |__/ |  | |\n| |  |________|  | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'M': "\n .----------------. \n| .--------------. |\n| | ____    ____ | |\n| ||_   \\  /   _|| |\n| |  |   \\/   |  | |\n| |  | |\\  /| |  | |\n| | _| |_\\/_| |_ | |\n| ||_____||_____|| |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'N': "\n .-----------------.\n| .--------------. |\n| | ____  _____  | |\n| ||_   \\|_   _| | |\n| |  |   \\ | |   | |\n| |  | |\\ \\| |   | |\n| | _| |_\\   |_  | |\n| ||_____|\\____| | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'O': "\n .----------------. \n| .--------------. |\n| |     ____     | |\n| |   .'    `.   | |\n| |  /  .--.  \\  | |\n| |  | |    | |  | |\n| |  \\  `--'  /  | |\n| |   `.____.'   | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'P': "\n .----------------. \n| .--------------. |\n| |   ______     | |\n| |  |_   __ \\   | |\n| |    | |__) |  | |\n| |    |  ___/   | |\n| |   _| |_      | |\n| |  |_____|     | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'Q': "\n .----------------. \n| .--------------. |\n| |    ___       | |\n| |  .'   '.     | |\n| | /  .-.  \\    | |\n| | | |   | |    | |\n| | \\  `-'  \\_   | |\n| |  `.___.\\__|  | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'R': "\n .----------------. \n| .--------------. |\n| |  _______     | |\n| | |_   __ \\    | |\n| |   | |__) |   | |\n| |   |  __ /    | |\n| |  _| |  \\ \\_  | |\n| | |____| |___| | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'S': "\n .----------------. \n| .--------------. |\n| |    _______   | |\n| |   /  ___  |  | |\n| |  |  (__ \\_|  | |\n| |   '.___`-.   | |\n| |  |`\\____) |  | |\n| |  |_______.'  | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'T': "\n .----------------. \n| .--------------. |\n| |  _________   | |\n| | |  _   _  |  | |\n| | |_/ | | \\_|  | |\n| |     | |      | |\n| |    _| |_     | |\n| |   |_____|    | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'U': "\n .----------------. \n| .--------------. |\n| | _____  _____ | |\n| ||_   _||_   _|| |\n| |  | |    | |  | |\n| |  | '    ' |  | |\n| |   \\ `--' /   | |\n| |    `.__.'    | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'V': "\n .----------------. \n| .--------------. |\n| | ____   ____  | |\n| ||_  _| |_  _| | |\n| |  \\ \\   / /   | |\n| |   \\ \\ / /    | |\n| |    \\ ' /     | |\n| |     \\_/      | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'W': "\n .----------------. \n| .--------------. |\n| | _____  _____ | |\n| ||_   _||_   _|| |\n| |  | | /\\ | |  | |\n| |  | |/  \\| |  | |\n| |  |   /\\   |  | |\n| |  |__/  \\__|  | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'X': "\n .----------------. \n| .--------------. |\n| |  ____  ____  | |\n| | |_  _||_  _| | |\n| |   \\ \\  / /   | |\n| |    > `' <    | |\n| |  _/ /'`\\ \\_  | |\n| | |____||____| | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'Y': "\n .----------------. \n| .--------------. |\n| |  ____  ____  | |\n| | |_  _||_  _| | |\n| |   \\ \\  / /   | |\n| |    \\ \\/ /    | |\n| |    _|  |_    | |\n| |   |______|   | |\n| |              | |\n| '--------------' |\n '----------------' \n\n", 'Z': "\n .----------------. \n| .--------------. |\n| |   ________   | |\n| |  |  __   _|  | |\n| |  |_/  / /    | |\n| |     .'.' _   | |\n| |   _/ /__/ |  | |\n| |  |________|  | |\n| |              | |\n| '--------------' |\n '----------------' \n\n"}
 WORDLE_FREQ = 100/WORDLE_DIFFICULTY
 
+SLOT_ASSETS = [
+f""" .----------------. 
+| .--------------. |
+| |              | |
+| |              | |
+| |              | |
+| |      {GREEN}$${DEFAULT_COLOR}      | |
+| |              | |
+| |              | |
+| |              | |
+| '--------------' |
+ '----------------' """,
+f""" .----------------. 
+| .--------------. |
+| |              | |
+| |              | |
+| |              | |
+| |      {RED}!{DEFAULT_COLOR}       | |
+| |              | |
+| |              | |
+| |              | |
+| '--------------' |
+ '----------------' """,
+ f""" .----------------. 
+| .--------------. |
+| |              | |
+| |              | |
+| |              | |
+| |     {PURPLE} @{DEFAULT_COLOR}       | |
+| |              | |
+| |              | |
+| |              | |
+| '--------------' |
+ '----------------' """,
+ f""" .----------------. 
+| .--------------. |
+| |              | |
+| |              | |
+| |              | |
+| |      {YELLOW}%{DEFAULT_COLOR}       | |
+| |              | |
+| |              | |
+| |              | |
+| '--------------' |
+ '----------------' """,
+ f""" .----------------. 
+| .--------------. |
+| |              | |
+| |              | |
+| |              | |
+| |     {RED} ^{DEFAULT_COLOR}       | |
+| |              | |
+| |              | |
+| |              | |
+| '--------------' |
+ '----------------' """,
+ f""" .----------------. 
+| .--------------. |
+| |              | |
+| |              | |
+| |              | |
+| |     {BLUE} &{DEFAULT_COLOR}       | |
+| |              | |
+| |              | |
+| |              | |
+| '--------------' |
+ '----------------' """,
+  f""" .----------------. 
+| .--------------. |
+| |              | |
+| |              | |
+| |              | |
+| |     {GREEN} *{DEFAULT_COLOR}       | |
+| |              | |
+| |              | |
+| |              | |
+| '--------------' |
+ '----------------' """,
+ f""" .----------------. 
+| .--------------. |
+| |              | |
+| |              | |
+| |              | |
+| |    {RED}  +{DEFAULT_COLOR}       | |
+| |              | |
+| |              | |
+| |              | |
+| '--------------' |
+ '----------------' """,
+ f""" .----------------. 
+| .--------------. |
+| |              | |
+| |              | |
+| |              | |
+| |     {YELLOW} ?{DEFAULT_COLOR}       | |
+| |              | |
+| |              | |
+| |              | |
+| '--------------' |
+ '----------------' """,
+ f""" .----------------. 
+| .--------------. |
+| |              | |
+| |              | |
+| |              | |
+| |    {PURPLE}  ~{DEFAULT_COLOR}       | |
+| |              | |
+| |              | |
+| |              | |
+| '--------------' |
+ '----------------' """,
+ f""" .----------------. 
+| .--------------. |
+| |              | |
+| |              | |
+| |              | |
+| |     {GREEN} ={DEFAULT_COLOR}       | |
+| |              | |
+| |              | |
+| |              | |
+| '--------------' |
+ '----------------' """,
+ f""" .----------------. 
+| .--------------. |
+| |              | |
+| |              | |
+| |              | |
+| |   {BLUE}  [-]{DEFAULT_COLOR}      | |
+| |              | |
+| |              | |
+| |              | |
+| '--------------' |
+ '----------------' """,
+ r""" .----------------. 
+| .--------------. |
+| |              | |
+| |              | |
+| |              | |
+| |              | |
+| |              | |
+| |              | |
+| |              | |
+| '--------------' |
+ '----------------' """
+]
+#7x11x13 = 1001 (slight edge to house 0.1%)
+SLOT_1_ROLLS = [SLOT_ASSETS[i] for i in range(0,7)]
+SLOT_2_ROLLS = [SLOT_ASSETS[i] for i in range(0,11)]
+SLOT_3_ROLLS = [SLOT_ASSETS[i] for i in range(0,13)]
+SLOT_WINNING = SLOT_ASSETS[0]
+SLOT_REFRESH = f"\033[{len(SLOT_1_ROLLS[0].split('\n'))+1}A" #Move cursor back up to create animation
+
+SLOT_FPS = 30
+SLOT_SLEEP = 1/SLOT_FPS
+SLOT_ANIMATION_TIME = (1, 6, 0.35) #(time for each slot to be displayed, total slots per slot, transition time)
 
 
 RIDDLES = [
@@ -559,7 +812,6 @@ ENCHANTMENT_BOOKS = {
     "enchantmentBook Fire": "Covers your sword in an eternal flame",
     "enchantmentBook Poison": "Covers your sword in poison",
 }
-
 
 while True:
     if career == None: #Standard Careers (not including ghost)
@@ -1138,14 +1390,14 @@ while True:
             char_animation("0. Shop")
             char_animation("1. Quiz for gold!!")
             char_animation("2. Slot Machine, try your luck out, win upto 1000x your bet")
-            char_animation("3. Hangman, guess the word and win 10 gold")
+            char_animation("3. Solve a riddle and win")
             char_animation("4. Wordle, guess the word in 6 tries and win 10 gold")
             char_animation("5. Farm")
             char_animation("6. City")
             char_animation("7. Library")
             char_animation("8. Arena")
             char_animation("9. Temple")
-            choice = get_char_animation_in("Enter your choice: ",{'s':['0','shop'],'a':['1','quiz'],'b':['2','slot','machine'],'c':['3','hangman'],'d':['4','wordle'],'e':['5','farm'],'f':['6','city'],'g':['7','library'],'h':['8','arena'],'i':['9','temple']}, allow_save=True)
+            choice = get_char_animation_in("Enter your choice: ",{'s':['0','shop'],'a':['1','quiz'],'b':['2','slot','machine'],'c':['3','trivia','quiz'],'d':['4','wordle'],'e':['5','farm'],'f':['6','city'],'g':['7','library'],'h':['8','arena'],'i':['9','temple']}, allow_save=True)
             if choice == 's':
                 if career == WIZARD or career == VILLIAN:
                     char_animation("Welcome to the Magik shop!")
@@ -1278,7 +1530,7 @@ while True:
             elif choice == 'b':
                 gold += play_slot_machine()
             elif choice == 'c':
-                gold += play_hangman()
+                gold += play_trivia()
             elif choice == 'd':
                 gold += play_wordle()
             elif choice == 'e':
