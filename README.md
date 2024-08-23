@@ -1,4 +1,6 @@
-Text Adventure game, always adding updates :)
+# Mythopes - Console Edition
+
+always adding updates :)
 
 Chapter 1 completed!
 
