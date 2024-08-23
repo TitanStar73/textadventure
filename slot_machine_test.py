@@ -26,6 +26,12 @@ r""" .----------------.
  '----------------' """
 ]
 
+for item in SLOT_ASSETS:
+    if len(item.split('\n')) != len(SLOT_ASSETS[0].split('\n')):
+        print("Error: All assets must have the same number of lines.")
+        exit()
+
+
 for i in range(0,15):
     SLOT_ASSETS.append(SLOT_ASSETS[1])
 
@@ -40,10 +46,20 @@ SLOT_SLEEP = 1/SLOT_FPS
 SLOT_ANIMATION_TIME = (1, 6, 0.35) #(time for each slot to be displayed, total slots per slot, transition time)
 
 def special_print(texts):
-    for row_no in range(0,len(texts[0].split('\n'))):
+    total = ""
+    dubs = texts[0].split('\n')
+    dubs2 = []
+    #No idea what causes this bug but it took me ages to debug :(
+    for text in dubs:
+        if text != '':
+            dubs2.append(text)
+
+    for row_no in range(0,len(dubs2)):
         for text in texts:
-            print(text.split('\n')[row_no], end = ' ')
-        print("")
+            total += text.split('\n')[row_no] + " "
+        total += "\n"
+    print(total[:-1])
+    
 
 def get_spliced_asset(a1,a2,ratio): #ratio to ratio + 1 shown, e.g. 0.5 to 1.5
     total = a1 + "\n" + a2
@@ -66,7 +82,8 @@ def create_roll(a1,a2, previous = []):
         sleep(SLOT_SLEEP)
         print(SLOT_REFRESH, flush=True)
     
-    special_print(get_spliced_asset(a1,a2,1))
+    previous.append(get_spliced_asset(a1,a2,1))
+    special_print(previous)
     sleep(SLOT_SLEEP)
     
 
@@ -87,10 +104,10 @@ def play_slot_machine():
     for i in range(0, SLOT_ANIMATION_TIME[1]):
         a1 = a2
         a2 = randchoice(SLOT_2_ROLLS)
-        create_roll(a1,a2, previous=[s2])
+        create_roll(a1,a2, previous=[])
         print(SLOT_REFRESH, flush=True)
 
-    create_roll(a2,s1, previous=[s2])
+    create_roll(a2,s1, previous=[])
     sleep(SLOT_ANIMATION_TIME[0])
     
     if s1 == s2 == s3 == SLOT_WINNING:
@@ -107,10 +124,6 @@ print("s")
 print("s")
 
 play_slot_machine()
-
-
-
-
 
 
 print("s")
