@@ -872,15 +872,23 @@ while True:
             char_animation("You wake up in the clearing of a forest, not remembering how you got here. You don't remember anything or anyone. The only thing you remember is a single word: your name.")
             NAME = char_animation_in("What is it?: ")
             been_in_situations.add(1)
-        char_animation(f"Hello {NAME}. You see 4 paths labeled with signs: ")
+            char_animation(f"Hello {NAME}. You see 4 paths labeled with signs: ")
 
-        char_animation("\n\n")
-        char_animation("1. The path going to the Temple, it has a a bricked road with lamps on the side.")
-        char_animation("2. The path going to the Library, it has a road covered with leaves, seemingly not being disturbed in years.")
-        char_animation("3. The path to the Arena, it has a road with a lot of footchar_animations, and you can hear the sound of swords clashing from the distance.")                    
-        char_animation("4 The path to the Dragon's lair, the sign itself tangled with vines and the path so overgrown it may as well not have been there.")
-        choice = get_char_animation_in("Which path do you take?: ",{'2':['1','temple'],'3':['2','library'],'4':['3','arena'],'5':['4',"dragon","lair"]}, allow_save=True)
-        situtation = int(choice)
+            char_animation("\n\n")
+            char_animation("1. The path going to the Temple, it has a a bricked road with lamps on the side.")
+            char_animation("2. The path going to the Library, it has a road covered with leaves, seemingly not being disturbed in years.")
+            char_animation("3. The path to the Arena, it has a road with a lot of footchar_animations, and you can hear the sound of swords clashing from the distance.")                    
+            char_animation("4 The path to the Dragon's lair, the sign itself tangled with vines and the path so overgrown it may as well not have been there.")
+            choice = get_char_animation_in("Which path do you take?: ",{'2':['1','temple'],'3':['2','library'],'4':['3','arena'],'5':['4',"dragon","lair"]}, allow_save=True)
+            situtation = int(choice)
+        else: #Disable Dragon Lair after first one...
+            char_animation(f"Hello {NAME}. You see 4 paths labeled with signs: ")
+            char_animation("\n\n")
+            char_animation("1. The path going to the Temple, it has a a bricked road with lamps on the side.")
+            char_animation("2. The path going to the Library, it has a road covered with leaves, seemingly not being disturbed in years.")
+            char_animation("3. The path to the Arena, it has a road with a lot of footchar_animations, and you can hear the sound of swords clashing from the distance.")                    
+            choice = get_char_animation_in("Which path do you take?: ",{'2':['1','temple'],'3':['2','library'],'4':['3','arena']}, allow_save=True)
+            situtation = int(choice)
 
     elif situtation == 2: #Temple
         char_animation("\n\nTemple")
@@ -1657,7 +1665,52 @@ while True:
     elif situtation == 16: #Farm
         char_animation("\n\nFarm")
         if 16 not in been_in_situations:
-            #MAIN SCENE HERE
+            char_animation("You walk into the farm and fields expanding as far as you can see")
+            char_animation("In between all of them is a circular town, a mile long.")
+            char_animation("In the center was the Praed Palacia - The Palace of the Queen of the Fields.")
+
+            char_animation("You walk into the town and see a hotel. You walk in and ask: ")
+            char_animation(" How much for a room?")
+            char_animation(" 10 Gold for a night")
+
+            if gold >= 10:
+                char_animation("You have enough gold.")
+                char_animation("What do you do?: ")
+                char_animation("Pay for the room")
+                char_animation("Ask for cheaper accomodation")
+                choice = get_char_animation_in("Enter your choice: ",{'b':['pay','room'],'a':['ask','cheaper']})
+                if choice == 'b':
+                    gold -= 10
+                    char_animation("You pay for the room and the kind fellow at the counter takes you to your room.")
+                    char_animation("You sleep there for the night.")
+            else:
+                char_animation("You don't have enough gold")
+                char_animation("What do you do?: ")
+                char_animation("Ask for cheaper accomodation")
+                char_animation("Beg for a room")
+                choice = get_char_animation_in("Enter your choice: ",{'a':['ask','cheaper'],'b':['beg','room']})
+                if choice == 'b':
+                    char_animation("You beg for a room and the kind fellow at the counter says: ")
+                    char_animation(" How much money do you have?")
+                    char_animation(f" You reply: {gold} gold")
+                    char_animation(" He says: I suppose thats enough... He shows you to your room and you sleep there for the night.")
+                    gold = 0
+
+            if choice == 'a':
+                char_animation("You ask for a cheaper accomodation and they the kind fellow at the counter says: ")
+                char_animation(" Hmm... I suppose you can sleep in the attic...")
+                char_animation(" You can sleep there for free")
+                char_animation(" You walk up to the attic and see a rickety bed, you sleep there for the night.")
+
+            input("Press enter to continue...")
+            char_animation("You wake up in the middle of the night to a scream... You run down the stairs and see - the kind fellow dead and the bell-lady standing over him screaming.")
+            char_animation("You see a figure run out of the hotel and you chase after him.")
+            char_animation("As you are running out a police man sees you.")
+            char_animation("He apprehends you and takes you to the station.")
+            char_animation("You are put in a cell and accussed for murder. You as a newcomer are most suspicious.")
+
+
+
             been_in_situations.add(16)
 
         char_animation("Where would you like to go?: ")
