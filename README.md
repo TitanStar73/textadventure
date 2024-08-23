@@ -38,4 +38,6 @@ DISABLE_COLORS = False #Turns off colors if enabled
 OPENAI_API_KEY = None 
 ```
 
+# Have a great idea?
+Even if its a small one, write it up in a seperate text, markdown or image file and submit a pull request!
 
