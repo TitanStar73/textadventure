@@ -1703,13 +1703,48 @@ while True:
                 char_animation(" You walk up to the attic and see a rickety bed, you sleep there for the night.")
 
             input("Press enter to continue...")
-            char_animation("You wake up in the middle of the night to a scream... You run down the stairs and see - the kind fellow dead and the bell-lady standing over him screaming.")
+            char_animation("\n\nYou wake up in the middle of the night to a shrilling scream... You run down the stairs and see - the kind fellow dead and the bell-lady standing over him screaming.")
             char_animation("You see a figure run out of the hotel and you chase after him.")
-            char_animation("As you are running out a police man sees you.")
-            char_animation("He apprehends you and takes you to the station.")
+            char_animation("As you are running out a knight sees you.")
+            char_animation("He apprehends you and takes you to the dungeon for the murder of Harkaitz Oscar, awaiting trial.")
             char_animation("You are put in a cell and accussed for murder. You as a newcomer are most suspicious.")
 
+            char_animation("\n\nThe cell is barren. In the corner you notice a woman lying down. She looks up at you and asks: ")
+            char_animation(" What are you in here for?")
+            char_animation(" I was framed for murder. I'm here until the trial. What about you?")
+            char_animation(" I was betrayed years ago. Framed for something I never did. I'm still awaitng trial.")
+            char_animation(f" I'm {NAME}")
+            char_animation(f" I'm Twila Finn")
+            char_animation(" Wait what do you mean years?")
+            char_animation(" I lost track, maybe a couple years, maybe a few decades.")
+            char_animation(" Then we must break free!")
+            char_animation(" How? There is now way?")
 
+            char_animation_in(" Your creative mind has already thought of something: ")
+
+            char_animation(" Nope, tried that she says laughing.")
+
+            char_animation_in(" You quickly retort back another creative idea: ")
+
+            char_animation(" I've done that too.")
+            char_animation("You are about to give another idea when you here another voice say or you can brew a strength potion.")
+            char_animation(" What?")
+            char_animation(" The clothes you're wearing - Its made of unicorn leather. The necklace she's wearing has a sky opal and I have some residual goop from our meal, which has hot water.")
+            char_animation(" I can brew a strength potion - Goop flavoured strength potion, and you can break us out of here. The name is Igor, Reziko Igor.")
+
+            char_animation("You quickly rip of a part of your clothes. She takes the necklace off and looks at it. She hesitates and then throws it to him. He quickly starts brewing.")
+
+            char_animation(f"He brews... {PAUSE} Pauses a moment... {PAUSE}More than a moment... {PAUSE} And then he says: ")
+            char_animation(" I'm sorry, I can't do it! {PAUSE}")
+            char_animation(" Just kidding, its ready! He hands you the potion. You offer it to Twila but she says: ")
+            char_animation(" Nope the goop is all yours.")
+            char_animation("You drink it and it tastes horrible. Besides a terrible taste, you feel nothing.")
+            char_animation(" I don't feel different")
+            char_animation(" You hold the bars and push with all your strength. The bars feel like cardboard and you push them apart.")
+            char_animation(" A knight comes running and you knock him out with a single punch.")
+            char_animation(" You, Igor and Twila run into the night.")
+
+            
 
             been_in_situations.add(16)
 
