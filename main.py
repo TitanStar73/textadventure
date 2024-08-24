@@ -1663,6 +1663,11 @@ while True:
         situtation = 16 # Actual farm
     
     elif situtation == 16: #Farm
+        if get_karma('escaped_farm') == 1:
+            char_animation("You are a fugitive, you can't go back to the farm. You go to the town instead")
+            situtation = 10
+            continue
+
         char_animation("\n\nFarm")
         if 16 not in been_in_situations:
             char_animation("You walk into the farm and fields expanding as far as you can see")
@@ -1674,11 +1679,11 @@ while True:
             char_animation(" 10 Gold for a night")
 
             if gold >= 10:
-                char_animation("You have enough gold.")
+                char_animation(f"You have {gold} gold.")
                 char_animation("What do you do?: ")
-                char_animation("Pay for the room")
-                char_animation("Ask for cheaper accomodation")
-                choice = get_char_animation_in("Enter your choice: ",{'b':['pay','room'],'a':['ask','cheaper']})
+                char_animation("1. Pay for the room")
+                char_animation("2. Ask for cheaper accomodation")
+                choice = get_char_animation_in("Enter your choice: ",{'b':['1','pay','room'],'a':['2','ask','cheaper']})
                 if choice == 'b':
                     gold -= 10
                     char_animation("You pay for the room and the kind fellow at the counter takes you to your room.")
@@ -1686,9 +1691,9 @@ while True:
             else:
                 char_animation("You don't have enough gold")
                 char_animation("What do you do?: ")
-                char_animation("Ask for cheaper accomodation")
-                char_animation("Beg for a room")
-                choice = get_char_animation_in("Enter your choice: ",{'a':['ask','cheaper'],'b':['beg','room']})
+                char_animation("1. Ask for cheaper accomodation")
+                char_animation("2. Beg for a room")
+                choice = get_char_animation_in("Enter your choice: ",{'a':['1','ask','cheaper'],'b':['2','beg','room']})
                 if choice == 'b':
                     char_animation("You beg for a room and the kind fellow at the counter says: ")
                     char_animation(" How much money do you have?")
@@ -1744,8 +1749,56 @@ while True:
             char_animation(" A knight comes running and you knock him out with a single punch.")
             char_animation(" You, Igor and Twila run into the night.")
 
-            
+            char_animation(" You run into the fields and hide behind the corn.")
+            char_animation(" You tell everyone: Lets leave this place and go elsewhere.")
+            char_animation(" Twila says: No. I have to get my revenge on the perosn who betrayed me. The Queen.")
+            char_animation(" What? The Queen? Why?")
+            char_animation(" Igor chuckled. She is the Queen's sister. She was next in line for the throne. But the Queen framed her for a crime she didn't commit - the murder of her parents.")
 
+            char_animation(" Igor says, me a Twila will head towards the Palacia. You coming?")
+            char_animation("1. Go with them.")
+            char_animation("2. Escape to the city.")
+            choice = get_char_animation_in("Enter your choice", {'a':['1','with'], 'b':['escape','2']})
+
+            if choice == 'b':
+                char_animation("You escape and can never come back again - You are now a fugitive here.")
+                situtation = 14
+                continue
+            
+            char_animation("You decide to help them!")
+            char_animation("You head down the path and reach the Palacia. Gaurds are all around it.")
+
+            char_animation(" 'How are we going to get in?' you ask")
+            char_animation(" 'I know a secret passage' Twilia says.")
+
+            char_animation("You head down the fields past the Palacia. There in the middle of the field is a trapdoor.")
+            char_animation(" You all head down the trapdoor and find yourself in a pitch dark tunnel. Twilia reaches out and get a torch.")
+            char_animation(" You walk down the stone paved tunnel for what seems like an eternity.")
+            char_animation(" Eventually you reach a ladder which goes up. You climb up and find yourself in a room.")
+            char_animation(" This is my dad's room. He built the passage when he was a prince so that he could wander through the fields at night.")
+            
+            char_animation("\n\nYou and Igor follow Twilia who runs down the corridor. You stop outside a door - The Queen's Chambers. You enter in and see no one.")
+            char_animation("What do you do?")
+            char_animation("1. Wait for her to come to confront her.")
+            char_animation("2. Search the room for clues.")
+            char_animation("3. Stay sneakily hidden.")
+
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','wait'],'b':['2','search'],'c':['3','hide']})
+            if choice == 'a':
+                char_animation("She comes in and sees you. She screams and calls out for the guards.")
+                char_animation("You are about to punch her when a guard comes in and blocks it with ease. Your potion has worn out.")
+                char_animation("The Chief Knight comes in and says: You are herby sentenced to life in prison for trying to kill the Queen.")
+                char_animation("You are taken to the dungeon and locked up.")
+            elif choice == 'c':
+                char_animation("You stay hidden and see the Queen come in. She sits down and starts writing something.")
+                char_animation("Suddenly she gets up and leaves the room.")
+                char_animation(f"{PAUSE}You come out of hiding and see a letter on the table. You pick it up and read it.")
+                char_animation("It says: 'Got You!'")
+                char_animation("You hear a yell and a dozen knights enter and apprehend the three of you.")
+                char_animation("You are taken to the dungeon and locked up.")
+            
+                            
+            
             been_in_situations.add(16)
 
         char_animation("Where would you like to go?: ")
