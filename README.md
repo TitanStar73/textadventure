@@ -1,4 +1,4 @@
-# Mythopes - Console Edition
+# Mythopes - Command Line Edition
 
 always adding updates :)
 
