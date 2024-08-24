@@ -1789,16 +1789,54 @@ while True:
                 char_animation("You are about to punch her when a guard comes in and blocks it with ease. Your potion has worn out.")
                 char_animation("The Chief Knight comes in and says: You are herby sentenced to life in prison for trying to kill the Queen.")
                 char_animation("You are taken to the dungeon and locked up.")
-            elif choice == 'c':
-                char_animation("You stay hidden and see the Queen come in. She sits down and starts writing something.")
+            elif choice == 'b':
+                char_animation("Where do you search?")
+                char_animation("1. The desk")
+                char_animation("2. The bed")
+                char_animation("3. The closet")
+                choice = get_char_animation_in("Enter your choice: ",{'a':['1','desk'],'c':['2','bed'],'b':['3','closet']})
+
+                if choice == 'a':
+                    char_animation("You search the desk and find a letter. You pick it up and read it.")
+                    char_animation("It says: 'Got You Sister!'")
+                    char_animation("You hear a yell and a dozen knights enter and apprehend the three of you.")
+                    char_animation("You are taken to the dungeon and locked up.")                            
+                elif choice == 'c':
+                    char_animation(f"You search the bed and find {PAUSE}nothing.")
+                    char_animation("You hear a rumble outside and quickly hide under the bed.")
+                elif choice == 'b':
+                    char_animation(f"You search the closet and find {PAUSE}a skeleton. You literally find a skeleton in her closet.")
+                    choice = 'c'
+
+            if choice == 'c': #For hiding (+bed/ closet)
+                char_animation("The three of you stay hidden and see the Queen come in. She sits down and starts writing something.")
                 char_animation("Suddenly she gets up and leaves the room.")
                 char_animation(f"{PAUSE}You come out of hiding and see a letter on the table. You pick it up and read it.")
                 char_animation("It says: 'Got You!'")
                 char_animation("You hear a yell and a dozen knights enter and apprehend the three of you.")
                 char_animation("You are taken to the dungeon and locked up.")
-            
-                            
-            
+
+            char_animation("You are in the dungeon. Twila was smiling. You ask: ")
+            char_animation(" Why are you smiling?")
+            char_animation(" I've got a plan. Just go with it.")
+            char_animation("You guys are thrown back into your cells. A few hours later, the Queen comes in.")
+            char_animation("Twilia whispers to you: 'Make her mad.'")
+
+            char_animation_in("You scream at the Queen: ")
+
+            char_animation(f"The Queen stares at you{PAUSE}. Then burst out laughing.")
+            char_animation("She says: ")
+            char_animation(" You have lost. You are in MY dungeon. You are MY prisoners.")
+
+            char_animation("She starts leaving. Then turns around and says: ")
+            char_animation(" I am going to kill all three of you tomorrow. You three are putting your noses where they don't belong, just like Oscar.")
+            char_animation(" Just like him, you will die.")
+
+            char_animation("\n YOU killed Oscar?!")
+            char_animation(f" Of course. Just like I killed my parents.{PAUSE}")
+
+            char_animation("You are about to say something when Twila says: 'GOT YOU!' and burts out laughing.")
+
             been_in_situations.add(16)
 
         char_animation("Where would you like to go?: ")
