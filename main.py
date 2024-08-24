@@ -1392,19 +1392,46 @@ while True:
            
             char_animation("You walk through the town and see a few paths: ")
 
+        allowed = True
+
+        if (career != GHOST) and (17 in been_in_situations) and (16 in been_in_situations):
+            allowed = False #Disables nav bar menu in the other one
+            char_animation("What would you like to do?")
+            char_animation("1. Stay in town (Earn/Spend gold)")
+            char_animation("2. Go somewhere else")
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','stay'],'b':['2','go']}, allow_save=True)
+            if choice == 'a':
+                char_animation("Where do you want to go? ")
+                char_animation("0. Shop")
+                char_animation("1. Quiz for gold!!")
+                char_animation("2. Slot Machine, try your luck out, win upto 1000x your bet")
+                char_animation("3. Solve a riddle and win")
+                char_animation("4. Wordle, guess the word in 6 tries and win 10 gold")
+                choice = get_char_animation_in("Enter your choice: ",{'s':['0','shop'],'a':['1','quiz'],'b':['2','slot','machine'],'c':['3','trivia','quiz'],'d':['4','wordle']}, allow_save=True)
+            else:
+                char_animation("Where do you want to go?")
+                char_animation("1. Farm")
+                char_animation("2. City")
+                char_animation("3. Library")
+                char_animation("4. Arena")
+                char_animation("5. Temple")
+                char_animation("6. Royal Palatium")
+                choice = get_char_animation_in("Enter your choice: ",{'e':['1','farm'],'f':['2','city'],'g':['3','library'],'h':['4','arena'],'i':['5','temple'],'j':['6','palatium']}, allow_save=True)
+
         if career != GHOST:
-            char_animation("Where do you want to go?")
-            char_animation("0. Shop")
-            char_animation("1. Quiz for gold!!")
-            char_animation("2. Slot Machine, try your luck out, win upto 1000x your bet")
-            char_animation("3. Solve a riddle and win")
-            char_animation("4. Wordle, guess the word in 6 tries and win 10 gold")
-            char_animation("5. Farm")
-            char_animation("6. City")
-            char_animation("7. Library")
-            char_animation("8. Arena")
-            char_animation("9. Temple")
-            choice = get_char_animation_in("Enter your choice: ",{'s':['0','shop'],'a':['1','quiz'],'b':['2','slot','machine'],'c':['3','trivia','quiz'],'d':['4','wordle'],'e':['5','farm'],'f':['6','city'],'g':['7','library'],'h':['8','arena'],'i':['9','temple']}, allow_save=True)
+            if allowed:
+                char_animation("Where do you want to go?")
+                char_animation("0. Shop")
+                char_animation("1. Quiz for gold!!")
+                char_animation("2. Slot Machine, try your luck out, win upto 1000x your bet")
+                char_animation("3. Solve a riddle and win")
+                char_animation("4. Wordle, guess the word in 6 tries and win 10 gold")
+                char_animation("5. Farm")
+                char_animation("6. City")
+                char_animation("7. Library")
+                char_animation("8. Arena")
+                char_animation("9. Temple")
+                choice = get_char_animation_in("Enter your choice: ",{'s':['0','shop'],'a':['1','quiz'],'b':['2','slot','machine'],'c':['3','trivia','quiz'],'d':['4','wordle'],'e':['5','farm'],'f':['6','city'],'g':['7','library'],'h':['8','arena'],'i':['9','temple']}, allow_save=True)
             if choice == 's':
                 if career == WIZARD or career == VILLIAN:
                     char_animation("Welcome to the Magik shop!")
@@ -1530,8 +1557,6 @@ while True:
                             char_animation("You buy armor")
                         else:
                             char_animation("You don't have enough gold")
-                    
-
             elif choice == 'a':
                 gold += play_quiz()
             elif choice == 'b':
@@ -1550,6 +1575,8 @@ while True:
                 situtation = 12
             elif choice == 'i':
                 situtation = 2
+            elif choice == 'j':
+                situtation = 18
         else:
             if previous_choices['told_ghost'] != 1:
                 char_animation("You walk into the shop and the shopkeeper looks at you and say, what happened to you! You are a ghost, you are in a different plane of existence... I don't know much about ghosts but you should try finding the priest of the Castle of the Day Before.")
@@ -2404,6 +2431,57 @@ while True:
         char_animation("\n\nCastle of the Day Before")
         char_animation("Come back later!")
         input()
+    
+    elif situtation == 18: # Royal Palatium
+        char_animation("\n\nRoyal Palatium")
+        if 18 in been_in_situations:
+            pass
+
+        char_animation("Where would you like to go?")
+        char_animation("1. Royal Palace")
+        char_animation("2. Town Square")
+        char_animation("3. Shops")
+        char_animation("4. Town")
+
+        choice = get_char_animation_in("Enter your choice: ",{'a':['1','palace'],'b':['2','square'],'c':['3','shops'],'d':['4','town']})
+        if choice == 'a':
+            situtation = 19
+        elif choice == 'b':
+            situtation = 20
+        elif choice == 'c':
+            pass
+        elif choice == 'd':
+            situtation = 10
+
+    elif situtation == 19: #Royal Palace
+        char_animation("\n\nRoyal Palace")
+        if 19 in been_in_situations:
+            pass
+
+        char_animation("Where would you like to go?")
+        char_animation("1. Throne Room")
+        char_animation("2. Royal Gardens")
+        char_animation("3. Royal Library")
+        char_animation("4. Back to the Royal Palatium Entrance")
+        choice = get_char_animation_in("Enter your choice: ",{'a':['1','throne'],'b':['2','gardens'],'c':['3','library'], 'd':['4','entrance']})
+        if choice == 'a':
+            pass
+        elif choice == 'b':
+            pass
+        elif choice == 'c':
+            pass
+        elif choice == 'd':
+            situtation = 18
+
+    elif situtation == 20: #Town Square
+        char_animation("\n\nTown Square")
+        if 20 in been_in_situations:
+            pass
+        pass
+
+    elif situtation == 20: #Town Square
+        char_animation("\n\nTown Square")
+
 
     elif situtation == -1 and DEBUG_ALLOWED: #Debug
         print("Debug mode")
