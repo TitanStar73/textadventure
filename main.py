@@ -2598,7 +2598,46 @@ while True:
         if 21 not in been_in_situations:
             char_animation("The Wizard: Hey I see you've gotten the strength potion good job!")
             char_animation("Lets discuss the next course of action!")
+            char_animation("Great now we need to get you a silver bullet to end the King's life.")
+
+            char_animation("Which one would you like to get?")
+            char_animation("1. Potion of Supe: This will give you a random super power")
+            char_animation("2. Potion of Soul: This potion, when thrown on a person will rip their soul out of their body.")
+            char_animation("3. Flitstone Bomb: This bomb contains flitstone. Flitstone is a rare stone that stops magic around it. This will temporarily stop Rahas's invulnerbility and the bomb will finsih him off.")
+            char_animation("4. Enchanted Obsidian Shard: A shard of obsidian is sharp. A shard of enchanted obsidian is strong enough to wound and kill Rahas.")
+
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','supe'],'b':['2','soul'],'c':['3','flitstone'],'d':['4','obsidian']})
+
+            if choice == 'a':
+                silver_bullet = "potion_of_supe"
+                char_animation("Wizard: Great choice!")
+                char_animation("It is made of simple ingredients - except one.")
+                char_animation("I will have the potion ready. You must bring the last ingredient so that I can finish it.")
+                char_animation("The last ingredient is the feather of a sphinx. You can find the sphinx in the endless desert.")
+                char_animation_in("You start walking towards the desert...")
+
+                char_animation(f"You reach the desert and start walking.{PAUSE}.{PAUSE}.{PAUSE} You finally see a dark figure in the distance.")
+                char_animation("You walk towards it and see a giant lion's body - over 30 ft tall. It had massive wings the size of a house.")
+                char_animation("The sphinx has the head of a woman. She looks at you and says: ")
+                char_animation(" Why have you come to disturb me>")
+                char_animation("You say: 'I need a feather from you. The people of Mythapoes need it to save themselves.'")
+                char_animation("She says, 'And why do they deserve to be saved?'")
+                char_animation_in("You say: ")
+                char_animation("She looks at you and says: 'I will give you the feather if you can answer my riddle.'") 
+                               
+            elif choice == 'b':
+                silver_bullet = "potion_of_soul"
+            elif choice == 'c':
+                silver_bullet = "flitstone_bomb"
+            elif choice == 'd':
+                silver_bullet = "enchanted_obsidian_shard"
+                
             been_in_situations.add(21)
+        
+        situtation = 22
+    
+    elif situtation == 22: #Base part 2
+        pass
 
     elif situtation == -1 and DEBUG_ALLOWED: #Debug
         print("Debug mode")
