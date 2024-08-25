@@ -8,6 +8,8 @@ Users will be given the option to provide an OpenAI API key to create a more ime
 
 Things to add
 #Imersive text: automatically change certain keywords to -> italic, bold, underline, color, etc. similar to sword
+#Add in maze
+#Training sequence
 """
 """Here are the settings you should edit:"""
 WPM = 350 #Words speed text animation, recommended: 350
@@ -392,6 +394,15 @@ def jumble_name(name):
         else:
             final += name[i]
     return final.strip() #Remove leading and trailing spaces
+
+def play_maze(current_maze = None):
+    if current_maze == None:
+        current_maze = []
+    pass
+    return True, current_maze #True here is if you are still in the maze
+
+def training_sequence():
+    pass
 
 class InventoryManager:
     def __init__(self, inventory = {}):
@@ -2678,11 +2689,54 @@ while True:
 
                 char_animation("\nBut you are in too much pain to care. The pain is radiating through your body.")
 
+                char_animation("\nYou start to feel dizzy. You fall to the ground. You can't move. You can't see. You can't hear.")
+                char_animation(f"{PAUSE*3}And then its blackness. And then you wake up. Back in the swamp.")
+                char_animation("But everything is different. The pain is gone. You can see, move and hear again. Everything has a green tint.")
+                char_animation("You look for your flask but can't find it.")
+                
+                flag = False
+                answer = char_animation_in("Thats when you realise: ")
+                while True:
+                    for item in ['dream','hallucination','mind']:
+                        if item in answer:
+                            flag = True
+                    if flag:
+                        break
+                    answer = char_animation("Nope. What you realise is: ")
+                
+                char_animation("You are in your head, you get up and start walking. The trees shift around you.")
+                char_animation("You realise you are in a maze.")
+
+                still_playing,current_maze = play_maze()
+                while still_playing:
+                    still_playing,current_maze = play_maze(current_maze)
+
+                char_animation("You wake up wheezing. The pain in your leg is fading.")
+                char_animation("The only thing to remember this encounter by, is the scar on your leg.")
+                char_animation("You pick up the flask and see the venom in it.")
+                char_animation(f"You head back to the Wizard.{PAUSE*3}")
+                char_animation("You hand him the flask and he says: 'Good job! The potion is ready!'")
+
             elif choice == 'c':
+                char_animation("The Wizard: Great choice!")
+                char_animation("It is made of common ingredients except one - flitstone.")
+                char_animation("You can only find it in the mines of the dwarves. They are mistrusting of humans since they were driven into the ground by Rahas.")
+                char_animation("You must go and get a piece of flitstone.")
+
                 silver_bullet = "flitstone_bomb"
             elif choice == 'd':
+                char_animation("The Wizard: Great choice!")
+                char_animation("It is made of common ingredients except one - Enchanted Obsidian.")
+                char_animation("This is a dark substance only found with the dark necromancer - Xeno the Mysterious.")
+
                 silver_bullet = "enchanted_obsidian_shard"
-                
+            
+            char_animation("With your silver bullet ready, you prepare to face the King.")
+            char_animation("The wizard tells you, lets train a bit!")
+
+            #Enter a training sequence here, preparing to face the king (introduce the WASD keys and k keypresses)
+            training_sequence()
+
             been_in_situations.add(21)
             
         
