@@ -366,6 +366,23 @@ def play_slot_machine():
     char_animation(f"-{bet} gold")
     return -bet
 
+def jumble_name(name):
+    name = [char for char in name.lower() if char != " "] #Generate a list of letters, lowercase
+    for i in range(0, round(len(name)/4.2)):
+        name.append(" ") #Add a space every ~4.2 character, best after testing
+    shuffle(name) #Randomize name
+    prev = None
+    final = ""
+    for i in range(0,len(name)):
+        if prev == " ":
+            if name[i] == " ":
+                pass #Don't add two spaces one after another
+            else:
+                final += name[i].upper()
+        else:
+            final += name[i]
+    return final.strip() #Remove leading and trailing spaces
+
 class InventoryManager:
     def __init__(self, inventory = {}):
         self.inventory = inventory
@@ -2020,6 +2037,7 @@ while True:
                 char_animation("2. No")
                 choice = get_char_animation_in("Enter your choice: ",{'a':['1','yes'],'b':['2','no']})
                 if choice == 'a':
+                    previous_choices['met_john'] = 1
                     char_animation(f"You approach saying 'Hello there! I am {NAME}.'")
                     char_animation("Hey I'm John, the Blacksmith. I make and fix weapons and armor for the warriors of the town.")
                     char_animation("If you come across any broken weapons or armor, bring them to me in the city and I'll fix them for you.")
@@ -2509,6 +2527,44 @@ while True:
             char_animation("She takes you threw the alley ways of the town. Left {PAUSE} right {PAUSE} left {PAUSE} right... you lose track")
             char_animation("She takes you to a small secluded house. She knocks on the door: rat-a-tat-tat")
             char_animation("The door opens and you see a old Wizard - He looks at you and says: Welcome. We've been expecting you.")
+            
+            char_animation("You are taken into the house and see a group of people sitting around a table. The cat jumps onto a chair and transforms into a red-haired girl.")
+            char_animation("Everyone introduces themselves: ")
+            char_animation(" The Wizard: An old man with a long white beard. He is an expert wizard, capable of casting the most complex spells.")
+            char_animation(" Caroline: The shapeshifter. She can transform into anything")
+            char_animation(f" John: The blacksmith. He can make and fix weapons and armor.{' (But you alread now him)' if get_karma('met_john') == 1 else ''}")
+            char_animation(" Helen: The healer. She can heal any wound.")
+            char_animation_in(f" And you. You introduce yourself as: {NAME}. I am ")
+            char_animation("The Wizard says: 'We are the resistance. We are fighting against King Rahas. We think you could change everything.'")
+
+            char_animation(PAUSE*3)
+            char_animation("\n\nThe Wizard explains: 'King Rahas has been increasing taxes for years. He has spies everywhere. He is immortal and invulnerable. But there is one who has been prophecised to be his equal.'")
+            char_animation("'An outsider' it is said will come and overthrow the King. We didn't know what it meant.")
+            jumbled = jumble_name(NAME)
+            char_animation(f"The prophecy talked about {jumbled}. We didn't know what that meant. But now we do.")
+            if NAME != jumbled:
+                char_animation(f"It is your name jumbled up!")
+            
+            char_animation("We need you to help us. We need you to overthrow the King. We need you to save the Pallatium. You can save us!")
+
+            char_animation("What do you say?")
+            char_animation("1. Yes")
+            char_animation("2. No :(")
+
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','yes'],'b':['2','no']})
+            if choice == 'b':
+                while True:
+                    char_animation(randchoice([
+                        "Caroline looks at you and says: 'I understand. It's a big ask. Put please thing of the people': ",
+                        "Helen says: 'I understand. But trust me helping people is the best feeling in the world': ",
+                        "John says: 'I understand. But remember the King is a tyrant. He will kill us all if we don't stop him. Cmon what do you say?: '"
+                        "The Wizard says: 'I understand. You are scared. But remember the prophecy. You are his equal.'"
+                    ]))
+                    char_animation("1. Yes")
+                    char_animation("2. No")
+                    choice = get_char_animation_in("Enter your choice: ",{'a':['1','yes'],'b':['2','no']})
+                    if choice == 'a':
+                        break
 
         pass
 
