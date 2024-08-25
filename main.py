@@ -1689,11 +1689,6 @@ while True:
         situtation = 16 # Actual farm
     
     elif situtation == 16: #Farm
-        if get_karma('escaped_farm') == 1:
-            char_animation("You are a fugitive, you can't go back to the farm. You go to the town instead")
-            situtation = 10
-            continue
-
         char_animation("\n\nFarm")
         if 16 not in been_in_situations:
             char_animation("You walk into the farm and fields expanding as far as you can see")
@@ -1784,13 +1779,17 @@ while True:
             char_animation(" Igor says, me a Twila will head towards the Palacia. You coming?")
             char_animation("1. Go with them.")
             char_animation("2. Escape to the city.")
-            choice = get_char_animation_in("Enter your choice", {'a':['1','with'], 'b':['escape','2']})
-
-            if choice == 'b':
-                char_animation("You escape and can never come back again - You are now a fugitive here.")
-                situtation = 14
-                been_in_situations.add(16)
-                continue
+            
+            while True:
+                choice = get_char_animation_in("Enter your choice", {'a':['1','with'], 'b':['escape','2']})
+                char_animation(randchoice([
+                    "Twilia pleads with you to come. She says she'll owe you one",
+                    "Igor asks you to stay!",
+                    f"'Please {NAME}, help me beat my sister', Twilia says",
+                    f"'Cmon {NAME}, lets do the right thing.' Igor says"
+                ]))
+                if choice == 'a':
+                    break
             
             char_animation("You decide to help them!")
             char_animation("You head down the path and reach the Palacia. Gaurds are all around it.")
@@ -2454,6 +2453,10 @@ while True:
             situtation = 10
 
     elif situtation == 19: #Royal Palace
+        if get_karma("ready_to_attack") != 1:
+            char_animation("You walk into the Royal Palace and see the red cloaked guards standing there.")
+            char_animation("They don't allow you to enter.")
+
         char_animation("\n\nRoyal Palace")
         if 19 in been_in_situations:
             pass
@@ -2476,7 +2479,37 @@ while True:
     elif situtation == 20: #Town Square
         char_animation("\n\nTown Square")
         if 20 in been_in_situations:
-            pass
+            char_animation("You walk into the town square of the Royal Pallatium.")
+            char_animation("You see a lot of people walking around.")
+            char_animation("Suddenly you hear the sound of the approach of horses - and screams that follow.")
+            char_animation("The horses stop in front of a shop and the red cloaked knights get down.")
+            char_animation("They violently enter and grab the shopkeeper by the scruff.")
+            char_animation("In a ominous voice, the leader says: 'You haven't been paying your dues. If we don't get it by tomorrow, we will burn down your shop'")
+            char_animation("The shopkeeper pleads with them and they leave.")
+
+            char_animation("You walk up to the shopkeeper and ask him what happened.")
+            char_animation("He explains: ")
+            char_animation(" The red cloaked knights are King Rahas's personal guards. They were enforcing the new tax law which increased the taxes.")
+            char_animation(" They went from 88% to 93% of the my earnings. The King has been increasing taxes for years now. I can barely feed myself.")
+            char_animation(" It used to be better. My grand father told me stories. The King Galaad use to rule the Pallatium a hundred years ago. He was a good just king.")
+            char_animation(" He was overthrown by King Rahas. No on dares speak against him. He has spies everywhere. He looks at you for a moment.")
+            char_animation(" Nah you aren't a spy, you don't look like you are from here. No one has been able to overthrow Rahas.")
+            char_animation(" They say he is invulnerable and immortal. He looks the same now as he did a hundred years ago.")
+
+            char_animation("You ask him: 'What can I do to help?'")
+
+            char_animation("He says: 'You can't do anything. No one can. Just leave. Leave this place. It's not safe here.'")
+
+            char_animation("You continue walking when you hear a voice: 'Hey! Were you serious about helping?'")
+
+            char_animation("You turn and see a cat standing there. You reply at it hesitantly:'Yes...' not sure if you heard it right.")
+            char_animation("She says: 'I know a way to overthrow the King. But I need your help.' The cat was talking!")
+            char_animation("She starts running and you follow her.")
+
+            char_animation("She takes you threw the alley ways of the town. Left {PAUSE} right {PAUSE} left {PAUSE} right... you lose track")
+            char_animation("She takes you to a small secluded house. She knocks on the door: rat-a-tat-tat")
+            char_animation("The door opens and you see a old Wizard - He looks at you and says: Welcome. We've been expecting you.")
+
         pass
 
     elif situtation == 20: #Town Square
