@@ -633,6 +633,30 @@ SLOT_ANIMATION_TIME = (1, 6, 0.35) #(time for each slot to be displayed, total s
 #Grass in farm
 GRASS_DIFFICULTY = 3
 
+#Syntax
+#Each tuple is a section of the maze. It contains:
+# (ID,FORWARD_DESC,FORWARD_LINKING_IDS, BACKWARD_DESC, BACKWARD_LINKING_IDS) #None defualts to same as the other
+# ID: The ID of the section -> ID = 0 is the end of the maze
+# DESC: Description of current section
+# LINKING_IDS: {ID : M + DESCRIPTION}, here each id is where you can go from the current section | M = 'f' or 'b' which indicates forward or backward
+# Check out the assets/maze.png file for a visual representation of the maze described
+
+MAZE = [
+    (1, "You walk down the path. You follow a U-turn." , {4: "fLeft", 5: "fRight"}, "You walk and after a U-turn, you hit a dead-end. You walk back.", None),
+    (4, "You walk down the path. It is a dead end. You walk back down the path.", {1: "bRight", 5: "fStraight"}, None, None),
+    (5, "You walk down the path. It is covered with leaves", {6: "fLeft", 7: "fRight"}, None, {4: "fStraight", 1: "bLeft"}),
+    (6, "You walk for a moment.", {8:"fRight", 9: "fStraight"}, None, None),
+    (7, "You walk down the path. You can see daylight. You run towards it. The hedge covers it. Its a dead end. You walk back.", {5:"bLeft", 6: "fStraight"}, None, None),    
+    (8, "You walk down the path. It is a dead end again. You walk back.", {2: "fLeft", 9: "fRight"}, None, None),
+    (2, "You walk for half a moment.", {5: "bRight", 7: "fStraight"}, None, None),
+    (9, "You walk down a long twisting path.", {10: "fRight", 11: "fLeft"}, None, {8: "fLeft", 2: "fStraight"}),
+    (10, "You walk down the path. Its sadly a dead end. You walk back.", {9: "bLeft", 11: "fStraight"}, None, None),
+    (11, "You walk down a extrememly long path.", {12: "fLeft", 14: "fRight"}, None, {10: "fStraight", 9: "bRight"}),
+    (12, "You walk down a short path. It is a dead end", {11:"bRight", 14:"fStraight"}, None, None),
+    (14, "You walk down a path. It short and you feel near the end", {13: "fRight", 0: "fLeft"}, None, {11: "bLeft", 12: "fStraight"}),
+    (13, "You walk down a grass path. You reach a dead end", {14: "bLeft", 0: "fStraight"}, None, None)
+]   
+
 
 RIDDLES = [
     ("What has keys but can’t open locks?", {"piano", "keyboard"}),
@@ -2707,9 +2731,7 @@ while True:
                 char_animation("You are in your head, you get up and start walking. The trees shift around you.")
                 char_animation("You realise you are in a maze.")
 
-                still_playing,current_maze = play_maze()
-                while still_playing:
-                    still_playing,current_maze = play_maze(current_maze)
+                play_maze()
 
                 char_animation("You wake up wheezing. The pain in your leg is fading.")
                 char_animation("The only thing to remember this encounter by, is the scar on your leg.")
