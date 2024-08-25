@@ -2451,7 +2451,7 @@ while True:
     
     elif situtation == 18: # Royal Palatium
         char_animation("\n\nRoyal Palatium")
-        if 18 in been_in_situations:
+        if 18 not in been_in_situations:
             pass
 
         char_animation("Where would you like to go?")
@@ -2476,7 +2476,7 @@ while True:
             char_animation("They don't allow you to enter.")
 
         char_animation("\n\nRoyal Palace")
-        if 19 in been_in_situations:
+        if 19 not in been_in_situations:
             pass
 
         char_animation("Where would you like to go?")
@@ -2496,7 +2496,7 @@ while True:
 
     elif situtation == 20: #Town Square
         char_animation("\n\nTown Square")
-        if 20 in been_in_situations:
+        if 20 not in been_in_situations:
             char_animation("You walk into the town square of the Royal Pallatium.")
             char_animation("You see a lot of people walking around.")
             char_animation("Suddenly you hear the sound of the approach of horses - and screams that follow.")
@@ -2565,12 +2565,40 @@ while True:
                     choice = get_char_animation_in("Enter your choice: ",{'a':['1','yes'],'b':['2','no']})
                     if choice == 'a':
                         break
+            
+            char_animation("You say: 'Yes, I will help you.'")
+            char_animation("Great! Lets start")
 
-        pass
+            char_animation("You ask: 'But how will we beat a immortal, invulnerable King?'")
+            char_animation("The Wizard says: 'He is immortal - but not invulnerable. He can be killed through magical means.'")
+            char_animation("He can be killed using several ways. But first - we must make you stronger")
+            char_animation("You must procure a strength potion. With it you will be strong enough to hold your own against the king.")
+            char_animation("You must then meet us back here. I think your friends Igor and Twilia can help.")
 
-    elif situtation == 20: #Town Square
-        char_animation("\n\nTown Square")
+            previous_choices['needs_opal'] == 1
 
+            been_in_situations.add(20)
+
+        char_animation("Where would you like to go?")
+        char_animation("1. Back to entrance")
+        char_animation("2. To secret base")
+
+        choice = get_char_animation_in("Enter choice: ", {'a': ['1', 'entrance'], 'b':['2','secret','base']})
+
+        if choice == 'a':
+            situtation = 18
+        else:
+            situtation = 21
+
+    elif situtation == 21: #Base part 1
+        if ('strength_potion' not in inventory) and (not get_karma('beaten_rahas')):
+            char_animation("Please get the strength potion to coninue!")
+            continue
+
+        if 21 not in been_in_situations:
+            char_animation("The Wizard: Hey I see you've gotten the strength potion good job!")
+            char_animation("Lets discuss the next course of action!")
+            been_in_situations.add(21)
 
     elif situtation == -1 and DEBUG_ALLOWED: #Debug
         print("Debug mode")
