@@ -2,7 +2,7 @@
 
 always adding updates :)
 
-Chapter 1 completed!
+Chapter 3 completed!
 
 # How to Play
  You have two options
