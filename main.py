@@ -8,7 +8,6 @@ Users will be given the option to provide an OpenAI API key to create a more ime
 
 Things to add
 #Imersive text: automatically change certain keywords to -> italic, bold, underline, color, etc. similar to sword
-#Add in maze
 #Training sequence
 """
 """Here are the settings you should edit:"""
@@ -410,20 +409,6 @@ def get_id(id):
             return (id, fdesc, flink, bdesc, blink)
     return None
 
-"""
-To be deleted, just so that I don't have to scroll up and down
-#Syntax
-#Each tuple is a section of the maze. It contains:
-# (ID,FORWARD_DESC,FORWARD_LINKING_IDS, BACKWARD_DESC, BACKWARD_LINKING_IDS) #None defualts to same as the other
-# ID: The ID of the section -> ID = 0 is the end of the maze
-# DESC: Description of current section
-# LINKING_IDS: {ID : M + DESCRIPTION}, here each id is where you can go from the current section | M = 'f' or 'b' which indicates forward or backward
-# Check out the maze.png file for a visual representation of the maze described
-
-MAZE = [
-    (1, "You walk down the path. You follow a U-turn." , {4: "fLeft", 5: "fRight"}, "You walk and after a U-turn, you hit a dead-end. You walk back.", None),
-
-"""
 
 def play_maze():
     current_id = 1
@@ -433,7 +418,7 @@ def play_maze():
             break
         _, fdesc, flink, bdesc, blink = get_id(current_id) 
         if current_direction == 'f':
-            char_animation(fdesc[1:])
+            char_animation(fdesc)
             char_animation("Where would you like to go?")
             choices_map = {key:None for key in flink}
             for i,key in enumerate(flink.keys()):
@@ -445,7 +430,7 @@ def play_maze():
             current_direction = flink[choice][0] #Direction
 
         elif current_direction == 'b':
-            char_animation(bdesc[1:])
+            char_animation(bdesc)
             char_animation("Where would you like to go?")
             choices_map = {key:None for key in blink}
             for i,key in enumerate(blink.keys()):
@@ -454,7 +439,7 @@ def play_maze():
 
             choice = get_char_animation_in("Choice: ",choices_map)
             current_id = choice #New location  
-            current_direction = blink[choice][0] #Direction        else:
+            current_direction = blink[choice][0] #Direction
         else:
             raise Exception("Corrupted Maze Data.")
 
@@ -932,7 +917,6 @@ ENCHANTMENT_BOOKS = {
     "enchantmentBook Fire": "Covers your sword in an eternal flame",
     "enchantmentBook Poison": "Covers your sword in poison",
 }
-
 
 while True:
     if career == None: #Standard Careers (not including ghost)
@@ -2084,6 +2068,10 @@ while True:
                         if ((i*GRASS_DIFFICULTY + j + 1) not in nums) and squares[i][j] == 1:
                             char_animation(f"Sorry, grass was there on {i*GRASS_DIFFICULTY + j + 1}")
                             flag = True
+                        if ((i*GRASS_DIFFICULTY + j + 1) in nums) and squares[i][j] != 1:
+                            char_animation(f"Sorry, grass was there on {i*GRASS_DIFFICULTY + j + 1}")
+                            flag = True
+                        
                 
                 if flag:
                     char_animation("Sorry you didn't cut the grass well enough...")
@@ -2805,6 +2793,61 @@ while True:
                 char_animation("It is made of common ingredients except one - flitstone.")
                 char_animation("You can only find it in the mines of the dwarves. They are mistrusting of humans since they were driven into the ground by Rahas.")
                 char_animation("You must go and get a piece of flitstone.")
+
+                char_animation("You start walking towards the mines according to the direction the Wizard gives you")
+
+                char_animation(f"{PAUSE*3}\n\nYou reach the entrace. It is a huge cavern, with a large spiraling staircase.")
+                char_animation("You walk down to find it abandoned. You walk for a few hours and see not a single soul in sight.")
+                char_animation("The Wizard said that flitstone is red in color.")
+
+                while True:
+                    char_animation("\nFind the flitstone!")
+
+                    squares = [[randint(0,1) for i in range(0,GRASS_DIFFICULTY)] for i in range(0,GRASS_DIFFICULTY)]
+                    char_animation("Take a look at the map of flitstone deposits:")
+                    for i in range(0,GRASS_DIFFICULTY):
+                        for j in range(0,GRASS_DIFFICULTY):
+                            if squares[i][j] == 1:
+                                print(f" {RED}O{DEFAULT_COLOR} ", end='|')
+                            else:
+                                print(" O ", end='|')
+                        print("")
+                    
+                    sleep(1)
+                    print("3", end = " ", flush=True)
+                    sleep(1)
+                    print("2", end = " ", flush=True)
+                    sleep(1)
+                    print("2 and a half", end = " ", flush=True)
+                    sleep(1)
+                    print("1", flush=True)
+                    sleep(1)
+                    
+                    print(f"\033[{GRASS_DIFFICULTY + 2}A", flush=True)
+                    for i in range(0,GRASS_DIFFICULTY):
+                        for j in range(0,GRASS_DIFFICULTY):
+                            print(f" {i*GRASS_DIFFICULTY + j + 1} ", end='|')
+                        print("")
+                    
+                    nums = char_animation_in("Enter the numbers which need to be mined (add a comma inbetween them): ")
+                    nums = nums.split(",")
+                    nums = [int(item.strip()) for item in nums]
+                    flag = False
+                    for i in range(0,GRASS_DIFFICULTY):
+                        for j in range(0,GRASS_DIFFICULTY):
+                            if ((i*GRASS_DIFFICULTY + j + 1) not in nums) and squares[i][j] == 1:
+                                char_animation(f"Sorry, there was flitstone in {i*GRASS_DIFFICULTY + j + 1}")
+                                flag = True
+                            if ((i*GRASS_DIFFICULTY + j + 1) in nums) and squares[i][j] != 1:
+                                char_animation(f"Sorry, there was no flitstone in {i*GRASS_DIFFICULTY + j + 1}")
+                                flag = True
+                            
+                    
+                    if flag:
+                        char_animation("Sorry you didn't mine the flitstone well enough...")
+                    else:
+                        break
+
 
                 silver_bullet = "flitstone_bomb"
             elif choice == 'd':
