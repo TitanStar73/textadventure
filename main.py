@@ -22,7 +22,7 @@ OPENAI_API_KEY = None
 
 #Great! Now start playing! (or feel free to check out the source code!), beware though, spoilers ahead!
 
-
+#Welcome message
 print("""
 Welcome to the Text Based Adventure!
 
@@ -409,7 +409,6 @@ def get_id(id):
             return (id, fdesc, flink, bdesc, blink)
     return None
 
-
 def play_maze():
     current_id = 1
     current_direction = 'f'
@@ -700,7 +699,6 @@ MAZE = [
     (14, "You walk down a path. It short and you feel near the end", {13: "fRight", 0: "fLeft"}, None, {11: "bLeft", 12: "fStraight"}),
     (13, "You walk down a grass path. You reach a dead end", {14: "bLeft", 0: "fStraight"}, None, None)
 ]   
-
 
 RIDDLES = [
     ("What has keys but can’t open locks?", {"piano", "keyboard"}),
@@ -2697,7 +2695,7 @@ while True:
             char_animation("1. Potion of Supe: This will give you a random super power")
             char_animation("2. Potion of Soul: This potion, when thrown on a person will rip their soul out of their body.")
             char_animation("3. Flitstone Bomb: This bomb contains flitstone. Flitstone is a rare stone that stops magic around it. This will temporarily stop Rahas's invulnerbility and the bomb will finsih him off.")
-            char_animation("4. Enchanted Obsidian Shard: A shard of obsidian is sharp. A shard of enchanted obsidian is strong enough to wound and kill Rahas.")
+            char_animation("4. Cursed Obsidian Shard: A shard of obsidian is sharp. A shard of cursed obsidian is strong enough to wound and kill Rahas.")
 
             choice = get_char_animation_in("Enter your choice: ",{'a':['1','supe'],'b':['2','soul'],'c':['3','flitstone'],'d':['4','obsidian']})
 
@@ -2848,16 +2846,50 @@ while True:
                     else:
                         break
 
+                char_animation("You mine the flintstone and head back to the Wizard.")
+                char_animation("You hand him the flitstone and he says: 'Good job! The bomb is ready!'")
 
                 silver_bullet = "flitstone_bomb"
+            
             elif choice == 'd':
                 char_animation("The Wizard: Great choice!")
-                char_animation("It is made of common ingredients except one - Enchanted Obsidian.")
+                char_animation("Making such a throwing knife is easy... once you have a shard of Cursed Obsidian.")
                 char_animation("This is a dark substance only found with the dark necromancer - Xeno the Mysterious.")
 
-                silver_bullet = "enchanted_obsidian_shard"
+                char_animation("\nYou start walking towards the dark forest where Xeno is said to reside...")
+                char_animation("You worry what he will do...")
+
+                char_animation("\nYou reach the forest. It is dark and the trees are twisted...")
+                char_animation("You walk through the forest for what seems like ages. That is when you see it - ")
+                char_animation("A dark spire. You slowly start your ascent up it...")
+                char_animation(f"It goes on {PAUSE} and on{PAUSE} and on{PAUSE}")
+                char_animation("You finally reach the top and see a dark figure standing there.")
+                char_animation("he turns around and you can't see his face... He says: 'You come here for a shard of cursed obsidian...'")
+                char_animation("You say: {PAUSE}")
+                char_animation("I know because I can read minds... Very well I will help you kill Rahas - but you must do something for me.")
+
+                char_animation("You say: 'What do you want?'")
+
+                char_animation("He chuckles and says: Tell me a story. A long and interesting one.")
+
+                while True:
+                    story = char_animation_in("Enter a story: ")
+                    if len(story) < 200:
+                        char_animation("Nope. Make it longer.")
+                    elif len(set(story.split(" "))) < 50: #unique words
+                        char_animation("Nope. Make it more interesting.")
+                    else:
+                        break
+                
+                char_animation("He says: 'Wow it has been long since I heard a story like this!'")
+                char_animation("He gives you a shard of cursed obsidian. You thank him and leave.")
+
+                char_animation("\nYou head back to the Wizard and hand him the shard.")
+                char_animation("He quickly fashions a throwing blade with it.")
+                silver_bullet = "cursed_obsidian_shard"
             
             char_animation("With your silver bullet ready, you prepare to face the King.")
+            char_animation("Remember though - you can only use it once. Make sure you are ready.")
             char_animation("The wizard tells you, lets train a bit!")
 
             #Enter a training sequence here, preparing to face the king (introduce the WASD keys and k keypresses)
@@ -2865,11 +2897,15 @@ while True:
 
             been_in_situations.add(21)
             
-        
         situtation = 22
     
     elif situtation == 22: #Base part 2
+        if 22 not in been_in_situations:
+            pass
+            been_in_situations.add(22)
+            continue
         pass
+
 
     elif situtation == -1 and DEBUG_ALLOWED: #Debug
         print("Debug mode")
