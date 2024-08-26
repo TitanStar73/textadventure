@@ -11,17 +11,18 @@ SHOW_CURSOR = "\033[?25h"
 FPS = 30
 
 icons = {
-    "p":(0,0),
-    "e":(0,1),
+    " p ":(0,0),
+    " e ":(0,1),
 }
 
 def sleep_check_keys(sleeptime,keys):
     start = timenow() #Apparently faster than datetime.now()?
+    last_pressed = None
     for i in itercycle(keys):
         if keyboard.is_pressed(i):
-            return i
+            last_pressed = i
         if timenow() - start > sleeptime:
-            return None
+            return last_pressed
         
 def render_screen(header, footer, icons, default):
     print(header)
@@ -42,8 +43,39 @@ def render_screen(header, footer, icons, default):
 
 print(HIDE_CURSOR)
 
+last_pressed_at = -1000
 for i in range(0,1_000_000):
     last_pressed = sleep_check_keys(1/FPS,["w","a","s","d"])
-    render_screen(f"BATTLE {last_pressed}", f"SCORE: {i}", icons, "-")
+    if last_pressed != None and i - last_pressed_at > (FPS/10): #Prevent too fast movement
+        last_pressed_at = i
+        x,y = icons[" p "]
+        if last_pressed == "w":
+            y -= 1
+        elif last_pressed == "a":
+            x -= 1
+        elif last_pressed == "s":
+            y += 1
+        elif last_pressed == "d":
+            x += 1
+        if x >= BATTLE_SIZE:
+            x = BATTLE_SIZE - 1
+        if y >= BATTLE_SIZE:
+            y = BATTLE_SIZE - 1
+        if x < 0:
+            x = 0
+        if y < 0:
+            y = 0
+        if last_pressed == "j":
+            icons["PRB"] = (x,y)
+        elif last_pressed == "k":
+            icons["PDB"] = (x,y)
+        elif last_pressed == "l":
+            icons["PLB"] = (x,y)
+        elif last_pressed == "i":
+            icons["PUB"] = (x,y)
+            
+        icons[" p "] = (x,y)
+
+    render_screen(f"BATTLE {last_pressed}", f"SCORE: {i}", icons, " - ")
 
 print(SHOW_CURSOR)
