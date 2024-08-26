@@ -395,11 +395,70 @@ def jumble_name(name):
             final += name[i]
     return final.strip() #Remove leading and trailing spaces
 
-def play_maze(current_maze = None):
-    if current_maze == None:
-        current_maze = []
-    pass
-    return True, current_maze #True here is if you are still in the maze
+def get_id(id):
+    for item in MAZE:
+        if item[0] == id:
+            _, fdesc, flink, bdesc, blink = item
+            if fdesc == None:
+                fdesc = bdesc
+            if bdesc == None:
+                bdesc = fdesc
+            if flink == None:
+                flink = blink
+            if blink == None:
+                blink = flink
+            return (id, fdesc, flink, bdesc, blink)
+    return None
+
+"""
+To be deleted, just so that I don't have to scroll up and down
+#Syntax
+#Each tuple is a section of the maze. It contains:
+# (ID,FORWARD_DESC,FORWARD_LINKING_IDS, BACKWARD_DESC, BACKWARD_LINKING_IDS) #None defualts to same as the other
+# ID: The ID of the section -> ID = 0 is the end of the maze
+# DESC: Description of current section
+# LINKING_IDS: {ID : M + DESCRIPTION}, here each id is where you can go from the current section | M = 'f' or 'b' which indicates forward or backward
+# Check out the maze.png file for a visual representation of the maze described
+
+MAZE = [
+    (1, "You walk down the path. You follow a U-turn." , {4: "fLeft", 5: "fRight"}, "You walk and after a U-turn, you hit a dead-end. You walk back.", None),
+
+"""
+
+def play_maze():
+    current_id = 1
+    current_direction = 'f'
+    while True:
+        if current_id == 0:
+            break
+        _, fdesc, flink, bdesc, blink = get_id(current_id) 
+        if current_direction == 'f':
+            char_animation(fdesc[1:])
+            char_animation("Where would you like to go?")
+            choices_map = {key:None for key in flink}
+            for i,key in enumerate(flink.keys()):
+                char_animation(f"{i+1}. {flink[key][1:]}")
+                choices_map[key] = [str(i+1)]
+
+            choice = get_char_animation_in("Choice: ",choices_map)
+            current_id = choice #New location  
+            current_direction = flink[choice][0] #Direction
+
+        elif current_direction == 'b':
+            char_animation(bdesc[1:])
+            char_animation("Where would you like to go?")
+            choices_map = {key:None for key in blink}
+            for i,key in enumerate(blink.keys()):
+                char_animation(f"{i+1}. {blink[key][1:]}")
+                choices_map[key] = [str(i+1)]
+
+            choice = get_char_animation_in("Choice: ",choices_map)
+            current_id = choice #New location  
+            current_direction = blink[choice][0] #Direction        else:
+        else:
+            raise Exception("Corrupted Maze Data.")
+
+    char_animation("You see a light. You run towards it. You are free!")
 
 def training_sequence():
     pass
@@ -639,7 +698,7 @@ GRASS_DIFFICULTY = 3
 # ID: The ID of the section -> ID = 0 is the end of the maze
 # DESC: Description of current section
 # LINKING_IDS: {ID : M + DESCRIPTION}, here each id is where you can go from the current section | M = 'f' or 'b' which indicates forward or backward
-# Check out the assets/maze.png file for a visual representation of the maze described
+# Check out the assets/maze.png file for a visual representation of the maze described here
 
 MAZE = [
     (1, "You walk down the path. You follow a U-turn." , {4: "fLeft", 5: "fRight"}, "You walk and after a U-turn, you hit a dead-end. You walk back.", None),
@@ -873,6 +932,7 @@ ENCHANTMENT_BOOKS = {
     "enchantmentBook Fire": "Covers your sword in an eternal flame",
     "enchantmentBook Poison": "Covers your sword in poison",
 }
+
 
 while True:
     if career == None: #Standard Careers (not including ghost)
@@ -2715,12 +2775,13 @@ while True:
 
                 char_animation("\nYou start to feel dizzy. You fall to the ground. You can't move. You can't see. You can't hear.")
                 char_animation(f"{PAUSE*3}And then its blackness. And then you wake up. Back in the swamp.")
-                char_animation("But everything is different. The pain is gone. You can see, move and hear again. Everything has a green tint.")
+                char_animation("But everything is different. The pain is gone. You can see, move and hear again. Everything has a green tint. Above you is a thick canopy of leaves. Around you trees so close they form a wall.")
                 char_animation("You look for your flask but can't find it.")
                 
                 flag = False
                 answer = char_animation_in("Thats when you realise: ")
-                while True:
+                
+                for _ in range(5):
                     for item in ['dream','hallucination','mind']:
                         if item in answer:
                             flag = True
@@ -2728,7 +2789,7 @@ while True:
                         break
                     answer = char_animation("Nope. What you realise is: ")
                 
-                char_animation("You are in your head, you get up and start walking. The trees shift around you.")
+                char_animation("You realise you are in your head, you get up and start walking. The trees shift around you.")
                 char_animation("You realise you are in a maze.")
 
                 play_maze()
