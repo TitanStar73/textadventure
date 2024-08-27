@@ -22,14 +22,14 @@ SHOW_CURSOR = "\033[?25h"
 MOVE_COOLDOWN = 0.25 #In seconds
 SHOOT_COOLDOWN = 1.5 #In seconds
 BULLET_SPEED = 5
-DIFFICULTY_BOSS = 80
+DIFFICULTY_BOSS = 300 #Max is 500
 FPS = 30
 
 class Board:
     def __init__(self):
         self.icons = [
             [" p ",(0,0)],
-            [" e ",(0,1)],
+            [" e ",(BATTLE_SIZE-1,1)],
         ]
         self.render_icons = {
             ' p ' : f' {GREEN}@{DEFAULT_COLOR} ',
@@ -117,7 +117,7 @@ class Board:
                 
 my_board = Board()
 
-def sleep_check_keys(sleeptime,keys):
+def sleep_check_keys(sleeptime,keys):    
     start = timenow() #Apparently faster than datetime.now()?
     last_pressed = None
     for i in itercycle(keys):
@@ -135,7 +135,6 @@ def upload_banner(text, i):
     global banner_showed_at
     banner_showed_at = i
 
-print(HIDE_CURSOR)
 
 last_moved_at = -1000
 last_shot_at = -1000
@@ -144,6 +143,13 @@ banner = ""
 
 boss_health = 100
 player_health = 5
+
+boss_moving_up = True
+
+for key in ["w","a","s","d","j","k","l","i"]:
+    keyboard.block_key(key)
+
+print(HIDE_CURSOR)
 
 for i in range(0,1_000_000):
     last_pressed = sleep_check_keys(1/FPS,["w","a","s","d","j","k","l","i"])
@@ -159,8 +165,8 @@ for i in range(0,1_000_000):
             y += 1
         elif last_pressed == "d":
             x += 1
-        if x >= BATTLE_SIZE:
-            x = BATTLE_SIZE - 1
+        if x >= BATTLE_SIZE - 2: #Limit player movement to 2 blocks from the right
+            x = BATTLE_SIZE - 3
         if y >= BATTLE_SIZE:
             y = BATTLE_SIZE - 1
         if x < 0:
@@ -234,22 +240,39 @@ for i in range(0,1_000_000):
             else:
                 already_exits.append((x,y))
     for j in range(0,len(my_board)):
-        if my_board[j][0] in {"ERB","ELB","EDB","EUB","PRB","PLB","PDB","PUB", "ERM","ELM","EDM","EUM"}:
+        if my_board[j][0] in {"ERB","ELB","EDB","EUB","PRB","PLB","PDB","PUB"}: #Missile immune from being destoryed
             x,y = my_board[j][1]
             if (x,y) in collisions:
                 my_board[j][1] = None
 
     #Shoot enemy bullets
-    if i%int((FPS*100)/DIFFICULTY_BOSS) == 0:
-        for j in range(0,len(my_board)):
-            if my_board[j][0] == " e ":
-                x,y = my_board[j][1]
-                if randint(1,4) == 2:
-                    my_board.append(["ERM",(x + 1,y)]) #Missile
-                else:
-                    my_board.append(["ERB",(x + 1,y)])
+    if boss_health < 50:
+        difficulty_multiplier = 2
+    elif boss_health < 75:
+        difficulty_multiplier = 1.5
+    else:
+        difficulty_multiplier = 1
 
+    my_board.clean()
+    if i%int((FPS*100)/(DIFFICULTY_BOSS * difficulty_multiplier)) == 0:
+        if randint(0,1000) < DIFFICULTY_BOSS:
+            for j in range(0,len(my_board)):
+                if my_board[j][0] == " e ":
+                    x,y = my_board[j][1]
+                    bullet_type = ""
+                    if boss_health > 50:
+                        if randint(1,4) == 2:
+                            bullet_type = "M" #Missile
+                        else:
+                            bullet_type = "B"
+                    else: #Always shoot missiles after <50% health
+                        bullet_type = "M"
+
+                    my_board.append([f"EL{bullet_type}",(x,randint(0,BATTLE_SIZE-1))])
+                    
+                    
     #Check if player got hit
+    my_board.clean()
     for j in range(0,len(my_board)):
         if my_board[j][0] in {"ERB","ELB","EDB","EUB", "ERM","ELM","EDM","EUM"}:
             x,y = my_board[j][1]
@@ -260,7 +283,7 @@ for i in range(0,1_000_000):
                     player_health -= 3
                 my_board[j][1] = None
 
-
+    my_board.clean()
     #Check if player hit enemy
     for j in range(0,len(my_board)):
         if my_board[j][0] in {"PRB","PLB","PDB","PUB"}:
@@ -274,6 +297,21 @@ for i in range(0,1_000_000):
                     upload_banner("BLOCKED! ", i)
                 else:
                     boss_health -= randint(5,9) #Normal hit
+
+    if i%int((FPS*100)/(DIFFICULTY_BOSS*difficulty_multiplier)) == 2:
+        x,y = my_board[" e "][1]
+        if boss_moving_up:
+            y -= 1
+        else:
+            y += 1
+        if y >= BATTLE_SIZE:
+            boss_moving_up = True
+            y = BATTLE_SIZE - 1
+        if y < 0:
+            boss_moving_up = False
+            y = 0
+
+        my_board[" e "] = (x,y)
 
     if i == 300:
         upload_banner("CRIT! ", i)
@@ -299,6 +337,7 @@ for i in range(0,1_000_000):
         print("YOU WON!")
         break
 
-
-
 print(SHOW_CURSOR)
+
+for key in ["w","a","s","d","j","k","l","i"]:
+    keyboard.unblock_key(key)
