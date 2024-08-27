@@ -1,3 +1,12 @@
+DISABLE_COLORS = False #Turns off colors if enabled
+DEFAULT_COLOR = "\033[0m"
+RED = DEFAULT_COLOR if DISABLE_COLORS else "\033[31m"
+BLUE = DEFAULT_COLOR if DISABLE_COLORS else "\033[34m"
+GREEN = DEFAULT_COLOR if DISABLE_COLORS else "\033[32m"
+YELLOW = DEFAULT_COLOR if DISABLE_COLORS else "\033[33m"
+WHITE = DEFAULT_COLOR if DISABLE_COLORS else "\033[37m"
+PURPLE = DEFAULT_COLOR if DISABLE_COLORS else "\033[35m"
+
 import keyboard
 from time import sleep
 from itertools import cycle as itercycle
@@ -8,6 +17,11 @@ BATTLE_REFRESH = f"\033[{BATTLE_SIZE + 3}A"
 
 HIDE_CURSOR = "\033[?25l"
 SHOW_CURSOR = "\033[?25h"
+
+MOVE_COOLDOWN = 0.25 #In seconds
+SHOOT_COOLDOWN = 1.5 #In seconds
+BULLET_SPEED = 5
+
 FPS = 30
 
 class Board:
@@ -92,14 +106,27 @@ def sleep_check_keys(sleeptime,keys):
         if timenow() - start > sleeptime:
             return last_pressed
 
+def upload_banner(text, i):
+    global banner
+    banner = text
+    global banner_showed_at
+    banner_showed_at = i
+
 print(HIDE_CURSOR)
 
-last_pressed_at = -1000
+last_moved_at = -1000
+last_shot_at = -1000
+banner_showed_at = -1000
+banner = ""
+
+boss_health = 100
+player_health = 5
+
 for i in range(0,1_000_000):
     last_pressed = sleep_check_keys(1/FPS,["w","a","s","d","j","k","l","i"])
 
-    #Input handler
-    if last_pressed != None and i - last_pressed_at > (FPS/10): #Prevent too fast movement
+    #Movement handler
+    if last_pressed in {"w","a","s","d"} and i - last_moved_at > (FPS*MOVE_COOLDOWN): #Prevent too fast movement
         x,y = my_board[" p "][1]
         if last_pressed == "w":
             y -= 1
@@ -117,22 +144,26 @@ for i in range(0,1_000_000):
             x = 0
         if y < 0:
             y = 0
-        if i - last_pressed_at > (FPS/3):
-            if last_pressed == "j":
-                my_board["newPRB"] = (x,y)
-            elif last_pressed == "k":
-                my_board["newPDB"] = (x,y)
-            elif last_pressed == "l":
-                my_board["newPLB"] = (x,y)
-            elif last_pressed == "i":
-                my_board["newPUB"] = (x,y)
         
-        last_pressed_at = i
+        last_moved_at = i
         my_board[" p "] = (x,y)
+
+    #Shoot handler
+    if last_pressed in {"j","k","l","i"} and i - last_shot_at > (FPS*SHOOT_COOLDOWN): #Prevent too fast shooting
+        x,y = my_board[" p "][1]
+        if last_pressed == "l":
+            my_board["newPRB"] = (x,y)
+        elif last_pressed == "k":
+            my_board["newPDB"] = (x,y)
+        elif last_pressed == "j":
+            my_board["newPLB"] = (x,y)
+        elif last_pressed == "i":
+            my_board["newPUB"] = (x,y)
+        last_shot_at = i
 
 
     #Bullet mover
-    if i%(FPS//2) == 0: #Every half second
+    if i%(FPS//BULLET_SPEED) == 0: #Every half second
         for j in range(0,len(my_board)):
             if my_board[j][0] in {"PRB","PLB","PDB","PUB"}:
                 x,y = my_board[j][1]
@@ -145,11 +176,17 @@ for i in range(0,1_000_000):
                 elif my_board[j][0] == "PUB":
                     y -= 1
                 if x >= BATTLE_SIZE or x < 0 or y >= BATTLE_SIZE or y < 0:
-                    my_board[j] = None #removes bullet in next render
+                    my_board[j][1] = None #removes bullet in next render
                 else:
                     my_board[j][1] = (x,y) #moves bullet
-                
-            
-    my_board.render_screen(f"BATTLE {last_pressed}", f"SCORE: {i}", " - ")
+    
+    if i == 300:
+        upload_banner("CRIT! ", i)
+
+    shot_charged = min(100, round(((i - last_shot_at)/(FPS*SHOOT_COOLDOWN))*100))
+    shot_charged_color = GREEN if shot_charged == 100 else (RED if shot_charged < 75 else YELLOW)
+    banner_data = " " * (len(banner) + 5) if i - banner_showed_at > (FPS*2.5) else ' | ' + banner
+
+    my_board.render_screen(f"BOSS HEALTH: {boss_health}{banner_data}", f"YOUR HEALTH: {player_health * '♥'}  |  Shot charged up: {shot_charged_color}{' '*(3-len(str(shot_charged)))}{shot_charged}%{DEFAULT_COLOR}", " - ")
 
 print(SHOW_CURSOR)
