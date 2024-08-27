@@ -18,6 +18,7 @@ class Board:
         ]
 
     def render_screen(self, header, footer, default):
+        self.clean()
         print(header)
         for i in range(0,BATTLE_SIZE):
             for j in range(BATTLE_SIZE):
@@ -42,23 +43,45 @@ class Board:
         return None
     
     def __setitem__(self,key,value):
-        if key[:3] == "new":
-            self.icons.append([key[3:],value])
-            return
         try:
             int(key)
             self.icons[key] = value
             return
         except:
+            if key[:3] == "new":
+                self.icons.append([key[3:],value])
+                return
+
             for i in range(0,len(self.icons)):
                 if self.icons[i][0] == key:
                     self.icons[i][1] = value
                     return
         self.icons.append([key, value])
 
-
-my_board = Board()
+    def __len__(self):
+        return len(self.icons)
     
+    def append(self,value):
+        self.icons.append(value)
+    
+    def __iter__(self):
+        return iter(self.icons)
+    
+    def clean(self):
+        to_remove = []
+        for ij in range(0,len(self.icons)):
+            try:
+                #Checks to see if coords are still well formed
+                x,y = self.icons[ij][1]
+                int(x)
+                int(y)
+            except:
+                to_remove.append(ij)
+        to_remove = sorted(to_remove,reverse=True) #Reverse to avoid index errors
+        for i in to_remove:
+            self.icons.pop(i) #Pop later to avoid index errors
+                
+my_board = Board()
 
 def sleep_check_keys(sleeptime,keys):
     start = timenow() #Apparently faster than datetime.now()?
@@ -74,8 +97,9 @@ print(HIDE_CURSOR)
 last_pressed_at = -1000
 for i in range(0,1_000_000):
     last_pressed = sleep_check_keys(1/FPS,["w","a","s","d","j","k","l","i"])
+
+    #Input handler
     if last_pressed != None and i - last_pressed_at > (FPS/10): #Prevent too fast movement
-        last_pressed_at = i
         x,y = my_board[" p "][1]
         if last_pressed == "w":
             y -= 1
@@ -93,17 +117,39 @@ for i in range(0,1_000_000):
             x = 0
         if y < 0:
             y = 0
-        if last_pressed == "j":
-            my_board["newPRB"] = (x,y)
-        elif last_pressed == "k":
-            my_board["newPDB"] = (x,y)
-        elif last_pressed == "l":
-            my_board["newPLB"] = (x,y)
-        elif last_pressed == "i":
-            my_board["newPUB"] = (x,y)
-
+        if i - last_pressed_at > (FPS/3):
+            if last_pressed == "j":
+                my_board["newPRB"] = (x,y)
+            elif last_pressed == "k":
+                my_board["newPDB"] = (x,y)
+            elif last_pressed == "l":
+                my_board["newPLB"] = (x,y)
+            elif last_pressed == "i":
+                my_board["newPUB"] = (x,y)
+        
+        last_pressed_at = i
         my_board[" p "] = (x,y)
 
+
+    #Bullet mover
+    if i%(FPS//2) == 0: #Every half second
+        for j in range(0,len(my_board)):
+            if my_board[j][0] in {"PRB","PLB","PDB","PUB"}:
+                x,y = my_board[j][1]
+                if my_board[j][0] == "PRB":
+                    x += 1
+                elif my_board[j][0] == "PLB":
+                    x -= 1
+                elif my_board[j][0] == "PDB":
+                    y += 1
+                elif my_board[j][0] == "PUB":
+                    y -= 1
+                if x >= BATTLE_SIZE or x < 0 or y >= BATTLE_SIZE or y < 0:
+                    my_board[j] = None #removes bullet in next render
+                else:
+                    my_board[j][1] = (x,y) #moves bullet
+                
+            
     my_board.render_screen(f"BATTLE {last_pressed}", f"SCORE: {i}", " - ")
 
 print(SHOW_CURSOR)
