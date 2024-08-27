@@ -30,6 +30,18 @@ class Board:
             [" p ",(0,0)],
             [" e ",(0,1)],
         ]
+        self.render_icons = {
+            ' p ' : f' {GREEN}@{DEFAULT_COLOR} ',
+            ' e ' : f' {RED}#{DEFAULT_COLOR} ',
+            'PRB' : f' {GREEN}→{DEFAULT_COLOR} ',
+            'PLB' : f' {GREEN}←{DEFAULT_COLOR} ',
+            'PDB' : f' {GREEN}↓{DEFAULT_COLOR} ',
+            'PUB' : f' {GREEN}↑{DEFAULT_COLOR} ',
+            'ERB' : f' {RED}→{DEFAULT_COLOR} ',
+            'ELB' : f' {RED}←{DEFAULT_COLOR} ',
+            'EDB' : f' {RED}↓{DEFAULT_COLOR} ',
+            'EUB' : f' {RED}↑{DEFAULT_COLOR} ',
+        }
 
     def render_screen(self, header, footer, default):
         self.clean()
@@ -39,7 +51,10 @@ class Board:
                 at_here = default
                 for k in self.icons:
                     if k[1][0] == j and k[1][1] == i:
-                        at_here = k[0]
+                        if k[0] in self.render_icons:
+                            at_here = self.render_icons[k[0]]
+                        else:
+                            at_here = k[0]
                 print(at_here,end="")
             print("")            
 
@@ -176,10 +191,53 @@ for i in range(0,1_000_000):
                 elif my_board[j][0] == "PUB":
                     y -= 1
                 if x >= BATTLE_SIZE or x < 0 or y >= BATTLE_SIZE or y < 0:
+                    my_board[j] = None #removes bullet in next render
+                else:
+                    my_board[j][1] = (x,y) #moves bullet
+    
+    #Enemy bullet mover, moves 1 frame later, so that collision detection is easier
+    if i%(FPS//BULLET_SPEED) == 1: #Every half second
+        for j in range(0,len(my_board)):
+            if my_board[j][0] in {"ERB","ELB","EDB","EUB"}:
+                x,y = my_board[j][1]
+                if my_board[j][0] == "ERB":
+                    x += 1
+                elif my_board[j][0] == "ELB":
+                    x -= 1
+                elif my_board[j][0] == "EDB":
+                    y += 1
+                elif my_board[j][0] == "EUB":
+                    y -= 1
+                if x >= BATTLE_SIZE or x < 0 or y >= BATTLE_SIZE or y < 0:
                     my_board[j][1] = None #removes bullet in next render
                 else:
                     my_board[j][1] = (x,y) #moves bullet
     
+    my_board.clean()
+
+    #Detect bullet collisions
+    already_exits = []
+    collisions = []
+    for j in range(0,len(my_board)):
+        if my_board[j][0] in {"ERB","ELB","EDB","EUB","PRB","PLB","PDB","PUB"}:
+            x,y = my_board[j][1]
+            if (x,y) in already_exits:
+                collisions.append((x,y))
+            else:
+                already_exits.append((x,y))
+    for j in range(0,len(my_board)):
+        if my_board[j][0] in {"ERB","ELB","EDB","EUB","PRB","PLB","PDB","PUB"}:
+            x,y = my_board[j][1]
+            if (x,y) in collisions:
+                my_board[j][1] = None
+
+    #Shoot enemy bullets
+    if i%int(FPS*1.5) == 0:
+        for j in range(0,len(my_board)):
+            if my_board[j][0] == " e ":
+                x,y = my_board[j][1]
+                my_board.append(["ERB",(x + 1,y)])            
+
     if i == 300:
         upload_banner("CRIT! ", i)
 
@@ -187,6 +245,6 @@ for i in range(0,1_000_000):
     shot_charged_color = GREEN if shot_charged == 100 else (RED if shot_charged < 75 else YELLOW)
     banner_data = " " * (len(banner) + 5) if i - banner_showed_at > (FPS*2.5) else ' | ' + banner
 
-    my_board.render_screen(f"BOSS HEALTH: {boss_health}{banner_data}", f"YOUR HEALTH: {player_health * '♥'}  |  Shot charged up: {shot_charged_color}{' '*(3-len(str(shot_charged)))}{shot_charged}%{DEFAULT_COLOR}", " - ")
+    my_board.render_screen(f"{PURPLE}BOSS HEALTH: {boss_health}{DEFAULT_COLOR}{banner_data}", f"YOUR HEALTH: {RED}{player_health * '♥'}{DEFAULT_COLOR}  |  Shot charged up: {shot_charged_color}{' '*(3-len(str(shot_charged)))}{shot_charged}%{DEFAULT_COLOR}", " - ")
 
 print(SHOW_CURSOR)
