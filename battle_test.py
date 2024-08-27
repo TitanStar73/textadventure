@@ -11,6 +11,7 @@ import keyboard
 from time import sleep
 from itertools import cycle as itercycle
 from time import time as timenow
+from random import randint
 
 BATTLE_SIZE = 10
 BATTLE_REFRESH = f"\033[{BATTLE_SIZE + 3}A"
@@ -21,7 +22,7 @@ SHOW_CURSOR = "\033[?25h"
 MOVE_COOLDOWN = 0.25 #In seconds
 SHOOT_COOLDOWN = 1.5 #In seconds
 BULLET_SPEED = 5
-
+DIFFICULTY_BOSS = 80
 FPS = 30
 
 class Board:
@@ -41,6 +42,10 @@ class Board:
             'ELB' : f' {RED}←{DEFAULT_COLOR} ',
             'EDB' : f' {RED}↓{DEFAULT_COLOR} ',
             'EUB' : f' {RED}↑{DEFAULT_COLOR} ',
+            'ERM' : f' {RED}⇒{DEFAULT_COLOR} ',
+            'ELM' : f' {RED}⇐{DEFAULT_COLOR} ',
+            'EDM' : f' {RED}⇓{DEFAULT_COLOR} ',
+            'EUM' : f' {RED}⇑{DEFAULT_COLOR} ',
         }
 
     def render_screen(self, header, footer, default):
@@ -123,7 +128,10 @@ def sleep_check_keys(sleeptime,keys):
 
 def upload_banner(text, i):
     global banner
-    banner = text
+    if len(banner) <= len(text):
+        banner = text
+    else:
+        banner = text + (' ' * (len(banner) - len(text)))
     global banner_showed_at
     banner_showed_at = i
 
@@ -195,18 +203,18 @@ for i in range(0,1_000_000):
                 else:
                     my_board[j][1] = (x,y) #moves bullet
     
-    #Enemy bullet mover, moves 1 frame later, so that collision detection is easier
+    #Enemy bullet mover, moves 1 frame later, to prevent bullets from "phasing" through each other
     if i%(FPS//BULLET_SPEED) == 1: #Every half second
         for j in range(0,len(my_board)):
-            if my_board[j][0] in {"ERB","ELB","EDB","EUB"}:
+            if my_board[j][0] in {"ERB","ELB","EDB","EUB", "ERM","ELM","EDM","EUM"}:
                 x,y = my_board[j][1]
-                if my_board[j][0] == "ERB":
+                if my_board[j][0][1] == "R":
                     x += 1
-                elif my_board[j][0] == "ELB":
+                elif my_board[j][0][1] == "L":
                     x -= 1
-                elif my_board[j][0] == "EDB":
+                elif my_board[j][0][1] == "D":
                     y += 1
-                elif my_board[j][0] == "EUB":
+                elif my_board[j][0][1] == "U":
                     y -= 1
                 if x >= BATTLE_SIZE or x < 0 or y >= BATTLE_SIZE or y < 0:
                     my_board[j][1] = None #removes bullet in next render
@@ -219,32 +227,78 @@ for i in range(0,1_000_000):
     already_exits = []
     collisions = []
     for j in range(0,len(my_board)):
-        if my_board[j][0] in {"ERB","ELB","EDB","EUB","PRB","PLB","PDB","PUB"}:
+        if my_board[j][0] in {"ERB","ELB","EDB","EUB","PRB","PLB","PDB","PUB", "ERM","ELM","EDM","EUM"}:
             x,y = my_board[j][1]
             if (x,y) in already_exits:
                 collisions.append((x,y))
             else:
                 already_exits.append((x,y))
     for j in range(0,len(my_board)):
-        if my_board[j][0] in {"ERB","ELB","EDB","EUB","PRB","PLB","PDB","PUB"}:
+        if my_board[j][0] in {"ERB","ELB","EDB","EUB","PRB","PLB","PDB","PUB", "ERM","ELM","EDM","EUM"}:
             x,y = my_board[j][1]
             if (x,y) in collisions:
                 my_board[j][1] = None
 
     #Shoot enemy bullets
-    if i%int(FPS*1.5) == 0:
+    if i%int((FPS*100)/DIFFICULTY_BOSS) == 0:
         for j in range(0,len(my_board)):
             if my_board[j][0] == " e ":
                 x,y = my_board[j][1]
-                my_board.append(["ERB",(x + 1,y)])            
+                if randint(1,4) == 2:
+                    my_board.append(["ERM",(x + 1,y)]) #Missile
+                else:
+                    my_board.append(["ERB",(x + 1,y)])
+
+    #Check if player got hit
+    for j in range(0,len(my_board)):
+        if my_board[j][0] in {"ERB","ELB","EDB","EUB", "ERM","ELM","EDM","EUM"}:
+            x,y = my_board[j][1]
+            if my_board[" p "][1] == (x,y):
+                if my_board[j][0][2] == "B":
+                    player_health -= 1
+                elif my_board[j][0][2] == "M":
+                    player_health -= 3
+                my_board[j][1] = None
+
+
+    #Check if player hit enemy
+    for j in range(0,len(my_board)):
+        if my_board[j][0] in {"PRB","PLB","PDB","PUB"}:
+            x,y = my_board[j][1]
+            if my_board[" e "][1] == (x,y):
+                my_board[j][1] = None
+                if randint(1,20) == 2: #5% chance of crit
+                    boss_health -= 20
+                    upload_banner("CRIT! ", i)
+                elif randint(1,4) == 2: #25% chance after that to be blocked
+                    upload_banner("BLOCKED! ", i)
+                else:
+                    boss_health -= randint(5,9) #Normal hit
 
     if i == 300:
         upload_banner("CRIT! ", i)
+
+    if boss_health < 0:
+        boss_health = 0
+    if player_health < 0:
+        player_health = 0
 
     shot_charged = min(100, round(((i - last_shot_at)/(FPS*SHOOT_COOLDOWN))*100))
     shot_charged_color = GREEN if shot_charged == 100 else (RED if shot_charged < 75 else YELLOW)
     banner_data = " " * (len(banner) + 5) if i - banner_showed_at > (FPS*2.5) else ' | ' + banner
 
-    my_board.render_screen(f"{PURPLE}BOSS HEALTH: {boss_health}{DEFAULT_COLOR}{banner_data}", f"YOUR HEALTH: {RED}{player_health * '♥'}{DEFAULT_COLOR}  |  Shot charged up: {shot_charged_color}{' '*(3-len(str(shot_charged)))}{shot_charged}%{DEFAULT_COLOR}", " - ")
+    my_board.render_screen(f"{PURPLE}BOSS HEALTH: {boss_health}{DEFAULT_COLOR}{banner_data}", f"YOUR HEALTH: {RED}{player_health * '♥'}{DEFAULT_COLOR}{' ' * (5-player_health)}  |  Shot charged up: {shot_charged_color}{' '*(3-len(str(shot_charged)))}{shot_charged}%{DEFAULT_COLOR}", " - ")
+
+    if player_health == 0:
+        print("\n" * (BATTLE_SIZE + 4))
+        print("YOU DIED!")
+        break
+
+    if boss_health == 0:
+        print("\n" * (BATTLE_SIZE + 4))
+        print("YOU WON!")
+        break
+
+
 
 print(SHOW_CURSOR)
