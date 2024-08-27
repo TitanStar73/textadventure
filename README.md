@@ -6,8 +6,8 @@ Chapter 3 completed!
 
 # How to Play
  You have two options
- - Run the main.py script, no dependencies :)
- - Run the main.exe (windows only)
+ - Run the main.py python script
+ - Run the main.exe (windows only) -> Find it in the latest release!
 
 The other files are archival or just test files.
 
