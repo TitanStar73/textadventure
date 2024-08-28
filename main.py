@@ -2931,7 +2931,56 @@ while True:
 
         char_animation("\n\nRoyal Palace")
         if 19 not in been_in_situations:
-            pass
+            char_animation("You are outside the Royal palace. The guards are standing outside.")
+            char_animation("The warrior says 'I'll distract them. You go in.'")
+            char_animation("He walks up to the guards and starts talking to them.")
+            char_animation("You sneak in, Caroline leads you to the throne room.")
+            char_animation("On your way a battalion of guards spot you, they run at you!")
+            char_animation(f"{PAUSE}John, Igor and Twilia stay back to fight them. You Caroline and Helen run forward.")
+            char_animation("You reach the throne room and see the red cloaked warriors standing outside it. Caroline turns into a wild-beast and attacks them.")
+            char_animation("This is your chance and you and Helen run into the throne room.")
+
+            char_animation("\nYou see King Rahas - he is cloaked and sitting on the throne. He looks at you and says: 'You dare enter my palace?'")
+            char_animation("You say: 'Yes, I do. I am here to overthrow you.'")
+            char_animation("Rahas removes his cloak and you see his face - he has a pale face with deep blue eyes.")
+
+            char_animation("\nHe transforms into a 20 foot tall giant. His eyes glowing blue. He says: 'You think you can defeat me?'")
+            char_animation("He raises his hand and 5 fireballs appear hurling at you, you dodge them all.")
+
+            char_animation("\nYou drink the potion of strength and feel a surge of power. You feel like you can take on the world.")
+            char_animation("Helen says - 'I'll heal you if you get hurt.'")
+
+            char_animation("\nYou run at Rahas and attack him.")
+
+            char_animation("\n\nThe battle begins!\n")
+            
+            outcome = True
+            while outcome:
+                outcome = not real_fight_rahas()
+                if outcome: #If you lose
+                    char_animation("You lose the battle.")
+                    char_animation_in("Press enter to try again...")
+                    char_animation("\n\n")
+            
+            char_animation(f"He is weakened.")
+            if silver_bullet == "potion_of_supe":
+                char_animation("You drink the Potion of Supe and feel power surge through you. Your eyes become red hot and you shoot lasers out of your eyes.")
+                char_animation("With a single blast of all the power you can muster, you shoot a blast of lasers.")
+            elif silver_bullet == "potion_of_soul":
+                char_animation("You throw the potion of soul at him.")
+                char_animation("It hits him and it explodes. A bright light fills the room as his soul is destroyed.")
+            elif silver_bullet == "cursed_obsidian_shard":
+                char_animation("You throw the cursed obsidian shard at him.")
+                char_animation("It hits him and he looks at you in shock. His whole body starts to glow purple.")
+            elif silver_bullet == "flitstone_bomb":
+                char_animation("You throw the flitstone bomb at him.")
+                char_animation("It hits him and he is in shock for a fraction of a second. Then the bomb explodes with a blinding light.")
+            
+            if silver_bullet != "flitstone_bomb":
+                char_animation("He explodes with a blinding light")
+
+            char_animation("The smoke clears and you see the throne room. The red guards explode into dust. Rahas is no where to be seen! You have defeated the tyrant Rahas!")
+
 
         char_animation("Where would you like to go?")
         char_animation("1. Throne Room")
@@ -3291,7 +3340,6 @@ while True:
 
         char_animation_in("Click enter to continue...")
         situtation = 20
-
 
     elif situtation == -1 and DEBUG_ALLOWED: #Debug
         print("Debug mode")
