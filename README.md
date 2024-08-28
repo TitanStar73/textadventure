@@ -2,7 +2,7 @@
 
 always adding updates :)
 
-Chapter 3 completed!
+Book 1 Completed!
 
 # How to Play
  You have two options
@@ -41,3 +41,7 @@ OPENAI_API_KEY = None
 # Have a great idea?
 Even if its a small one, write it up in a seperate text, markdown or image file and submit a pull request!
 
+# Common Quesitons
+ - Why is `main.exe` taking a while to boot up: Don't worry! The python script has been compiled using pyinstaller and is not the most efficient
+ - Do I need to wait for the next book to come out before downloading the releases of the next chapters?: New binary releases will be released after every book is released. However you can always play the chapters already released by downloading and running the `main.py` script - They are interchangable!
+ - Does my book 1 progress `game.data` work with book 2?: Yes! Book 2 release will include Book 1 in it and will be backward compatable.
