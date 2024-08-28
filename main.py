@@ -2928,7 +2928,15 @@ while True:
             char_animation("What do you ask?")
             potential_questions = [
                 ("Who are you?", "I am the mage of the Good King."),
+                ("What are you?", "I am an apparation, unlike you. You see as an apparation I am temporarily projecting myself in this plane of existence - the physical world. I am actually in the After Realm."),
+                ("What am I?", "You are a ghost. You are still in the physical plane. However, your plane of existence has been closed of by the Nether Staff - the staff of Rahas."),
+                ("How do I get back?", "To enter back into the physical world, you must destroy the boundary between your enclosed plane and the physical plane - that is destroy the Nether Staff.")
+                ("Who created the Nether Staff?", f"The Nether Staff is as Old as Time itself - as for who created it{PAUSE*3} - an unspeakable evil.")
             ]
+            if get_karma('beaten_rahas') == 1:
+                potential_questions.append(("Who does the Warrior work for?", f"Who the Warrior works for {PAUSE*3}I do not know."))
+            else:
+                potential_questions.append(("What turned me into this?", "That I do not know. However the thing that has trapped you in this alternate plane of existence is the Nether Staff."))
             while True:
                 char_animation("\n\n")
                 for i,question in enumerate(potential_questions):
@@ -2949,6 +2957,9 @@ while True:
                 potential_questions.pop(choice-1)
                 if len(potential_questions) == 0:
                     break
+            
+            char_animation("'What do I do now?', you ask.")
+            char_animation("The only thing which can destroy the Nether Staff is the Aether Staff - the opposite staff of the Nether Staff. When in contact, they will both annihilate each other.")
 
             been_in_situations.add(15)
     
