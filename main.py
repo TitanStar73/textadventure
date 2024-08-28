@@ -2046,7 +2046,7 @@ while True:
                 situtation = 18
         else:
             if previous_choices['told_ghost'] != 1:
-                char_animation("You walk into the shop and the shopkeeper looks at you and say, what happened to you! You are a ghost, you are in a different plane of existence... I don't know much about ghosts but you should try finding the priest of the Castle of the Day Before.")
+                char_animation("You walk into the shop and the shopkeeper looks at you and says -  'What happened to you! You are a ghost, you are in a different plane of existence... I don't know much about ghosts but you should try finding the priest of the Castle of the Day Before.'")
 
             char_animation("\nYou walk back to the main street and ask around for the Castle of the Day Before... An old man shows you the direction and you start your journey there...")
             situtation = 15
@@ -2898,7 +2898,7 @@ while True:
             amt = play_trivia()
             char_animation(f"+{amt} credits")
 
-    elif situtation == 15: #Castle
+    elif situtation == 15: #Castle - Start of book 2!
         char_animation("\n\nCastle of the Day Before")
         char_animation("Come back later!")
         input()
@@ -2940,12 +2940,12 @@ while True:
             char_animation("You reach the throne room and see the red cloaked warriors standing outside it. Caroline turns into a wild-beast and attacks them.")
             char_animation("This is your chance and you and Helen run into the throne room.")
 
-            char_animation("\nYou see King Rahas - he is cloaked and sitting on the throne. He looks at you and says: 'You dare enter my palace?'")
+            char_animation("\nYou see King Rahas - he is cloaked and sitting on the throne. His purple staff has a skull on it. He looks at you and says: 'You dare enter my palace?'")
             char_animation("You say: 'Yes, I do. I am here to overthrow you.'")
             char_animation("Rahas removes his cloak and you see his face - he has a pale face with deep blue eyes.")
 
-            char_animation("\nHe transforms into a 20 foot tall giant. His eyes glowing blue. He says: 'You think you can defeat me?'")
-            char_animation("He raises his hand and 5 fireballs appear hurling at you, you dodge them all.")
+            char_animation("\nHe transforms into a 20 foot tall giant. His staff glowing with power. His eyes glowing blue. He says: 'You think you can defeat me?'")
+            char_animation("He raises his staff and 5 fireballs appear hurling at you, you dodge them all.")
 
             char_animation("\nYou drink the potion of strength and feel a surge of power. You feel like you can take on the world.")
             char_animation("Helen says - 'I'll heal you if you get hurt.'")
@@ -2980,7 +2980,35 @@ while True:
                 char_animation("He explodes with a blinding light")
 
             char_animation("The smoke clears and you see the throne room. The red guards explode into dust. Rahas is no where to be seen! You have defeated the tyrant Rahas!")
+            char_animation("The people of the city cheer and you are hailed as the hero of the city.")
 
+            char_animation("\nThe good king's grandson becomes the new king. The city is in good hands.")
+
+            char_animation(f"{PAUSE*5}")
+            char_animation("\nYou later walk into the secret base. You see the wizard lying on the floor blood coming out of his robes.")
+            char_animation("You run to him and ask him what happened but its too late.")
+            char_animation("You turn around and see - the Warrior.")
+            char_animation("He looks at you laughing and says - You think you won because you defeated Rahas?")
+            char_animation("You look at him confused - then you see Rahas's staff in his hand.")
+            char_animation("He says - 'Rahas was but a pawn - I serve a greater master. And soon you shall too.'")
+
+            char_animation("He raises the staff and you feel a pain in your head. It radiates throughout your body.")
+            char_animation("You black out. When you come to you realise you aren't dead. But you aren't quite alive either.")
+            char_animation("You are a ghost. You hear the warrior's laugh echoing thorugh your head.")
+            char_animation("You head back to the town... you feel the shopkeeper can help you!")
+            
+            situtation = 10
+            career = GHOST
+            been_in_situations.add(19)
+            char_animation("\nYou have completed book 1! Are you liking it?")
+            char_animation("1. Yes")
+            char_animation("2. No")
+            choice = get_char_animation_in("Enter your choice: ",{'a':['yes','1'],'b':['no','2']}, allow_save=True)
+            if choice == 'b':
+                char_animation("I'm sorry to hear that.")
+            elif choice == 'a':
+                char_animation("I'm glad you are enjoying it!")
+            char_animation("If you would like to contribute check out TitanStar73/textadventure on github!")            
 
         char_animation("Where would you like to go?")
         char_animation("1. Throne Room")
