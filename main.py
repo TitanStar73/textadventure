@@ -1029,6 +1029,10 @@ GRASS_DIFFICULTY = 3
 #Golden flower in royal garden regen time in seconds
 GOLD_FLOWER_REGEN = 60*60*24
 
+#Answers to library questions, stored in this format:
+ROYAL_LIBRARY_QUESTIONS = {
+    -1: ["QUESTION", "ANSWER"]
+}
 #Battle against Rahas
 BATTLE_SIZE = 11
 BATTLE_REFRESH = f"\033[{BATTLE_SIZE + 3}A"
@@ -1351,6 +1355,7 @@ while True:
             char_animation("4 The path to the Dragon's lair, the sign itself tangled with vines and the path so overgrown it may as well not have been there.")
             choice = get_char_animation_in("Which path do you take?: ",{'2':['1','temple'],'3':['2','library'],'4':['3','arena'],'5':['4',"dragon","lair"]}, allow_save=True)
             situtation = int(choice)
+            been_in_situations.add(1)
         else: #Disable Dragon Lair after first one...
             char_animation(f"Hello {NAME}. You see 4 paths labeled with signs: ")
             char_animation("\n\n")
@@ -1862,6 +1867,7 @@ while True:
             char_animation("\n\nGood Luck Adventurer!")
            
             char_animation("You walk through the town and see a few paths: ")
+            been_in_situations.add(10)
 
         allowed = True
 
@@ -2904,8 +2910,47 @@ while True:
 
     elif situtation == 15: #Castle - Start of book 2!
         char_animation("\n\nCastle of the Day Before")
-        char_animation("Come back later!")
-        input()
+        if situtation not in been_in_situations:
+            char_animation("You walk towards the old castle and see a man running in fear!")
+            char_animation("He screams at you: 'Run! Save yourself! The mage is crazy!")
+            char_animation("\nAlthough you are shaken, you continue walking towards the castle.")
+            char_animation("It is your only hope to return to your physical form.")
+            char_animation("You reach the castle. It is old and crumbling. It is a shadow of its old glory.")
+            if get_karma('beaten_rahas') == 1:
+                char_animation("It would have been grander than even the Royal Palatium's Palace. Infact the Royal Palatium seems to have been modeled after this...")
+
+            char_animation(f"You walk in and see nothing...{PAUSE*2}nothing but darkness...")
+            char_animation(f"You hear a voice: 'Welcome {NAME}. I have been waiting for you.'")
+
+            char_animation("You see a ghostly figure infront of you - almost like you but somehow even more ghostly.")
+            char_animation("I am here to answer your questions and help you on your journey.")
+
+            char_animation("What do you ask?")
+            potential_questions = [
+                ("Who are you?", "I am the mage of the Good King."),
+            ]
+            while True:
+                char_animation("\n\n")
+                for i,question in enumerate(potential_questions):
+                    char_animation(f"{(i+1)}) {question[0]}")
+                char_animation("What would you like to ask?")
+                while True:
+                    choice = char_animation_in("Enter your choice: ")
+                    try:
+                        choice = int(choice)
+                        if choice >= 1 and choice <= len(potential_questions):
+                            break
+                    except:
+                        None
+                    char_animation("Invalid choice.")
+
+                char_animation("You ask: " + potential_questions[choice-1][0])
+                char_animation("He replies: " + potential_questions[choice-1][1])
+                potential_questions.pop(choice-1)
+                if len(potential_questions) == 0:
+                    break
+
+            been_in_situations.add(15)
     
     elif situtation == 18: # Royal Palatium
         char_animation("\n\nRoyal Palatium")
@@ -3034,6 +3079,7 @@ while True:
             char_animation("You are a ghost. You hear the warrior's laugh echoing thorugh your head.")
             char_animation("You head back to the town... you feel the shopkeeper can help you!")
             
+            previous_choices['beaten_rahas'] = 1
             situtation = 10
             career = GHOST
             been_in_situations.add(19)
@@ -3046,6 +3092,7 @@ while True:
             elif choice == 'a':
                 char_animation("I'm glad you are enjoying it!")
             char_animation("If you would like to contribute check out TitanStar73/textadventure on github!")            
+            continue
 
         char_animation("Where would you like to go?")
         char_animation("1. Throne Room")
@@ -3073,7 +3120,14 @@ while True:
                     previous_choices['gold_rose'] = str(seconds_since)
 
         elif choice == 'c':
-            pass
+            char_animation("You walk into the Royal Library and see the books and scrolls.")
+            char_animation("If you have a particular question, you can come here and get the answer.")
+            if int(get_karma('needs_answers_to')) in ROYAL_LIBRARY_QUESTIONS:
+                char_animation("You need the answer to: ", end = '')
+                char_animation(ROYAL_LIBRARY_QUESTIONS[int(get_karma('needs_answers_to'))][0])
+                char_animation("You find a book with the answer: ")
+                char_animation(ROYAL_LIBRARY_QUESTIONS[int(get_karma('needs_answers_to'))][1])
+
         elif choice == 'd':
             situtation = 18
 
