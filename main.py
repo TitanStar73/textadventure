@@ -50,6 +50,7 @@ import random
 import keyboard
 from itertools import cycle as itercycle
 from time import time as timenow
+import datetime
 
 
 DEBUG_ALLOWED = False #Turns on debug mode | PROCEED WITH CAUTION, ARBITARY PYTHON CODE CAN BE EXECUTED
@@ -844,7 +845,7 @@ PURPLE = DEFAULT_COLOR if DISABLE_COLORS else "\033[35m"
 
 person_type = 0
 career = 'None'
-previous_choices = {'sword_color':DEFAULT_COLOR, "sword_name":"sword"}
+previous_choices = {'sword_color':DEFAULT_COLOR, "sword_name":"sword", "gold_flower_regen":"0"}
 gold = 0
 credits = 0
 inventory = InventoryManager()
@@ -1024,6 +1025,9 @@ SLOT_ANIMATION_TIME = (1, 6, 0.35) #(time for each slot to be displayed, total s
 
 #Grass in farm
 GRASS_DIFFICULTY = 3
+
+#Golden flower in royal garden regen time in seconds
+GOLD_FLOWER_REGEN = 60*60*24
 
 #Battle against Rahas
 BATTLE_SIZE = 11
@@ -2905,9 +2909,7 @@ while True:
     
     elif situtation == 18: # Royal Palatium
         char_animation("\n\nRoyal Palatium")
-        if 18 not in been_in_situations:
-            pass
-
+        
         char_animation("Where would you like to go?")
         char_animation("1. Royal Palace")
         char_animation("2. Town Square")
@@ -2920,7 +2922,42 @@ while True:
         elif choice == 'b':
             situtation = 20
         elif choice == 'c':
-            pass
+            char_animation("Welcome to the Royale Market!")
+            char_animation("Today's selection includes: ")
+            char_animation("1. Potion of Strength (200 gold)")
+            char_animation("2. Wierd trinket?? (99 gold)")
+            char_animation("3. Enchanted Book of Fire (300 gold)")
+            char_animation("4. Enchanted Book of Poison (300 gold)")
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','strength'],'b':['2','trinket'],'c':['3','fire'],'d':['4','poison']})
+            if choice == 'a':
+                if gold >= 200:
+                    gold -= 200
+                    inventory.add("potion_of_strength")
+                    char_animation("You buy a potion of strength")
+                else:
+                    char_animation("You don't have enough gold")
+            elif choice == 'b':
+                if gold >= 99:
+                    gold -= 99
+                    inventory.add("weird_trinket")
+                    char_animation("You buy a weird trinket")
+                else:
+                    char_animation("You don't have enough gold")
+            elif choice == 'c':
+                if gold >= 300:
+                    gold -= 300
+                    inventory.add("enchantmentBook Fire")
+                    char_animation("You buy an enchanted book of fire")
+                else:
+                    char_animation("You don't have enough gold")
+            elif choice == 'd':
+                if gold >= 300:
+                    gold -= 300
+                    inventory.add("enchantmentBook Poison")
+                    char_animation("You buy an enchanted book of poison")
+                else:
+                    char_animation("You don't have enough gold")
+
         elif choice == 'd':
             situtation = 10
 
@@ -3017,9 +3054,24 @@ while True:
         char_animation("4. Back to the Royal Palatium Entrance")
         choice = get_char_animation_in("Enter your choice: ",{'a':['1','throne'],'b':['2','gardens'],'c':['3','library'], 'd':['4','entrance']})
         if choice == 'a':
-            pass
+            char_animation("You walk into the throne room and see the Good King's grandson - Endymion on the throne.")
+            char_animation("He smiles at you and says: 'Thank you for saving the city. You are a true hero.'")
         elif choice == 'b':
-            pass
+            char_animation("You walk into the Royal Gardens and see the beautiful flowers and trees.")
+            reference_date = datetime.datetime(2024, 1, 1, tzinfo=datetime.UTC)
+            current_date = datetime.datetime.now(datetime.UTC)
+            seconds_since = (current_date - reference_date).total_seconds()
+
+            if seconds_since - int(previous_choices['gold_flower_regen']) > GOLD_FLOWER_REGEN:
+                char_animation("You see a gold rose. Do you pick it up?")
+                char_animation("1. Yes")
+                char_animation("2. No")
+                choice = get_char_animation_in("Enter your choice: ",{'a':['1','yes'],'b':['2','no']})
+                if choice == 'a':
+                    inventory.add("gold_rose")
+                    char_animation("You pick up the gold rose.")
+                    previous_choices['gold_rose'] = str(seconds_since)
+
         elif choice == 'c':
             pass
         elif choice == 'd':
