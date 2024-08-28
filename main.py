@@ -8,7 +8,6 @@ Users will be given the option to provide an OpenAI API key to create a more ime
 
 Things to add
 #Imersive text: automatically change certain keywords to -> italic, bold, underline, color, etc. similar to sword
-#Training sequence
 """
 """Here are the settings you should edit:"""
 WPM = 350 #Words speed text animation, recommended: 350
@@ -29,7 +28,7 @@ Welcome to the Text Based Adventure!
 Some tips:
 Come back every once in a while to see if there are any new updates!
 Enter quit to exit the game.
-Enter save to save your progress in the game to a file (you will need to enter a filename).
+Enter save to save your progress in the game to a file (Only available if the last character in the text is PURPLE).
 Enter autosave to automatically save the game whenever possible.
 Enter inventory to view your inventory
       
@@ -98,6 +97,8 @@ if DISABLE_ANIMATION:
 
 def get_char_animation_in(msg,accepted:dict, allow_save = False,err_msg = ""): #{'choice1':['choice1','alias1','alias2'],'choice2':['choice2','alias1','alias2']}
     global situtation, NAME, been_in_situations, morailty, person_type, career, previous_choices, gold, inventory, autosave, credits
+    if allow_save and (not autosave):
+        msg = msg[:-1] + PURPLE + msg[-1] + DEFAULT_COLOR #Indicate it can be saved
     while True:
         choice = char_animation_in(msg).lower()
         if choice == 'autosave':
@@ -126,7 +127,7 @@ def get_char_animation_in(msg,accepted:dict, allow_save = False,err_msg = ""): #
             a = char_animation_in("Are you sure? If you haven't saved your progress, you will lose it. Press enter to confirm, or anything else to cancel. You can enter 'save' to save")
             if a == '':
                 exit()
-        elif choice == 'save' or (autosave and allow_save):
+        if choice == 'save' or (autosave and allow_save):
             if not allow_save:
                 char_animation("You can't save right now :(\nPlease wait till you are prompted which place to go next!")
                 continue
@@ -674,6 +675,20 @@ def real_fight_rahas():
         if boss_health == 0:
             banner, banner_showed_at = upload_banner("YOU WON! ", i, banner)
 
+        if i%(FPS*10) == 4: #Every 10 seconds
+            my_board.append([" h ",(randint(0,BATTLE_SIZE-3),randint(0,BATTLE_SIZE-1))])
+
+        my_board.clean()
+        for j in range(0,len(my_board)):
+            if my_board[j][0] == " h ":
+                x,y = my_board[j][1]
+                if my_board[" p "][1] == (x,y):
+                    player_health += 1
+                    my_board[j][1] = None
+                    banner, banner_showed_at = upload_banner("HEALTH RESTORED! ", i, banner)
+        
+        my_board.clean()
+
         shot_charged = min(100, round(((i - last_shot_at)/(FPS*SHOOT_COOLDOWN))*100))
         shot_charged_color = GREEN if shot_charged == 100 else (RED if shot_charged < 75 else YELLOW)
         banner_data = " " * (len(banner) + 5) if i - banner_showed_at > (FPS*2.5) else ' | ' + banner
@@ -733,6 +748,7 @@ class Board:
         self.render_icons = {
             ' p ' : f' {GREEN}@{DEFAULT_COLOR} ',
             ' e ' : f' {RED}#{DEFAULT_COLOR} ',
+            ' h ' : f' {RED}♥{DEFAULT_COLOR} ',
             'PRB' : f' {GREEN}→{DEFAULT_COLOR} ',
             'PLB' : f' {GREEN}←{DEFAULT_COLOR} ',
             'PDB' : f' {GREEN}↓{DEFAULT_COLOR} ',
@@ -3239,7 +3255,6 @@ while True:
             char_animation("Remember though - you can only use it once. Make sure you are ready.")
             char_animation("The wizard tells you, lets train a bit!")
 
-            #Enter a training sequence here, preparing to face the king (introduce the WASD keys and k keypresses)
             training_sequence()
 
             been_in_situations.add(21)
@@ -3248,10 +3263,34 @@ while True:
     
     elif situtation == 22: #Base part 2
         if 22 not in been_in_situations:
-            pass
+            char_animation("The Wizard: Great lets review the rest of the plan:")
+            char_animation("1. We sneak into the Royal Palace. We'll all help you but at the end it will be you vs Rahas.")
+            char_animation("2. You drink the strength potion and fight Rahas.")
+            char_animation("3. Once he is weakened, you use the silver bullet to finish him off.")
+
+            char_animation("\nOh by the way, here is your team who will come with you:")
+            char_animation("1. Caroline: The shapeshifter. She can transform into anything")
+            char_animation("2. John: The blacksmith. Besides fixing stuff, he is great at breaking stuff too!")
+            char_animation("3. Helen: The healer. She'll heal you up if required. If you are low, look out for her heart power-ups on the map'")
+            char_animation("4. Igor: The mage. He can cast spells and help you out.")
+            char_animation("5. Twilia: Besides being a queen, she is a great archer.")
+            char_animation("6. The Warrior: The warrior from the Arena, he is strong and will help you out!")
+
+            char_animation("You are ready. Lets put our plan into action, and good luck!")
+            previous_choices['ready_to_attack'] = 1
             been_in_situations.add(22)
+            situtation = 19
+
+            char_animation("Are you ready to attack?")
+            char_animation("1. Yes")
+            char_animation("2. Absolutely yes!")
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','yes'],'b':['2','absolutely']}, allow_save=True)
             continue
-        pass
+        
+        char_animation("Hey welcome to the secret base!")
+
+        char_animation_in("Click enter to continue...")
+        situtation = 20
 
 
     elif situtation == -1 and DEBUG_ALLOWED: #Debug
