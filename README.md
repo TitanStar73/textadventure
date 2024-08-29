@@ -6,6 +6,12 @@ Book 1 Completed!
 
 ![image](https://github.com/user-attachments/assets/624a18fd-d8a5-40b3-b8c4-1257ef356c2c)
 
+# Minigames!
+![image](https://github.com/user-attachments/assets/eb66dc03-36ff-48a8-80e9-3ea78fe84df7)
+
+![image](https://github.com/user-attachments/assets/27d19cbd-8c99-480e-bd47-375d8c46dbb7)
+
+
 # How to Play
  You have two options
  - Run the main.py python script
