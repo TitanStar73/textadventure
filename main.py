@@ -1040,7 +1040,8 @@ GOLD_FLOWER_REGEN = 60*60*24
 
 #Answers to library questions, stored in this format:
 ROYAL_LIBRARY_QUESTIONS = {
-    -1: ["QUESTION", "ANSWER"]
+    -1: ["QUESTION", "ANSWER"],
+    1 : ["Where is Kallisto's body?", "After she was killed by Malcor, her body was taken with him to his lair. You will find her body there."],
 }
 #Battle against Rahas
 BATTLE_SIZE = 11
@@ -3167,7 +3168,19 @@ while True:
                 if len(potential_questions) == 0:
                     break
 
+            char_animation("You thank Neiflam and start your journey to find the 3 objects.")
+            char_animation("Which object would you like to find first?")
+            char_animation("1. The source of power - Kallisto's heart. You must go to the library to find out where Kallisto's body is.")
+            char_animation("2. The source of balance - Someone who has been both good and evil. You must ask around, maybe the town square?")
 
+            choice = get_char_animation_in("Where would you like to go? ",{'a':['1','power'],'b':['2','balance']})
+            if choice == 'a':
+                situtation = 19
+            elif choice == 'b':
+                situtation = 20
+            
+            previous_choices['needs_answers_to'] = 1
+            previous_choices['king_replay'] = 1
             been_in_situations.add(15)
     
     elif situtation == 18: # Royal Palatium
@@ -3437,13 +3450,34 @@ while True:
         char_animation("Where would you like to go?")
         char_animation("1. Back to entrance")
         char_animation("2. To secret base")
-
-        choice = get_char_animation_in("Enter choice: ", {'a': ['1', 'entrance'], 'b':['2','secret','base']})
+        if int(previous_choices['king_replay']) == 1:
+            char_animation("3. To Caroline who says she knows something...")
+            choice = get_char_animation_in("Enter choice: ", {'a': ['1', 'entrance'], 'b':['2','secret','base'], 'c':['3','caroline']})
+        else:
+            choice = get_char_animation_in("Enter choice: ", {'a': ['1', 'entrance'], 'b':['2','secret','base']})
 
         if choice == 'a':
             situtation = 18
-        else:
+        elif choice == 'b':
             situtation = 21
+        elif choice == 'c':
+            char_animation("You walk up to Caroline and ask her what she knows.")
+            char_animation("She says: 'I know why the Warrior attacked you!'")
+            char_animation("You ask: 'Why?'")
+            char_animation("'He isn't who we thought he was. He works for Malcor the evil Dragon. Malcor was the one who created Rahas.'")
+            char_animation("'All of this I know...'")
+            char_animation("'Yes but this is what you don't know. Check this out' she says handing you a book.")
+            char_animation("In it is a picture of the Warrior")
+            char_animation("Under it a single caption: 'The Good King'")
+            char_animation("You look at her in shock.")
+            char_animation("She says: 'The Good King never died it appears. Or atleast he was brought back'")
+            char_animation("'It seems that Malcor has been controlling him all this time. Rahas was never the true enemy.'")
+            char_animation("You say: 'But wait, if the Good King used to be good but now is evil - he is the source of balance!'")
+            char_animation("'I need to find him and take a hair or something from him. He is the key to defeating Malcor.'")
+
+            #At this point the player finds and gets the warrior -> Redirect back to the entrance of the Royal Palatium.
+            #At the Royal Pallatium entrance, once the player knows about the heart of Kallisto AND has the source of balance, they can go to the Dragon Lair and start the final battle there
+            
 
     elif situtation == 21: #Base part 1
         if ('strength_potion' not in inventory) and (not get_karma('beaten_rahas')):
