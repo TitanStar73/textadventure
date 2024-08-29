@@ -420,9 +420,17 @@ def get_id(id):
 def play_maze():
     current_id = 1
     current_direction = 'f'
+    current_moves = 0
     while True:
         if current_id == 0:
             break
+        if current_moves == 50:
+            char_animation("You are lost in the maze. Then you hear a voice... 'Quick tip: If you always try to go left, if not left then straight, you will always find the exit - i.e. stick to the left wall.'")
+        if current_moves == 125:
+            #pity exit
+            break
+
+        current_moves += 1
         _, fdesc, flink, bdesc, blink = get_id(current_id) 
         if current_direction == 'f':
             char_animation(fdesc)
@@ -465,7 +473,7 @@ def training_sequence():
     char_animation(f"That is all you need to know\nGood luck!\n\n")
     char_animation_in("Press enter to continue...")
 
-def real_fight_rahas():
+def real_fight_rahas(boss_health = 100, player_health = 5):
     my_board = Board()
 
     def sleep_check_keys(sleeptime,keys):    
@@ -491,8 +499,8 @@ def real_fight_rahas():
     banner_showed_at = -1000
     banner = ""
 
-    boss_health = 100
-    player_health = 5
+    boss_health = boss_health
+    player_health = player_health
 
     boss_moving_up = True
 
@@ -677,7 +685,8 @@ def real_fight_rahas():
             banner, banner_showed_at = upload_banner("YOU WON! ", i, banner)
 
         if i%(FPS*10) == 4: #Every 10 seconds
-            my_board.append([" h ",(randint(0,BATTLE_SIZE-3),randint(0,BATTLE_SIZE-1))])
+            if " h " not in [item[0] for item in my_board]:
+                my_board.append([" h ",(randint(0,BATTLE_SIZE-3),randint(0,BATTLE_SIZE-1))])
 
         my_board.clean()
         for j in range(0,len(my_board)):
@@ -1285,8 +1294,7 @@ ENCHANTMENT_BOOKS = {
     "enchantmentBook Fire": "Covers your sword in an eternal flame",
     "enchantmentBook Poison": "Covers your sword in poison",
 }
-
-
+   
 while True:
     if career == None: #Standard Careers (not including ghost)
         if abs(morailty) >= 5 and abs(person_type) >= 5:
@@ -3019,7 +3027,41 @@ while True:
             char_animation("He runs at you with fury, hardstone sword in hand.")
             char_animation("You get up and run at him with the Aether Staff. You feel its power coursing through your veins.")
             
+            char_animation("\n\nThe battle begins!\n")
+            DIFFICULTY_BOSS *= 1.3 #Increase the difficulty by 30%
+            done = not real_fight_rahas(boss_health = 120, player_health = 4) #Increase boss health and reduce player health
+            while done:
+                char_animation("Sorry you lost!")
+                char_animation_in("Press enter to try again...")
+                done = not real_fight_rahas(boss_health = 120, player_health = 4) #Increase boss health and reduce player health
 
+            DIFFICULTY_BOSS /= 1.3 #Reset the difficulty
+            
+            char_animation("You fight him off! He is defeated for now...")
+            char_animation("You run into the cottage and grab the Nether Staff and run off into the forest.")
+            char_animation(f"{PAUSE*4}")
+            char_animation("Thats when you realise - the Warrior has one more trick up his sleeve.")
+            char_animation("His cottage isn't in a random clearing - it is in the middle of the Labrynith!")
+
+            play_maze()
+            
+            char_animation("You clear through the labrynith and are standing outside the forest, on the path to the Castle of the Day Before.")
+            char_animation("You put the Aether Staff and Nether Staff together and they both annihilate each other.")
+            char_animation("You feel a surge of energy flow through you...")
+            char_animation("You see some visions: ")
+            char_animation("A dark dragon flying through the sky with a white dragon.")
+            char_animation("The dark dragon now has purple eyes and is attacking the white dragon.")
+            char_animation("The white dragon is slayed.")
+            char_animation("The dark dragon is filled with grief.")
+            char_animation(PAUSE*5)
+            char_animation("And just as quickly as the visions came, they went away. You fade back into the physical world.")
+            char_animation("You are back in the physical world. You have successfully freed yourself!")
+
+            char_animation(PAUSE*5)
+            char_animation("You walk towards the Castle of the Day Before...")
+            char_animation("You are bursting with excitement and try to find the mage. You can't find him.")
+            char_animation("You look throughout the castle but he is nowhere to be found. That is when you see a letter from the mage: ")
+            
             been_in_situations.add(15)
     
     elif situtation == 18: # Royal Palatium
