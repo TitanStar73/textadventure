@@ -3037,7 +3037,7 @@ while True:
 
             DIFFICULTY_BOSS /= 1.3 #Reset the difficulty
             
-            char_animation("You fight him off! He is defeated for now...")
+            char_animation("You fight him off! He is struck by your blow and he bleeds dark purple blood. He is defeated for now...")
             char_animation("You run into the cottage and grab the Nether Staff and run off into the forest.")
             char_animation(f"{PAUSE*4}")
             char_animation("Thats when you realise - the Warrior has one more trick up his sleeve.")
@@ -3108,6 +3108,66 @@ while True:
             
             char_animation("You start walking towards the Dragon Sanctuary. Determined to find Neiflam and defeat Malcor.")
             
+            char_animation("You reach the Dragon Sanctuary and see the large golden gate.")
+            char_animation("You walk towards it and it opens itself.")
+            char_animation("You mutter to youself: 'I'll never get used to that.'")
+            char_animation("You walk onto the podium and Neiflam appears.")
+            char_animation("He says: 'What you seek is impossible. You cannot kill Malcor.'")
+            char_animation("You say: 'I have to try. I have to save the world.'")
+            char_animation(f"'Saving the world on the other hand... {PAUSE*3}that is a different story.'")
+            char_animation("'You see you cannot kill Malcor. You can however imprison him.'")
+            char_animation("'You can use the Inretial Spell - a spell which will imprison almost any being in the Never Realm.'")
+            char_animation("'The Never Realm is a phrophesiced place - a place which is neither here nor there. Even we Arch Dragons do not understand it.")
+            char_animation("'Creating a portal there is simple enough. Say the Incantation: ")
+            char_animation("'numquam semper'")
+            char_animation("With 3 objects near you: ")
+            char_animation("1. A source of power to fuel the spell")
+            char_animation("2. A source of balance to allow transport to the Never Realm - a place of balance")
+            char_animation("3. A source of difference - something which is from a different realm.")
+
+            char_animation("You must find these 3 objects and then you can imprison Malcor.")
+            char_animation("Which would you like to learn more about?")
+
+            potential_questions = []
+            potential_questions.append(( "The source of power",
+                    "The only source of power powerful enough to fuel the spell is the heart of an arch dragon",
+                    "The heart of a dragon must be taken from the only other arch dragon - Kallisto.",
+                    "Kallisto's body will not have decayed. You must find her heart - it is in Malcor's lair."
+                ))
+            potential_questions.append(( "The source of balance",
+                    "The source of balance is required to allow transport to the Never Realm.",
+                    "The Never Realm you see is the first realm - the home of the good and evil spirit.",
+                    "You must take someone who has been both good and evil..."
+                ))
+            potential_questions.append(( "The source of difference",
+                    "The source of difference is required to allow transport to a different Realm",
+                    "But this is the simplest - a single drop of your blood will suffice.",
+                    "You are from a different realm and so your blood will work"
+            ))
+            while True:
+                char_animation("\n\n")
+                for i,question in enumerate(potential_questions):
+                    char_animation(f"{(i+1)}) {question[0]}")
+                char_animation("What would you like to ask?")
+                while True:
+                    choice = char_animation_in("Enter your choice: ")
+                    try:
+                        choice = int(choice)
+                        if choice >= 1 and choice <= len(potential_questions):
+                            break
+                    except:
+                        None
+                    char_animation("Invalid choice.")
+
+                char_animation("You ask: " + potential_questions[choice-1][0])
+                char_animation("He replies: " + potential_questions[choice-1][1])
+                char_animation("He continues: " + potential_questions[choice-1][2])
+                char_animation("He finishes: " + potential_questions[choice-1][3])
+                potential_questions.pop(choice-1)
+                if len(potential_questions) == 0:
+                    break
+
+
             been_in_situations.add(15)
     
     elif situtation == 18: # Royal Palatium
