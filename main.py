@@ -3061,6 +3061,52 @@ while True:
             char_animation("You walk towards the Castle of the Day Before...")
             char_animation("You are bursting with excitement and try to find the mage. You can't find him.")
             char_animation("You look throughout the castle but he is nowhere to be found. That is when you see a letter from the mage: ")
+
+            char_animation("Dear {NAME},")
+            char_animation(" I am writing this at the time of Malcor the Dragon is taking over the surface world.")
+            char_animation(" He has killed the great Arch Dragon Kallisto and has taken over the Mortal Realm.")
+            char_animation(" He has created Rahas - a being of pure evil. Rahas literally means evil.")
+            char_animation(" My death is all but guaranteed. And there is no way to contact you once I have passed.")
+            char_animation(" I have left you all that I have - my castle.")
+            char_animation(" It is quite powerful - you can go into the past with it, although you will be a weak apparation.")
+            char_animation(" Stand infront of my mirror and say - 'convertat horologium' to go back in time.")
+            char_animation(" I hope you have much better luck than I did.")
+            char_animation(" Goodbye,")
+            char_animation(" The Mage of the Good King - The Mage of the Day Before")
+
+            char_animation("You realise that the apparation you saw wasn't of the mage.")
+            ans = char_animation_in("It was of: ")
+            for i in range(0,10):
+                if 'me' in ans.lower() or 'i' in ans.lower():
+                    break
+                ans = char_animation_in("Nope what you realised is that it was of: ")
+
+            char_animation("You realise you were the apparation. You check the closet and find some of his clothes.")
+            ans = char_animation_in("You stand infront of the mirror and say: ")
+            while True:
+                if ans.lower() == 'convertat horologium':
+                    break
+                char_animation("The mirror does nothing. You try again.")
+                ans = char_animation_in("You stand infront of the mirror and say: ")
+            
+            char_animation("You feel a deep pull in your gut and you are sucked into the mirror.")
+            char_animation("You are at the castle entrance. You see yourself walking towards the castle - still a ghost.")
+            char_animation("You answer your questions and come back to the present.")
+
+            char_animation("What do you do now?: ")
+            char_animation("1. Go back in time and help the mage")
+            char_animation("2. Go to the Dragon Sanctuary and ask Neiflam for help")
+
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','time'],'b':['2','sanctuary']})
+            if choice == 'a':
+                #Close up and plot holes showing that time travel happens in a closed loop, i.e. what happenes always happened.
+                char_animation("You go back in time and see the mage.")
+                char_animation("You say: 'I am here to help you. I am the chosen one. I can save you.'")
+                char_animation_in("You say: ")
+                char_animation("The mage looks at you and says: 'Haha, I understand. But my time is up. You will have more success in the future.'")
+                char_animation("He waves his hand and you are pulled back through the mirror - into the future.")
+            
+            char_animation("You start walking towards the Dragon Sanctuary. Determined to find Neiflam and defeat Malcor.")
             
             been_in_situations.add(15)
     
