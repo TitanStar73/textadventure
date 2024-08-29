@@ -1351,7 +1351,7 @@ while True:
             char_animation("\n\n")
             char_animation("1. The path going to the Temple, it has a a bricked road with lamps on the side.")
             char_animation("2. The path going to the Library, it has a road covered with leaves, seemingly not being disturbed in years.")
-            char_animation("3. The path to the Arena, it has a road with a lot of footchar_animations, and you can hear the sound of swords clashing from the distance.")                    
+            char_animation("3. The path to the Arena, it has a road with a lot of footsteps, and you can hear the sound of swords clashing from the distance.")                    
             char_animation("4 The path to the Dragon's lair, the sign itself tangled with vines and the path so overgrown it may as well not have been there.")
             choice = get_char_animation_in("Which path do you take?: ",{'2':['1','temple'],'3':['2','library'],'4':['3','arena'],'5':['4',"dragon","lair"]}, allow_save=True)
             situtation = int(choice)
@@ -2960,6 +2960,34 @@ while True:
             
             char_animation("'What do I do now?', you ask.")
             char_animation("The only thing which can destroy the Nether Staff is the Aether Staff - the opposite staff of the Nether Staff. When in contact, they will both annihilate each other.")
+
+            char_animation("The Aether staff can be found in the Sanctuary of Dragons. It is the place where the Arch Dragons lived eons ago.")
+            char_animation("You must go to the Sanctuary of Dragons and retrieve the Aether Staff, what surprises are there, you will see.")
+            char_animation(f"You leave for the Dragon Sanctuary, curious of what you will find{PAUSE}.{PAUSE}.{PAUSE}. and what you will face.")
+            
+            char_animation("\nYou reach the Sanctuary of Dragons and see a large golden gate. The gate is as tall as the sky itself.")
+            char_animation("You step towards the gate and it opens itself.")
+            char_animation("You walk in and see the large podium in front of you - The remenants of the Arch Dragon Council.")
+            char_animation("You see the Aether Staff in the center of the podium.")
+            char_animation("You walk towards it but as you reach it, it zaps you and you are thrown back.")
+            char_animation("You hear a deep ancient voice, coming from.{PAUSE}.{PAUSE}. inside you head: 'You want the Aether Staff? Why?'")
+            char_animation("You reply: 'I need it to destroy the Nether Staff and free myself from this ghostly plane of existence. Who are you?'")
+            char_animation("'I am the Arch Dragon Neiflam. I am the guardian of the Aether Staff.'")
+            char_animation("'We Arch Dragons live outside of your plane of existence in the Draconic Realm. Here time is non existant. In your mortal terms I suppose I can look into the future.'")
+            char_animation("'I see you are on a quest, but head my warning - Your enemy is not who you think it is.'")
+            
+            char_animation("\n'And for my part I will tell you the story of the Aether and Nether Staff.'")
+            char_animation("'We Arch Dragons lived in peace with humans for eons. One day however one of us - Malcor grew restless.'")
+            char_animation("'He wanted to rule over the humans and the Arch Dragons. He created the Nether Staff - a staff which could trap souls in an alternate plane of existence.'")
+            char_animation("'He turned on us and we were routed. He would have destroyed all of us if it wasn't for Kallisto - his wife.'")
+            char_animation("'She created a staff - equal yet opposite to the Nether Staff - the Aether Staff.'")
+            char_animation("'She held him off while we Arch Dragons escaped to the Draconic Realm - sealing ourselves off.'")
+            char_animation("'Kallisto sacrificed herself to save the rest of our kind. She defeated Malcor - at the cost of her own life.'")
+
+            char_animation("\n'You must realise that the Aether Staff and Nether Staff are linked far beyond what you can comprehend. In a crude sense you could call it love.'")
+            char_animation("'Here take the Aether Staff but be warned - you are playing with powers you do not know.'")
+
+
 
             been_in_situations.add(15)
     
