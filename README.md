@@ -4,6 +4,8 @@ always adding updates :)
 
 Book 1 Completed!
 
+![image](https://github.com/user-attachments/assets/624a18fd-d8a5-40b3-b8c4-1257ef356c2c)
+
 # How to Play
  You have two options
  - Run the main.py python script
