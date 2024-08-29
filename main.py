@@ -2979,15 +2979,46 @@ while True:
             char_animation("\n'And for my part I will tell you the story of the Aether and Nether Staff.'")
             char_animation("'We Arch Dragons lived in peace with humans for eons. One day however one of us - Malcor grew restless.'")
             char_animation("'He wanted to rule over the humans and the Arch Dragons. He created the Nether Staff - a staff which could trap souls in an alternate plane of existence.'")
-            char_animation("'He turned on us and we were routed. He would have destroyed all of us if it wasn't for Kallisto - his wife.'")
+            char_animation("'He turned on us and we were routed. He would have destroyed all of us if it wasn't for Kallisto - his love.'")
             char_animation("'She created a staff - equal yet opposite to the Nether Staff - the Aether Staff.'")
             char_animation("'She held him off while we Arch Dragons escaped to the Draconic Realm - sealing ourselves off.'")
             char_animation("'Kallisto sacrificed herself to save the rest of our kind. She defeated Malcor - at the cost of her own life.'")
 
             char_animation("\n'You must realise that the Aether Staff and Nether Staff are linked far beyond what you can comprehend. In a crude sense you could call it love.'")
             char_animation("'Here take the Aether Staff but be warned - you are playing with powers you do not know.'")
+            char_animation("Here is another useful thing - the Aether Staff always points towards the Nether Staff.")
+            
+            char_animation("\nBut how will I pick up the Aether Staff? I am a ghost.")
+            char_animation("The Aether Staff is made up of hard stone - All entities from all planes of this Realm can touch it.")
+            char_animation("Similarly beware - hardstone swords can hurt you, and you cannot pass through hardstone walls.")
 
+            char_animation("\nYou take the Aether Staff and feel an undescriable power surge through you. You leave the Sanctuary of Dragons to the place the Aether Staff calls you to.")
+            char_animation(f"You venture through the forest for a while{PAUSE*2}.{PAUSE*2}.{PAUSE*2}.{PAUSE*2} and reach a clearing.")
+            char_animation("In the clearing is a small cottage house. You walk near it and gaze through the window. You see the Warrior standing there.")
+            char_animation("Next to him is the Nether Staff. He is wearing hardstone armor and holding a shining hardstone sword.")
 
+            char_animation("You think of multiple plans to get the Nether Staff. What do you do?")
+            char_animation("1. Attack him, take the Nether Staff and run")
+            char_animation("2. Create a distraction and take the Nether Staff")
+            char_animation("3. Talk to him and try to convince him to give you the Nether Staff")
+
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','attack'],'b':['2','distraction'],'c':['3','talk']})
+            if choice == 'c':
+                char_animation("You walk up to the door and knock. He opens the door and looks at you in disbelief.")
+                char_animation(" 'Are you dumb walking upto me like that... You do know that hardstone can hurt you right? Never mind, I'll show you!'")
+                char_animation("With a single blow he knocks you out onto the ground.")
+            elif choice == 'a':
+                char_animation("You run through the door and attack him with the Aether Staff.")
+                char_animation("Without missing a beat he whips around and kicks you out of the cottage with a single blow.")
+                char_animation("You shoot through the window and land on the ground.")
+            elif choice == 'b':
+                char_animation("You create a distraction by zapping a rock through the cottage with the Aether Staff.")
+                char_animation("He runs out to see what happened. You run into the cottage. As you are about to enter, you are pulled back.")
+                char_animation("He uses his hardstone gloves to pull you back. You are thrown out of the cottage onto the ground.")
+            
+            char_animation("He runs at you with fury, hardstone sword in hand.")
+            char_animation("You get up and run at him with the Aether Staff. You feel its power coursing through your veins.")
+            
 
             been_in_situations.add(15)
     
