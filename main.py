@@ -718,6 +718,9 @@ def real_fight_rahas(boss_health = 100, player_health = 5):
     for key in ["w","a","s","d","j","k","l","i"]:
         keyboard.unblock_key(key)
 
+def fake_fight(boss_health = 100, player_health = 5):
+    pass
+
 class InventoryManager:
     def __init__(self, inventory = {}):
         self.inventory = inventory
@@ -3518,6 +3521,15 @@ while True:
             char_animation("2. Run away")
             char_animation("3. Climb up a tree")
             choice = get_char_animation_in("Enter your choice: ",{'a':['1','fight'],'b':['2','run'],'c':['3','climb']})
+            
+            if choice == 'b':
+                char_animation("You try to run away from the wolf")
+                char_animation("It is far faster than you.")
+                char_animation("You have no choice but to: ")
+                char_animation("1. Fight it")
+                char_animation("2. Climb up a tree")
+                choice = get_char_animation_in("Enter your choice: ",{'a':['1','fight'],'c':['2','climb']})
+            
             if choice == 'a':
                 if 'sword' in inventory:
                     char_animation("You take out your sword and fight the wolf.")
@@ -3531,11 +3543,51 @@ while True:
                         char_animation(" too!")
                     else:
                         char_animation("!")
+                if 'sword' not in inventory and 'potion' not in inventory:
+                    char_animation("You try to fight the wolf with a stick you pick up.")
+                    char_animation("It bites the stick and throws it away.")
+                char_animation("What do you do now?")
+                char_animation("1. Run away")
+                char_animation("2. Climb up a tree")
+                choice = get_char_animation_in("Enter your choice: ",{'b':['1','run'],'c':['2','climb']})
+            
+            if choice == 'b':
+                char_animation("You try running away from the wolf, but it quickly pounces on you.")
+                char_animation("You close your eyes and wait for the end.")
+                char_animation(f"{PAUSE}But it never comes.")
+
+            if choice == 'c':
+                char_animation("You try climbing up a tree but you trip and fall.")
+                char_animation("The wolf lunges at you and you close your eyes.")
+
+            char_animation("You open your eyes and you see a wildabeast attacking the wolf.")
+            char_animation("It was a strange sight!")
+            if previous_choices['caroline_with'] == 1:
+                char_animation("Its Caroline! She is attacking the wolf.")
+            
+            char_animation("You get up and the wolf runs away, having been defeated by Caroline.")
+            char_animation("The wildabeast turns back into Caroline", end = '')
+            if previous_choices['caroline_with'] == 1:
+                char_animation(".")
+            else:
+                char_animation("!")
+                char_animation(f"'Me be safe?! Looks like I need to keep you safe {NAME}.', she exclaims.")
+            
+            char_animation("You thank her and you both continue down the path.")
+            char_animation("You realise three things: ")
+            char_animation("Caroline is amazing!")
+            char_animation("You hate blood wolves (and they hate you)!")
+            char_animation("You have reached the Warrior's cottage!")
+
+            char_animation("You knock on the door and the Warrior opens it, surprised to see you!")
+            char_animation("You dare have the audacity to come here after what you did to me?!")
+            char_animation("And I see you have destroyed the Nether Staff and are no longer a ghost.")
 
             if get_karma('needs_answers_to') == 1:
                 char_animation("'Great now all I need is to head to the library,' you say.")
             else:
                 char_animation("'Great I am now ready to face Malcor!' you say.")
+
             previous_choices['spell_p1'] = 1
 
     elif situtation == 21: #Base part 1
