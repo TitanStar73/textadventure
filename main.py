@@ -3127,6 +3127,7 @@ while True:
             char_animation("3. A source of difference - something which is from a different realm.")
 
             char_animation("You must find these 3 objects and then you can imprison Malcor.")
+            char_animation("Once you have all 3 objects, go the the Entrance of the Royal Palatium. You will find the path to Malcor's lair there.")
             char_animation("Which would you like to learn more about?")
 
             potential_questions = []
@@ -3191,8 +3192,12 @@ while True:
         char_animation("2. Town Square")
         char_animation("3. Shops")
         char_animation("4. Town")
+        if get_karma("spell_p1") == 1 and get_karma("needs_answers_to") == 0:
+            char_animation("5. Head to Dragon's Lair to take down Malcor!")
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','palace'],'b':['2','square'],'c':['3','shops'],'d':['4','town'],'e':['5','lair']})
+        else:
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','palace'],'b':['2','square'],'c':['3','shops'],'d':['4','town']})
 
-        choice = get_char_animation_in("Enter your choice: ",{'a':['1','palace'],'b':['2','square'],'c':['3','shops'],'d':['4','town']})
         if choice == 'a':
             situtation = 19
         elif choice == 'b':
@@ -3236,6 +3241,9 @@ while True:
 
         elif choice == 'd':
             situtation = 10
+        
+        elif choice == 'e':
+            situtation = 30
 
     elif situtation == 19: #Royal Palace
         if get_karma("ready_to_attack") != 1:
@@ -3358,6 +3366,7 @@ while True:
                 char_animation(ROYAL_LIBRARY_QUESTIONS[int(get_karma('needs_answers_to'))][0])
                 char_animation("You find a book with the answer: ")
                 char_animation(ROYAL_LIBRARY_QUESTIONS[int(get_karma('needs_answers_to'))][1])
+                previous_choices['needs_answers_to'] = 0
 
         elif choice == 'd':
             situtation = 18
@@ -3474,10 +3483,14 @@ while True:
             char_animation("'It seems that Malcor has been controlling him all this time. Rahas was never the true enemy.'")
             char_animation("You say: 'But wait, if the Good King used to be good but now is evil - he is the source of balance!'")
             char_animation("'I need to find him and take a hair or something from him. He is the key to defeating Malcor.'")
-
-            #At this point the player finds and gets the warrior -> Redirect back to the entrance of the Royal Palatium.
-            #At the Royal Pallatium entrance, once the player knows about the heart of Kallisto AND has the source of balance, they can go to the Dragon Lair and start the final battle there
             
+            #Find and beat the warrior again with Calorine
+
+            if get_karma('needs_answers_to') == 1:
+                char_animation("'Great now all I need is to head to the library,' you say.")
+            else:
+                char_animation("'Great I am now ready to face Malcor!' you say.")
+            previous_choices['spell_p1'] = 1
 
     elif situtation == 21: #Base part 1
         if ('strength_potion' not in inventory) and (not get_karma('beaten_rahas')):
@@ -3751,5 +3764,14 @@ while True:
                     exec(command)
         
         situtation = int(input("Enter the new situtation: "))
+
+    elif situtation == 30: #Dragon's Lair, Final battle
+        char_animation("You walk towards the lair of Malcor the Dragon.")
+        char_animation("You see skulls and bones throughout the path there.")
+        char_animation_in("You continue on{PAUSE}.{PAUSE}.{PAUSE}.")
+        char_animation("You reach the entrance of the lair...")
+        char_animation("It is a large cave with a huge opening. From it you sense pure evil...")
+        char_animation_in("You walk in{PAUSE}.{PAUSE}.{PAUSE}.")
+
 
 char_animation("Goodbye!")
