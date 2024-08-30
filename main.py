@@ -4183,7 +4183,50 @@ while True:
 
         print(DRAGON_CLOSEUP)
 
-        char_animation("As he is about to strike you down - he stops. Hesitates for a second and you see his eyes change.")
+        char_animation("As he is about to strike you down - he stops. Hesitates for a second and the smoke in his eyes clears out once again.")
+
+        ans = char_animation_in("You get and idea! You scream: ")
+        if 'kallisto' not in ans.lower():
+            char_animation("To no effect...")
+            char_animation("Then it hits you. You scream: 'Kallisto! Kallisto! Kallisto!'")
+
+        char_animation("Malcor looks at you and speaks in the softest tone you ever heard: 'You speak her name...'")
+        char_animation("He looks at you and says: 'Where is she?'")
+        
+        char_animation("\nOnce again the smoke fills back his eyes - and he looks at you with disdain.")
+        char_animation("'HAHAHA you think you can defeat me! You know what... It has been long since I had amusing company...")
+        char_animation("I will tell you a story...")
+
+        char_animation("\nEons ago there live two arch dragons - Malcor and Kallisto. They were young powerful dragons in the world.")
+        char_animation("They were in love. They were on the top of the world - literally.")
+        char_animation("But then a voice spoke to Malcor. It told him that he could be the most powerful dragon in the world.")
+        char_animation("It told him he could rule all 12 realms. It told him he could be a god - with his love Kallisto by his side.")
+        char_animation("And so he was tempted. He spoke to the voice and it talked back to him.")
+        char_animation("It told him that he must free it from the Never Realm. That once free the voice will grant him all the power his heart desires.")
+        char_animation("And so he did. He found the the objects of balance - his own scale and difference - a feather from a phoenix from the Eternal Realm.")
+        char_animation("And so he came to this very cave and started the spell to free the voice.")
+        char_animation("Little did he know - Kallisto had found out. She knew it was too late so she ushered of the remaining dragons to the Draconic Realm and stayed back herself.")
+        char_animation("She didn't want to leave Malcor - for a life without him was no life at all.")
+        char_animation("And so she stayed. And went to the cave. The spell was almost complete...")
+        char_animation("A blinding light erupted, 100 yards behind where you are lying right now. And a portal started forming.")
+        char_animation("Kallisto tried what she could - she moved slashed at the portal trying to close it.")
+        char_animation("Malcor screamed out trying to stop her. But it was too late.")
+        char_animation("The voice was freed. The spell was complete.")
+        char_animation("Little did Malcor or Kallisto know - the final object for the spell was the object of power - the heart of a dragon.")
+        char_animation("And so Kallisto's heart was ripped out of her body and disintergrated infront of Malcor's very eyes.")
+        
+        char_animation("\nThe voice escaped and closed the portal behind it. Malcor was in grief - he had lost the love of his life.")
+        char_animation("He spoke to the voice angrily and told it to bring her back - bring her back from the dead.")
+        char_animation("The voice merely chuckled and said: 'I can't - because she isn't dead. She has had a fate worse than death.'")
+        char_animation("'Her very spirit has been transported to the Never Realm. She is permanently sealed in there.'")
+        char_animation("Malcor attacked the voice in rage but that is what the voice wanted - that is what I wanted.")
+        char_animation("I possessed Malcor - the mightiest of the dragons. I was free. The remaining realms were mine.")
+        char_animation("The remaining realms were mine - for I am the evil spirit - all powerful - all knowing - all evil.")
+
+        char_animation("\nYou look at Malcor and for the first time look at him in pity.")
+        char_animation("He was but a pawn in the game of the evil spirit.")
+
+        char_animation("\n")
 
         get_review()
 
