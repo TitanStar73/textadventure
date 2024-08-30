@@ -3461,9 +3461,9 @@ while True:
         char_animation("2. To secret base")
         if int(previous_choices['king_replay']) == 1:
             char_animation("3. To Caroline who says she knows something...")
-            choice = get_char_animation_in("Enter choice: ", {'a': ['1', 'entrance'], 'b':['2','secret','base'], 'c':['3','caroline']})
+            choice = get_char_animation_in("Enter choice: ", {'a': ['1', 'entrance'], 'b':['2','secret','base'], 'c':['3','caroline']}, allow_save=True)
         else:
-            choice = get_char_animation_in("Enter choice: ", {'a': ['1', 'entrance'], 'b':['2','secret','base']})
+            choice = get_char_animation_in("Enter choice: ", {'a': ['1', 'entrance'], 'b':['2','secret','base']}, allow_save=True)
 
         if choice == 'a':
             situtation = 18
@@ -3484,7 +3484,53 @@ while True:
             char_animation("You say: 'But wait, if the Good King used to be good but now is evil - he is the source of balance!'")
             char_animation("'I need to find him and take a hair or something from him. He is the key to defeating Malcor.'")
             
-            #Find and beat the warrior again with Calorine
+            char_animation("You tell Caroline: 'Thanks for your help. I will head back to the forest to try and find the Warrior, I mean the Good King'")
+            char_animation("As you are walking away she comes after you and says: 'Wait! I'll come with you!'")
+
+            char_animation("\nDo you accept her help?")
+            char_animation("1. Yes, she will be a valuable asset")
+            char_animation("2. No, she is safer here")
+
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','yes'],'b':['2','no']})
+            if choice == 'a':
+                char_animation("You say: 'Yes, you can come with me.'")
+                char_animation("She smiles and says: 'Great! Lets go!'")
+                previous_choices['caroline_with'] = 1
+            elif choice == 'b':
+                char_animation("You say: 'No, you are safer here.'")
+                char_animation("She looks at you and says: 'I understand, Ill be here if you need help.'")
+                previous_choices['caroline_with'] = 0
+            
+            char_animation("You head towards the forest...")
+            char_animation("As you enter the forest you are tired. You sit down and rest.")
+            if previous_choices['caroline_with'] == 1:
+                char_animation("Caroline says: 'I'll get some water, you wait here.'")
+            
+            char_animation("As you sit there, you wonder about the Good King. He was so good, yet he was turned evil.")
+            char_animation("What if Malcor turned me evil...")
+            char_animation("You shake your head. Such thoughts are dangerous.")
+            
+            char_animation("\nAs you are resting you hear a growl behind you.")
+            char_animation("You turn around and see a giant wolf. It is snarling at you.")
+            char_animation("You stand up and it lunges at you.")
+            char_animation("What do you do?")
+            char_animation("1. Fight it")
+            char_animation("2. Run away")
+            char_animation("3. Climb up a tree")
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','fight'],'b':['2','run'],'c':['3','climb']})
+            if choice == 'a':
+                if 'sword' in inventory:
+                    char_animation("You take out your sword and fight the wolf.")
+                    char_animation("You attack it with your sword but it slashes right off.")
+                    char_animation("You remember, blood wolves are invulnerable to ordinary weapons.")
+                if 'potion' in inventory:
+                    char_animation("You take out a potion of harming and throw it at the wolf.")
+                    char_animation("The wolf appears irritated at best.")
+                    char_animation("It appears that the wolf is invulnerable to most magic", end = '')
+                    if 'sword' in inventory:
+                        char_animation(" too!")
+                    else:
+                        char_animation("!")
 
             if get_karma('needs_answers_to') == 1:
                 char_animation("'Great now all I need is to head to the library,' you say.")
