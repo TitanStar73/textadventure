@@ -473,7 +473,7 @@ def training_sequence():
     char_animation(f"That is all you need to know\nGood luck!\n\n")
     char_animation_in("Press enter to continue...")
 
-def real_fight_rahas(boss_health = 100, player_health = 5):
+def real_fight_rahas(boss_health = 100, player_health = 5, max_iterations = 1_000_000):
     my_board = Board()
 
     def sleep_check_keys(sleeptime,keys):    
@@ -503,13 +503,14 @@ def real_fight_rahas(boss_health = 100, player_health = 5):
     player_health = player_health
 
     boss_moving_up = True
+    flag = None
 
     for key in ["w","a","s","d","j","k","l","i"]:
         keyboard.block_key(key)
 
     print(HIDE_CURSOR)
 
-    for i in range(0,1_000_000):
+    for i in range(0,max_iterations):
         last_pressed = sleep_check_keys(1/FPS,["w","a","s","d","j","k","l","i"])
 
         #Movement handler
@@ -706,20 +707,25 @@ def real_fight_rahas(boss_health = 100, player_health = 5):
         my_board.render_screen(f"{PURPLE}BOSS HEALTH: {boss_health}{DEFAULT_COLOR}{banner_data}", f"YOUR HEALTH: {RED}{player_health * '♥'}{DEFAULT_COLOR}{' ' * (5-player_health)}  |  Shot charged up: {shot_charged_color}{' '*(3-len(str(shot_charged)))}{shot_charged}%{DEFAULT_COLOR}", " - ")
 
         if player_health == 0:
-            print("\n" * (BATTLE_SIZE + 4))
-            return False
+            flag = False
+            break
 
         if boss_health == 0:
-            print("\n" * (BATTLE_SIZE + 4))
-            return True
-
+            flag = True
+            break
+        
+    print("\n" * (BATTLE_SIZE + 4))
     print(SHOW_CURSOR)
 
     for key in ["w","a","s","d","j","k","l","i"]:
         keyboard.unblock_key(key)
 
+    return flag
+
 def fake_fight(boss_health = 100, player_health = 5):
-    pass
+    real_fight_rahas(boss_health = boss_health, player_health = player_health, max_iterations = FPS*5)
+    print(CAROLINE_WILDABEAST)
+    print("Caroline transforms into a wildabeast and attacks the Warrior!")
 
 class InventoryManager:
     def __init__(self, inventory = {}):
@@ -1059,6 +1065,10 @@ BULLET_SPEED = 5
 DIFFICULTY_BOSS = 300 #Max is 500
 FPS = 30
 
+CAROLINE_WILDABEAST = """
+RAWRRR
+"""
+
 #Syntax
 #Each tuple is a section of the maze. It contains:
 # (ID,FORWARD_DESC,FORWARD_LINKING_IDS, BACKWARD_DESC, BACKWARD_LINKING_IDS) #None defualts to same as the other
@@ -1298,7 +1308,9 @@ ENCHANTMENT_BOOKS = {
     "enchantmentBook Fire": "Covers your sword in an eternal flame",
     "enchantmentBook Poison": "Covers your sword in poison",
 }
-   
+
+fake_fight()
+
 while True:
     if career == None: #Standard Careers (not including ghost)
         if abs(morailty) >= 5 and abs(person_type) >= 5:
@@ -3579,9 +3591,34 @@ while True:
             char_animation("You hate blood wolves (and they hate you)!")
             char_animation("You have reached the Warrior's cottage!")
 
-            char_animation("You knock on the door and the Warrior opens it, surprised to see you!")
+            char_animation("What do you do?")
+            char_animation("1. Knock on the door")
+            char_animation("2. Sneak in")
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','knock'],'b':['2','sneak']})
+
+            if choice == 'a':
+                char_animation("You knock on the door and the Warrior opens it, surprised to see you!")
+            if choice == 'b':
+                char_animation(f"You sneak in{PAUSE*3}.\nthe Warrior whurls around and sees you. He looks at you with disdain!")
+
             char_animation("You dare have the audacity to come here after what you did to me?!")
             char_animation("And I see you have destroyed the Nether Staff and are no longer a ghost.")
+            char_animation("\nI am here in peace. All I want is a single strand of your hair!")
+
+            char_animation("He looks at you and says: 'You think you can defeat my Lord? You think you can defeat me?'")
+            ans = char_animation_in("You reply: ")
+            if 'malcor' in ans.lower():
+                char_animation("He looks at you and says: 'You dare speak his name!'")
+            char_animation("You shall die!!!")
+
+            fake_fight() #Fake fight, seems like a normal boss fight but Caroline becomes a wildabeast and ends it in like 3 seconds lol
+
+            char_animation("Caroline/Wildabeast holds the Warrior down and you tie him up.")
+            char_animation("You take a strand of his hair, and Caroline turns back into a human.")
+            char_animation_in("You wittily tell the Warrior: ")
+            char_animation("the Warrior looks at you with pure hatred. Caroline smirks with glee.")
+
+            char_animation(f"\nYou head back to the Town Square...{PAUSE*3}")
 
             if get_karma('needs_answers_to') == 1:
                 char_animation("'Great now all I need is to head to the library,' you say.")
