@@ -1134,6 +1134,14 @@ IMMERSIVE_TEXT_KEYWORDS = {
     "Credits" : BLUE + "Credits",
     "Bones" : WHITE + "Bones",
     "Skull" : WHITE + "Skull",
+    "Fire" : RED + "Fire",
+    "Magical" : PURPLE + "Magical",
+    "Purple" : PURPLE + "Purple",
+    "Red" : RED + "Red",
+    "Green" : GREEN + "Green",
+    "Blue" : BLUE + "Blue",
+    "Yellow" : YELLOW + "Yellow",
+    "White" : WHITE + "White",
 }
 
 #Taken from https://emojicombos.com/dragon
@@ -4127,7 +4135,55 @@ while True:
         char_animation("It is a large cave with a huge opening. From it you sense pure evil...")
         char_animation_in("You walk in{PAUSE}.{PAUSE}.{PAUSE}.")
 
-        char_animation("\n\nThats all for Book 2! Come back soon for Book 3!")
+        char_animation("You see nothing in the pitch black darkness.")
+        char_animation("You hear a dark voice: 'So you have come...'")
+        char_animation("The voice is the most despicalbe evil voice you have ever heard.")
+        char_animation("You try to move forward but you are petrified in your place.")
+
+        char_animation("\nWhat do you do?")
+        char_animation("1. Try to move forward")
+        char_animation("2. Try to run away")
+        char_animation("3. Scream at Malcor")
+        choice = get_char_animation_in("Enter your choice: ",{'a':['1','move'],'b':['2','run'],'c':['3','scream']})
+        if choice == 'a':
+            char_animation("You try moving forward but your legs are firmly stuck on the ground.")
+        if choice == 'b':
+            char_animation("You try running away but you can't move, your legs are stuck firmly on the ground.")
+        if choice in {'a','b'}:
+            char_animation("Malcor laughs and says: 'You are but a mortal - you think you can defeat me?'")
+            char_animation("'You can't even move!'")
+        
+        char_animation("You try to scream at Malcor but no sound comes out.")
+        char_animation_in("Mustering all your courage you scream: ")
+        char_animation("Malcor laughs evilly. He moves forward and you can see his eyes: ")
+        char_animation("They are glazed with purple smoke. They are the most evil eyes you have ever seen.")
+
+        ans = char_animation_in("You muster all your courage and scream: ")
+        if 'kallisto' not in ans.lower():
+            char_animation("Malcor breathes heavily and you feel the heat of his breath.")
+            char_animation("He says: 'You amuse me...'")
+            char_animation("You scream: 'How can you kill her?! How could you kill Kallisto - the love of your life?!'")
+        
+        char_animation(f"Malcor looks at you stunned for a second. {PAUSE*3}")
+        char_animation("Malcor's eyes change - the smoke clears a bit.")
+        char_animation("A new voice emerges out of him - one harshly different to the previous one - it is filled with kindness.")
+        char_animation(f"'Ka{PAUSE}llis{PAUSE}to{PAUSE}. No {PAUSE*2}I could not have {PAUSE*3}killed her...' he says.")
+
+        char_animation("You see a tear fall from his eye. But just as quickly as it came, it is gone.")
+        char_animation("The smoke returns to his eyes and his voice returns to the evil one - 'ENOUGH!'")
+        char_animation("He moves his head out of the darkness and you see his head - the most massive structure you have ever seen.")
+
+        print(DRAGON_HEAD)
+
+        char_animation("You are shocked at the sight of Malcor. Perhaps as a good thing, you are so scared you are no longer petrified into place.")
+        char_animation(f"He blows fire at you - magical fire purple in color, you dash out of the way.")
+
+        char_animation("He lunges at you and you dodge out of the way, skidding across the floor of the cavern.")
+        char_animation("He stands above you... and you see him in his full glory.")
+
+        print(DRAGON_CLOSEUP)
+
+        char_animation("As he is about to strike you down - he stops. Hesitates for a second and you see his eyes change.")
 
         get_review()
 
