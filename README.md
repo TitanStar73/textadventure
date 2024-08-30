@@ -6,7 +6,7 @@ Book 2 Completed!
 
 ![image](https://github.com/user-attachments/assets/624a18fd-d8a5-40b3-b8c4-1257ef356c2c)
 
-# Minigames!
+# Minigames! (animated + colourful!)
 ![image](https://github.com/user-attachments/assets/eb66dc03-36ff-48a8-80e9-3ea78fe84df7)
 
 ![image](https://github.com/user-attachments/assets/27d19cbd-8c99-480e-bd47-375d8c46dbb7)
@@ -21,7 +21,7 @@ The other files are archival or just test files.
 
 Keep in mind, when you enable autosave, it saves to `game.data` and will overwrite a pre-existing file with that name.
 
-# Story
+# Story (please bare with me, I swear it has a great backstory and plot :P )
 
 Set in a Mythical Kingdom, somewhere, sometime
 > You wake up in the clearing of a forest, not remembering how you got here. You don't remember anything or anyone. The only thing you remember is a single word: your name.
