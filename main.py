@@ -4306,7 +4306,62 @@ while True:
             char_animation("The Good King's armor cannot be in the Dragon Lair")
             char_animation("The evil spirit would be weakened by it - it must be far from the Dragon Lair but still safe...")
 
-        #Get good kings armor and stuff
+        char_animation("What do you do next?")
+        char_animation("1. Go to Castle and see if the mage left any clues")
+        char_animation("2. Go to the town square and ask the Wizard")
+        char_animation("3. Go to the library and see if you find anything")
+        choice = get_char_animation_in("Enter your choice: ",{'a':['1','castle'],'b':['2','town'],'c':['3','library']})
+
+        if choice == 'b':
+            char_animation("You head to the town square and see the Wizard.")
+            char_animation("You explain him your predicament and he nods.")
+            char_animation("'Unforntunately I have no idea' he says.")
+            char_animation("\nWhat do you do?")
+            char_animation("1. Go to Castle and see if the mage left any clues")
+            char_animation("2. Go to the library and see if you find anything")
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','castle'],'c':['2','library']})
+        elif choice == 'c':
+            char_animation("You head to the Royal Pallatium's library to see if you can find anything.")
+            char_animation("The only thing you find is - 'The Good King's armor was presumably destroyed after his death'")
+            char_animation("What do you do next?")
+            char_animation("1. Go to Castle and see if the mage left any clues")
+            char_animation("2. Go to the town square and ask the Wizard")
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','castle'],'b':['2','town']})
+
+        if choice == 'b':
+            char_animation("You head to the town square and see the Wizard.")
+            char_animation("You explain him your predicament and he nods.")
+            char_animation("'Unforntunately I have no idea' he says.")
+            char_animation("\nYou head towards the castle to see if the mage left any clues.")
+        elif choice == 'c':
+            char_animation("You head to the Royal Pallatium's library to see if you can find anything.")
+            char_animation("The only thing you find is - 'The Good King's armor was presumably destroyed after his death'")
+            char_animation("You head towards the castle to see if the mage left any clues.")
+
+        char_animation("You reach the castle - still amazed by the ruins of the once great building.")
+        char_animation("You walk through the ruins and go to the mage's room.")
+        char_animation("What do you do?")
+        char_animation("1. Search the room for any clues")
+        char_animation("2. Try using the mirror to go back in time and ask the mage.")
+        
+        choice = get_char_animation_in("Enter your choice: ",{'a':['1','search'],'b':['2','mirror']})
+
+        if choice == 'a':
+            char_animation("You try searching the room but find nothing...")
+            char_animation("You try using the mirror to go back in time and ask the mage.")
+
+        ans = char_animation_in("You look at the mirror and say the incantation: ")
+        if ans.lower() != 'convertat horologium':
+            for i in range(0,5):
+                ans = char_animation("Nothing happens. You say: ")
+                if ans.lower() == 'convertat horologium':
+                    break
+            if ans.lower() != 'convertat horologium':
+                char_animation("A nagging thought in the back of your head shows you the spell.")
+                char_animation("You mutter 'convertat horologium' and the mirror pulls you in.")
+
+        char_animation("You are back in time and you see the mage infront of you...")
+
         situtation = 32
 
     elif situtation == 32: #Dragon lair, actual final battle
