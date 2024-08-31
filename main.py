@@ -1152,7 +1152,7 @@ if DISABLE_COLOR_REPLACE:
     IMMERSIVE_TEXT_KEYWORDS = {}
 
 #Taken from https://emojicombos.com/dragon
-DRAGON = r"""
+DRAGON = f"""{BLUE}
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⣀⣀⣠⣼⠀⠀⠀⠀⠈⠙⡆⢤⠀⠀⠀⠀⠀⣷⣄⣀⣀⣀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣴⣾⣿⣿⣿⣿⣿⣿⡿⢿⡷⡆⠀⣵⣶⣿⣾⣷⣸⣄⠀⠀⠀⢰⠾⡿⢿⣿⣿⣿⣿⣿⣿⣷⣦⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣾⣿⣿⣿⣿⣽⣿⣿⣿⣿⡟⠀⠀⠀⠀⣾⣿⣿⣿⣿⣿⣿⣿⣄⠀⠀⠀⠀⠀⠀⢹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -1160,7 +1160,7 @@ DRAGON = r"""
 ⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⢿⣿⣿⣿⡄⠀⠀⠀⠀⢻⣿⣿⣷⡌⠸⣿⣾⢿⡧⠀⠀⠀⠀⠀⢀⣿⣿⣿⡿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⡀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⣠⣾⡿⢛⣵⣾⣿⣿⣿⣿⣿⣯⣾⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⢻⣿⣿⣿⣶⣌⠙⠋⠁⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣷⣽⣿⣿⣿⣿⣿⣷⣮⡙⢿⣿⣆⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⣰⡿⢋⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⣿⣿⣿⣿⣧⡀⠀⠀⠀⣠⣽⣿⣿⣿⣿⣷⣦⡀⠀⠀⠀⢀⣼⣿⣿⣿⣿⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣝⢿⣇⠀⠀⠀⠀
-⠀⠀⠀⣴⣯⣴⣿⣿⠿⢿⣿⣿⣿⣿⣿⣿⡿⢫⣾⣿⣿⣿⣿⣿⣿⡦⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⡀⢴⣿⣿⣿⣿⣿⣿⣷⣝⢿⣿⣿⣿⣿⣿⣿⡿⠿⣿⣿⣧⣽⣦⠀⠀⠀
+⠀⠀⠀⣴⣯⣴⣿⣿⠿⢿⣿⣿⣿⣿⣿⣿⡿⢫⣾⣿⣿⣿⣿⣿⣿⡦⢀⣼⣿⣿⣿{PURPLE}⣿⣿{BLUE}⣿⣿⣿⣿⣦⡀⢴⣿⣿⣿⣿⣿⣿⣷⣝⢿⣿⣿⣿⣿⣿⣿⡿⠿⣿⣿⣧⣽⣦⠀⠀⠀
 ⠀⠀⣼⣿⣿⣿⠟⢁⣴⣿⡿⢿⣿⣿⡿⠛⣰⣿⠟⣻⣿⣿⣿⣿⣿⣿⣿⡿⠿⠋⢿⣿⣿⣿⣿⣿⠻⢿⣿⣿⣿⣿⣿⣿⣿⣟⠻⣿⣆⠙⢿⣿⣿⡿⢿⣿⣦⡈⠻⣿⣿⣿⣧⠀⠀
 ⠀⡼⣻⣿⡟⢁⣴⡿⠋⠁⢀⣼⣿⠟⠁⣰⣿⠁⢰⣿⣿⣿⡿⣿⣿⣿⠿⠀⣠⣤⣾⣿⣿⣿⣿⣿⠀⠀⠽⣿⣿⣿⢿⣿⣿⣿⡆⠈⢿⣆⠀⠻⣿⣧⡀⠈⠙⢿⣦⡈⠻⣿⣟⢧⠀
 ⠀⣱⣿⠋⢠⡾⠋⠀⢀⣠⡾⠟⠁⠀⢀⣿⠟⠀⢸⣿⠙⣿⠀⠈⢿⠏⠀⣾⣿⠛⣻⣿⣿⣿⣿⣯⣤⠀⠀⠹⡿⠁⠀⣿⠏⣿⡇⠀⠹⣿⡄⠀⠈⠻⢷⣄⡀⠀⠙⢷⣄⠙⣿⣎⠂
@@ -1175,7 +1175,7 @@ DRAGON = r"""
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢷⣴⡿⣷⠀⠀⢰⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠴⡿⣟⣿⣿⣶⡶⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 
-"""
+{DEFAULT_COLOR}"""
 DRAGON_HEAD = r"""
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⠄⠀⠀⠀⢠⡾⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣿⠋⠀⠀⠀⢠⡟⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⢶⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -4292,14 +4292,44 @@ while True:
         char_animation("You won!")
         char_animation("The battle is over. The evil spirit's hold on Malcor is weakened.")
 
-        #Malcor sacrifice and stuff
+        char_animation("Malcor looks at you and in a weak voice mutters: ")
+        char_animation("'Start the spell... now'")
+        
+        char_animation("\nYou take out the hair of the Warrior and place it infront of you.")
+        char_animation("You take a single drop of your blood.")
+        ans = char_animation_in("And you say the incantation: ")
+        if ans.lower() != 'numquam semper':
+            for i in range(0,5):
+                ans = char_animation("Nope. Nothing happens. Try again: ")
+                if ans.lower() == 'numquam semper':
+                    break
+            if ans.lower() != 'numquam semper':
+                char_animation("A voice in the back of your head gives you the spell.")
+                char_animation("You scream 'NUMQUAM SEMPER' and the spell starts.")
+        
+        char_animation("Your blood and the hair glow and burst into light.")
+        char_animation("A cloudy portal starts forming. You continue chanting 'NUMQUAM SEMPER'.")
+        char_animation("The portal grows and grows until it is a massive swirling vortex.")
+        char_animation("Yet it is clearly not completed yet...")
+        char_animation("Malcor still fighting the evil spirit for control of his own body, slowly moves towards the portal.")
+        char_animation("With a single slash of his claw, he touches the portal.")
+        char_animation("His heart is ripped out and his body disinigrates.")
+        char_animation("With a blinding light you are thrown back.")
+        char_animation("You see a dragon spirit, holding the evil spirit's purple form\n")
 
-        char_animation("The Warrior walks into the cave. But he looks different.")
+        print(DRAGON)
+
+        char_animation("You see a flash of blue and purple forms - the evil spirit and another form.")
+        char_animation("And you see Malcor's spirit - and another dragon spirit...")
+        char_animation("\nAnd with a bang the portal closes. And you black out.\n")
+
+        char_animation(f"{PAUSE*6}When you come to you are still in the cave")
+        char_animation("\nThe Warrior walks into the cave. But he looks different.")
         char_animation("He is no longer under the control of the evil spirit.")
         char_animation("He walks up to you and says, I am proud of you. You have single handedly rescued our realm from a hundred years of darkness.")
         char_animation("The Warrior/Good King look at you and says: 'We are forever indebted to you. You have saved us all.'")
         char_animation("\nYou ask: 'But what of Malcor, Kallisto and the evil spirit?'")
-        char_animation("Ahh yes, a truly curious outcome. Perhaps a story for another time...{PAUSE} Nah I'm just kidding, you should see the look on your face...")
+        char_animation(f"Ahh yes, a truly curious outcome. Perhaps a story for another time...{PAUSE} Nah I'm just kidding, you should see the look on your face...")
 
         char_animation("\nYou see the Never Realm is the realm of the good spirit and evil spirit.")
         char_animation("They are forever locked in a battle but a hundred years ago the evil spirit escaped.")
