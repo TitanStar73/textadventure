@@ -82,7 +82,11 @@ def char_animation(msg, end = "\n"):
     global previous_choices
     msg = msg.replace("sword", f"{previous_choices['sword_color']}{previous_choices['sword_name']}{DEFAULT_COLOR}")
     msg = msg.replace("{PAUSE}", f"{PAUSE}") #Adds a pause incase fstring was accidently not used
-    for item in IMMERSIVE_TEXT_KEYWORDS:
+    
+    sorted_immersive = sorted(IMMERSIVE_TEXT_KEYWORDS.keys(), key = lambda x: len(x))
+    sorted_immersive = sorted_immersive[::-1] #Flips keys and sorts to allow for longer keywords to be replaced first, prevents clashes like magical and magic
+    
+    for item in sorted_immersive:
         msg = msg.replace(item, IMMERSIVE_TEXT_KEYWORDS[item] + DEFAULT_COLOR)
         msg = msg.replace(item.lower(), IMMERSIVE_TEXT_KEYWORDS[item].lower() + DEFAULT_COLOR)
 
@@ -476,8 +480,11 @@ def training_sequence():
     char_animation(f"That is all you need to know\nGood luck!\n\n")
     char_animation_in("Press enter to continue...")
 
-def real_fight_rahas(boss_health = 100, player_health = 5, max_iterations = 1_000_000):
+def real_fight_rahas(boss_health = 100, player_health = 5, max_iterations = 1_000_000, max_health = None):
     my_board = Board()
+
+    if max_health == None:
+        max_health = int(player_health)
 
     def sleep_check_keys(sleeptime,keys):    
         start = timenow() #Apparently faster than datetime.now()?
@@ -688,7 +695,7 @@ def real_fight_rahas(boss_health = 100, player_health = 5, max_iterations = 1_00
         if boss_health == 0:
             banner, banner_showed_at = upload_banner("YOU WON! ", i, banner)
 
-        if i%(FPS*10) == 4: #Every 10 seconds
+        if i%(FPS*10) == 4 and player_health < max_health: #Every 10 seconds
             if " h " not in [item[0] for item in my_board]:
                 my_board.append([" h ",(randint(0,BATTLE_SIZE-3),randint(0,BATTLE_SIZE-1))])
 
@@ -698,6 +705,8 @@ def real_fight_rahas(boss_health = 100, player_health = 5, max_iterations = 1_00
                 x,y = my_board[j][1]
                 if my_board[" p "][1] == (x,y):
                     player_health += 1
+                    if player_health > max_health:
+                        player_health = max_health
                     my_board[j][1] = None
                     banner, banner_showed_at = upload_banner("HEALTH RESTORED! ", i, banner)
         
@@ -1147,6 +1156,8 @@ IMMERSIVE_TEXT_KEYWORDS = {
     "Evil" : PURPLE + "Evil",
     "Together": RED + "Together",
     "Time" : GREEN + "Time",
+    "Fireball" : RED + "Fireball",
+    "Magic" : PURPLE + "Magic",
 }
 if DISABLE_COLOR_REPLACE:
     IMMERSIVE_TEXT_KEYWORDS = {}
@@ -4270,19 +4281,48 @@ while True:
         char_animation("You run and run until you reach the town square. You see the Wizard there.")
         char_animation(f"He asks {NAME}: 'What happened?'")
         char_animation("You quickly explain everything to him. He nods and looks at you deeply: 'So you need the Warrior's armor and weapons, I suppose?'")
-        char_animation("'Very well, Igor and Twilia will help you. Caroline and John have gone on another mission at the moment.'") #Potential opening for spin-off along w/ mage and Never Realm
+        char_animation("'According to legend, the Good King's armor was given to him by Kallisto herself. It was forged out of hard light.'")
+        char_animation("'It is probably enchanted and will give you a fighting chance against the evil spirit.'")
+        char_animation("'Very well, Igor and Twilia will help you. Caroline and John have gone on another mission at the moment and haven't returned since...'") #Potential opening for spin-off along w/ mage and Never Realm
         
         char_animation("\nIgor and Twilia come out of the base smiling - until you tell them your predicament.")
         char_animation("They look at you and say: 'We will help you. We will help you get the Good King's armor.'")
 
         char_animation("You leave the town square and head towards the forest.")
-        
+
+        char_animation("You reach the forest and start walking through it...")
+        char_animation("You aren't too nervous - you've beaten the Warrior twice before.")
+        char_animation("You reach the clearing and see the Warrior's cottage...")
+        char_animation("As you enter you see the Warrior lying dead on the floor... purple smoke coming out of his mouth.")
+        char_animation("He has been punished for his failure by the evil spirit.")
+        char_animation("His armor and sword is nowhere to be seen. That is when you remember... the Warrior's armor was made of hardstone!")
+        char_animation("That means he must have hidden his hard light armor elsewhere, infact the evil spirit must have kept it as far away as possible.")
+        char_animation("Since the hard light armor might block the evil spirit's control over the Warrior.")
+        char_animation("You look behind and tell Igor and Twilia: 'The Good King's armor is not here - it must be hidden somewhere else.'")
+        char_animation("igor says: 'It must be in the Dragon Lair'")
+        ans = char_animation_in("You reply: ")
+        if 'yes' in ans.lower() or 'correct' in ans.lower():
+            char_animation("Then it hits you!")
+            char_animation("The Good King's armor cannot be in the Dragon Lair")
+            char_animation("The evil spirit would be weakened by it - it must be far from the Dragon Lair but still safe...")
+
         #Get good kings armor and stuff
         situtation = 32
 
     elif situtation == 32: #Dragon lair, actual final battle
-        pass
-        won = real_fight_rahas(boss_health=250, player_health=3)
+        char_animation("You walk into the cave, the Kings armor shining in the darkness.")
+        char_animation("You see Malcor/Evil Spirit standing there...")
+        char_animation("He chuckles and says: 'You think you can defeat me?'")
+        char_animation("'You cannot even move...'")
+        char_animation(f"{PAUSE*2}But this time you can. The Good King's armor's magic is protecting you.")
+
+        char_animation("The dragon's expression falters for half a second. But then he looks straight at you.")
+        char_animation("He smiles with evil glee. We shall fight puny mortal.")
+        char_animation("He shoots a fireball at you. You dodge out of the way.")
+        char_animation("The battle begins...\n")
+
+
+        won = real_fight_rahas(boss_health=300, player_health=2, max_health=3)
         if not won:
             while not won:
                 char_animation("You Lost.")
