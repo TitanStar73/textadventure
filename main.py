@@ -11,8 +11,6 @@ Not sure how to start Contributing? You can add to the IMMERISIVE_TEXT_KEYWORDS 
 Things to add:
 #Atlantians
 #Dwarves
-#Puzzle in Dark Temple
-#Add memory game
 """
 """Here are the settings you should edit:"""
 WPM = 350 #Words speed text animation, recommended: 350
@@ -4555,8 +4553,69 @@ while True:
         char_animation("You walk in and see nothing. It is pitch black, unsurprisingly.")
         char_animation("Igor lights a torch and you see you are in a massive chamber.")
         
-        #Add more puzzles and stuff here
-
+        char_animation("You walk into the temple and see a singular zombie.")
+        char_animation("What do you do?")
+        char_animation("1. Fight the zombie")
+        char_animation("2. Run away")
+        char_animation("3. Try to talk to the zombie")
+        choice = get_char_animation_in("Choice: ",accepted={1:["1"],2:["2"],3:["3"]})
+        if choice == 1:
+            char_animation("You decide to fight the zombie!")
+            char_animation("You draw your sword and hit the zombie!")
+            char_animation("The zombie remains unmoved.")
+            char_animation("What do you do?")
+            char_animation("1. Run away")
+            char_animation("2. Try talking to the zombie")
+            choice = get_char_animation_in("Choice: ",accepted={2:["1"],3:["2"]})
+        elif choice == 2:
+            char_animation("You try running away but the doorway closes!")
+            char_animation("You are trapped with the zombie!")
+            char_animation("What do you do?")
+            char_animation("1. Fight the zombie")
+            char_animation("2. Try talking to the zombie")
+            choice = get_char_animation_in("Choice: ",accepted={1:["1"],3:["2"]})
+        
+        if choice == 1:
+            char_animation("You decide to fight the zombie!")
+            char_animation("You draw your sword and hit the zombie!")
+            char_animation("The zombie remains unmoved.")
+        elif choice == 2:
+            char_animation("You try running away but the doorway closes!")
+            char_animation("You are trapped with the zombie!")
+        
+        char_animation("You start trying to talk to the zombie. What do you say?")
+        ans = char_animation_in("You say: ")
+        if 'malum est via vitae' not in ans.lower():
+            for i in range(0,5):
+                ans = char_animation("The zombie remains unmoved. You say: ")
+                if 'malum est via vitae' in ans.lower():
+                    break
+            if 'malum est via vitae' not in ans.lower():
+                char_animation("The zombie remains unmoved. In a final act of desperation you say: 'Malum est via vitae'")
+        
+        char_animation("The zombie looks at you with piercing eyes. In your head his raspy voice says: 'Malum est via vitae'")
+        char_animation("Then in your head says: 'Do you truly believe that?'")
+        char_animation("What do you say?")
+        char_animation("1. Yes")
+        char_animation("2. No")
+        choice = get_char_animation_in("Choice: ",accepted={1:["1","yes"],2:["2","no"]})
+        if char_animation == 1:
+            char_animation("'Then prove it. Prove that you believe that evil is the way of life.'")
+            char_animation("Kill your friends. Kill Igor and Twilia. A sword appears in front of the zombie - a hardstone blade.")
+            char_animation("What do you do?")
+            char_animation("1. Kill Igor and Twilia")
+            char_animation("2. Refuse")
+            choice = get_char_animation_in("Choice: ",accepted={1:["1"],2:["2"]})
+            if choice == 1:
+                char_animation("You draw the sword, but with a sudden burst of energy you turn around and slash the zombie.")
+                char_animation("The zombie bursts into dust.")
+            elif choice == 2:
+                char_animation("You refuse.")
+                char_animation("So you do not believe that evil is the way of life.")
+        
+        if choice == 2: #If he refuses to prove he is evil
+            pass
+        
         char_animation("You walk for a while through the zig-zag path")
         char_animation("Infront of you see the Good King's armor. It is shining in the darkness.")
         char_animation("You walk towards it and pick it up.")
