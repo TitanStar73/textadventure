@@ -4614,8 +4614,75 @@ while True:
                 char_animation("So you do not believe that evil is the way of life.")
         
         if choice == 2: #If he refuses to prove he is evil
-            pass
+            char_animation("Then why do you say it?")
+            char_animation_in("You say: ")
+            char_animation("The zombie looks at you for a second. ")
+            char_animation("Then suddenly his eyes light up in a different way.")
+            char_animation("He stands up and hardstone blades appear in his hands.")
+            char_animation("He says: 'He throws the blades at you.'")
+            char_animation("You tell Igor and Twilia to run and you dodge out of the way.")
+            char_animation("You and the zombie start fighting.")
+            won = real_fight_rahas(boss_health=80, player_health=1, max_health=2)
+            while not won:
+                char_animation("You Lost.")
+                char_animation_in("Press enter to try again...")
+                won = real_fight_rahas(boss_health=80, player_health=1, max_health=2)
+
+        char_animation("The zombie bursts into dust. You continue walking through the temple.")
+        char_animation("You reach the a second chamber and see a massive door. Which door do you choose?")
+        char_animation("1. The left door with the symbol of a dragon.")
+        char_animation("2. The right door with the symbol of a phoenix.")
+        char_animation("3. The middle door with the symbol of a skull.")
+        choice = get_char_animation_in("Enter your choice: ",{'a':['1','left','dragon'],'b':['2','right','phoenix'],'c':['3','middle','skull']})
+        if choice == 'a':
+            char_animation("You chose the left door with the symbol of a dragon.")
+            char_animation("You walk through the door and see a massive chamber.")
+            char_animation("You walk up to the pedestal. An inscription appears")
+            question,possible_answers = randchoice(list(RIDDLES))
+            char_animation(f"The inscription reads: '{question}'")
+            answer = char_animation_in("You say: ")
+            if answer.split(" ")[-1].lower() not in possible_answers:
+                while True:
+                    char_animation("The door remains closed.")
+                    question,possible_answers = randchoice(list(RIDDLES))
+                    char_animation(f"The inscription changes. It now reads: '{question}'")
+                    answer = char_animation_in("You say: ")
+                    if answer.split(" ")[-1].lower() in possible_answers:
+                        break
+            char_animation("The door opens and you walk through it.")
+        elif choice == 'b':
+            char_animation("You chose the right door with the symbol of a phoenix.")
+            the_questions = list(MYTHOLOGY_QUESTIONS)
+        elif choice == 'c':
+            char_animation("You chose the middle door with the symbol of a skull.")
+            the_questions = list(LOGIC_PUZZLES)
         
+        if choice == 'b' or choice == 'c':
+            question,answers = randchoice(the_questions)
+            correct_answer = answers[0]
+            answers = shuffle(answers)
+            char_animation("In the room you see a pedestal. An inscription appears.")
+            char_animation(f"The inscription reads: '{question}'")
+            char_animation("What do you do?")
+            for i in range(0,4):
+                char_animation(f"{i+1}. {answers[i]}")
+            choice = get_char_animation_in("Enter your choice: ",{0:['1',answers[0]],1:['2',answers[1]],2:['3',answers[2]],3:['4',answers[3]]})
+
+            if answers[choice] != correct_answer:
+                while True:
+                    char_animation("The door remains closed.")
+                    question,answers = randchoice(the_questions)
+                    correct_answer = answers[0]
+                    answers = shuffle(answers)
+                    char_animation(f"The inscription changes. It now reads: '{question}'")
+                    char_animation("What do you do?")
+                    for i in range(0,4):
+                        char_animation(f"{i+1}. {answers[i]}")
+                    choice = get_char_animation_in("Enter your choice: ",{0:['1',answers[0]],1:['2',answers[1]],2:['3',answers[2]],3:['4',answers[3]]})
+                    if answers[choice] == correct_answer:
+                        break
+            char_animation("The door opens and you walk through it.")
+
         char_animation("You walk for a while through the zig-zag path")
         char_animation("Infront of you see the Good King's armor. It is shining in the darkness.")
         char_animation("You walk towards it and pick it up.")
