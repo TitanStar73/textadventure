@@ -4127,7 +4127,7 @@ while True:
         
         situtation = int(input("Enter the new situtation: "))
 
-    elif situtation == 30: #Dragon's Lair, Final battle
+    elif situtation == 30: #Dragon's Lair, Story time :)
         char_animation("You walk towards the lair of Malcor the Dragon.")
         char_animation("You see skulls and bones throughout the path there.")
         char_animation_in("You continue on{PAUSE}.{PAUSE}.{PAUSE}.")
@@ -4214,6 +4214,7 @@ while True:
         char_animation("The voice was freed. The spell was complete.")
         char_animation("Little did Malcor or Kallisto know - the final object for the spell was the object of power - the heart of a dragon.")
         char_animation("And so Kallisto's heart was ripped out of her body and disintergrated infront of Malcor's very eyes.")
+        char_animation("Kallisto herself burst into dust...")
         
         char_animation("\nThe voice escaped and closed the portal behind it. Malcor was in grief - he had lost the love of his life.")
         char_animation("He spoke to the voice angrily and told it to bring her back - bring her back from the dead.")
@@ -4226,8 +4227,52 @@ while True:
         char_animation("\nYou look at Malcor and for the first time look at him in pity.")
         char_animation("He was but a pawn in the game of the evil spirit.")
 
+        char_animation_in("You look straight at Malcor and say: ")
+        char_animation("Malcor looks stunned for a moment - then the kind voice back again in a strained tone says")
+        char_animation("'Run... Run... Find the Good King, his armor is the only thing that can help defeat %$*& - the evil spirit.'")
+        char_animation("You look right at him and run out of the cave...")
+        situtation = 31
         char_animation("\n")
 
+    elif situtation == 31: #Good King's Cottage
+        char_animation("You run out of the cave into the shining sun - it has never felt better.")
+        char_animation("You run and run until you reach the town square. You see the Wizard there.")
+        char_animation(f"He asks {NAME}: 'What happened?'")
+        char_animation("You quickly explain everything to him. He nods and looks at you deeply: 'So you need the Warrior's armor and weapons, I suppose?'")
+        char_animation("'Very well, Igor and Twilia will help you. Caroline and John have gone on another mission at the moment.'") #Potential opening for spin-off along w/ mage and Never Realm
+        
+        char_animation("\nIgor and Twilia come out of the base smiling - until you tell them your predicament.")
+        char_animation("They look at you and say: 'We will help you. We will help you get the Good King's armor.'")
+
+        char_animation("You leave the town square and head towards the forest.")
+        
+        #Get good kings armor and stuff
+        situtation = 32
+
+    elif situtation == 32: #Dragon lair, actual final battle
+        pass
+        won = real_fight_rahas(boss_health=250, player_health=3)
+        if not won:
+            while not won:
+                char_animation("You Lost.")
+                char_animation_in("Press enter to try again...")
+                won = real_fight_rahas(boss_health=250, player_health=3)
+        
+        char_animation("You won!")
+        char_animation("The battle is over. The evil spirit's hold on Malcor is weakened.")
+
+        #Malcor entire sacrficie thing -> never realm both of them
+
+        char_animation("The Warrior walks into the cave. But he looks different.")
+        char_animation("He is no longer under the control of the evil spirit.")
+        char_animation("He walks up to you and says, I am proud of you. You have single handedly rescued our realm from a hundred years of darkness.")
+        char_animation("The Warrior/Good King look at you and says: 'We are forever indebted to you. You have saved us all.'")
+        char_animation("You ask: 'But what of Malcor, Kallisto and the evil spirit?'")
+        char_animation("Ahh yes, a truly curious outcome. Perhaps a story for another time...{PAUSE} Nah I'm just kidding, you should see the look on your face...")
+
+        #Explain the outcome here
+
+        char_animation("The End.")
         get_review()
 
 
