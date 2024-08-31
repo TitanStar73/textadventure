@@ -2,7 +2,7 @@
 
 always adding updates :)
 
-Book 2 Completed!
+Book 3 Completed!
 
 ![image](https://github.com/user-attachments/assets/624a18fd-d8a5-40b3-b8c4-1257ef356c2c)
 
