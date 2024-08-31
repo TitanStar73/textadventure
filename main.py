@@ -12,6 +12,7 @@ Things to add:
 #Atlantians
 #Dwarves
 #Puzzle in Dark Temple
+#Add memory game
 """
 """Here are the settings you should edit:"""
 WPM = 350 #Words speed text animation, recommended: 350
@@ -485,20 +486,20 @@ def training_sequence():
     char_animation(f"That is all you need to know\nGood luck!\n\n")
     char_animation_in("Press enter to continue...")
 
+def sleep_check_keys(sleeptime,keys):    
+    start = timenow() #Apparently faster than datetime.now()?
+    last_pressed = None
+    for i in itercycle(keys):
+        if keyboard.is_pressed(i):
+            last_pressed = i
+        if timenow() - start > sleeptime:
+            return last_pressed
+
 def real_fight_rahas(boss_health = 100, player_health = 5, max_iterations = 1_000_000, max_health = None):
     my_board = Board()
 
     if max_health == None:
         max_health = int(player_health)
-
-    def sleep_check_keys(sleeptime,keys):    
-        start = timenow() #Apparently faster than datetime.now()?
-        last_pressed = None
-        for i in itercycle(keys):
-            if keyboard.is_pressed(i):
-                last_pressed = i
-            if timenow() - start > sleeptime:
-                return last_pressed
 
     def upload_banner(text, i, banner):
         if len(banner) <= len(text):
@@ -792,6 +793,25 @@ def get_review(retried = False):
     global gold
     gold += 100
 
+def play_memory_game():
+    current_gold = 1
+    multiplier = 1.1
+    current_pattern = [] #1 = Q, 2 = W, 3 = A, 4 = S
+    refresh = f"\033[{len(get_asset().split('\n')) + 2}A"
+    print(HIDE_CURSOR)
+    while True:
+        current_pattern.append(randint(1,4))
+        for i in current_pattern:
+            #print out pattern
+            print("Check out the pattern!")
+            print(refresh)
+    
+    print("\n" * (len(get_asset().split('\n')) + 3))
+    print(SHOW_CURSOR)
+    char_animation(f"Sorry, Game Over! You got {current_gold} gold.")        
+
+
+
 class InventoryManager:
     def __init__(self, inventory = {}):
         self.inventory = inventory
@@ -863,6 +883,8 @@ class Board:
             print("")            
 
         print(footer)
+        print(f"Enter WASD to move and IJKL to shoot. {self.render_icons[" h "]} will restore health.")
+        print(f"Dodge the {self.render_icons["ERB"]}, {self.render_icons["ERM"]} deal extra damage!")
         print(BATTLE_REFRESH)
     
     def __getitem__(self,key): #Returns icon data depending on key: int -> location on list; str -> dictionary value
@@ -1106,6 +1128,33 @@ SLOT_FPS = 30
 SLOT_SLEEP = 1/SLOT_FPS
 SLOT_ANIMATION_TIME = (1, 6, 0.35) #(time for each slot to be displayed, total slots per slot, transition time)
 
+#Memory game asset
+def get_asset(c1 = DEFAULT_COLOR,c2 = DEFAULT_COLOR,c3 = DEFAULT_COLOR,c4 = DEFAULT_COLOR):
+    return f"""
+{c1} .----------------. {c2} .----------------. 
+{c1}| .--------------. |{c2}| .--------------. |
+{c1}| |    ___       | |{c2}| | _____  _____ | |
+{c1}| |  .'   '.     | |{c2}| ||_   _||_   _|| |
+{c1}| | /  .-.  \\    | |{c2}| |  | | /\\ | |  | |
+{c1}| | | |   | |    | |{c2}| |  | |/  \\| |  | |
+{c1}| | \\  `-'  \\_   | |{c2}| |  |   /\\   |  | |
+{c1}| |  `.___.\\__|  | |{c2}| |  |__/  \\__|  | |
+{c1}| |              | |{c2}| |              | |
+{c1}| '--------------' |{c2}| '--------------' |
+{c1} '----------------' {c2} '----------------' 
+{c3} .----------------. {c4} .----------------. 
+{c3}| .--------------. |{c4}| .--------------. |
+{c3}| |      __      | |{c4}| |    _______   | |
+{c3}| |     /  \\     | |{c4}| |   /  ___  |  | |
+{c3}| |    / /\\ \\    | |{c4}| |  |  (__ \\_|  | |
+{c3}| |   / ____ \\   | |{c4}| |   '.___`-.   | |
+{c3}| | _/ /    \\ \\_ | |{c4}| |  |`\\____) |  | |
+{c3}| ||____|  |____|| |{c4}| |  |_______.'  | |
+{c3}| |              | |{c4}| |              | |
+{c3}| '--------------' |{c4}| '--------------' |
+{c3} '----------------' {c4} '----------------' 
+{DEFAULT_COLOR}"""
+
 #Grass in farm
 GRASS_DIFFICULTY = 3
 
@@ -1117,9 +1166,10 @@ ROYAL_LIBRARY_QUESTIONS = {
     -1: ["QUESTION", "ANSWER"],
     1 : ["Where is Kallisto's body?", "After she was killed by Malcor, her body was taken with him to his lair. You will find her body there."],
 }
+
 #Battle against Rahas
 BATTLE_SIZE = 11
-BATTLE_REFRESH = f"\033[{BATTLE_SIZE + 3}A"
+BATTLE_REFRESH = f"\033[{BATTLE_SIZE + 5}A"
 
 HIDE_CURSOR = "\033[?25l"
 SHOW_CURSOR = "\033[?25h"
@@ -1547,7 +1597,6 @@ LOGIC_PUZZLES = [
     ("If 3 people can paint 3 fences in 3 hours, how many fences can 6 people paint in 6 hours?", ["12", "9", "6", "3"]),
     ("What number is missing: 7, 14, 21, ..., 35?", ["28", "24", "30", "27"])
 ]
-
 
 """
 Enchantment books on swords.
@@ -2160,7 +2209,8 @@ while True:
                 char_animation("4. Wordle, guess the word in 6 tries and win 10 gold")
                 char_animation("5. Maze, find your way out and win 50 gold")
                 char_animation("6. Boss battle, practice your skills and win upto 100 gold")
-                choice = get_char_animation_in("Enter your choice: ",{'s':['0','shop'],'a':['1','quiz'],'b':['2','slot','machine'],'c':['3','trivia','quiz'],'d':['4','wordle'], 'k': ['5','maze'], 'm': ['6', 'battle']}, allow_save=True)
+                char_animation("7. Memory game, win exponentially increasing gold!")
+                choice = get_char_animation_in("Enter your choice: ",{'s':['0','shop'],'a':['1','quiz'],'b':['2','slot','machine'],'c':['3','trivia','quiz'],'d':['4','wordle'], 'k': ['5','maze'], 'm': ['6', 'battle'], 'n':['7','memory']}, allow_save=True)
             else:
                 char_animation("Where do you want to go?")
                 char_animation("1. Farm")
@@ -2351,7 +2401,8 @@ while True:
                     char_animation(f"You win! + {gold_earned} gold")
                 else:
                     char_animation("You lose! Better luck next time!")
-
+            elif choice == 'n':
+                gold += play_memory_game()
         else:
             if previous_choices['told_ghost'] != 1:
                 char_animation("You walk into the shop and the shopkeeper looks at you and says -  'What happened to you! You are a ghost, you are in a different plane of existence... I don't know much about ghosts but you should try finding the priest of the Castle of the Day Before.'")
@@ -3228,7 +3279,7 @@ while True:
                 ("Who are you?", "I am the mage of the Good King."),
                 ("What are you?", "I am an apparation, unlike you. You see as an apparation I am temporarily projecting myself in this plane of existence - the physical world. I am actually in the After Realm."),
                 ("What am I?", "You are a ghost. You are still in the physical plane. However, your plane of existence has been closed of by the Nether Staff - the staff of Rahas."),
-                ("How do I get back?", "To enter back into the physical world, you must destroy the boundary between your enclosed plane and the physical plane - that is destroy the Nether Staff.")
+                ("How do I get back?", "To enter back into the physical world, you must destroy the boundary between your enclosed plane and the physical plane - that is destroy the Nether Staff."),
                 ("Who created the Nether Staff?", f"The Nether Staff is as Old as Time itself - as for who created it{PAUSE*3} - an unspeakable evil.")
             ]
             if get_karma('beaten_rahas') == 1:
