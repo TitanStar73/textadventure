@@ -11,7 +11,8 @@ Not sure how to start Contributing? You can add to the IMMERISIVE_TEXT_KEYWORDS 
 """Here are the settings you should edit:"""
 WPM = 350 #Words speed text animation, recommended: 350
 DISABLE_ANIMATION = False #Turns off text animation if enabled
-DISABLE_COLORS = False #Turns off colors if enabled
+DISABLE_COLORS = False #Turns off all colors if enabled
+DISABLE_COLOR_REPLACE = False #Turns off most colors if enabled (keeps the important ones!)
 
 #Optional | Will not change gameplay descisons only provides a more immersive dialogue
 #If not provided make it None
@@ -1142,7 +1143,13 @@ IMMERSIVE_TEXT_KEYWORDS = {
     "Blue" : BLUE + "Blue",
     "Yellow" : YELLOW + "Yellow",
     "White" : WHITE + "White",
+    "Good" : BLUE + "Good",
+    "Evil" : PURPLE + "Evil",
+    "Together": RED + "Together",
+    "Time" : GREEN + "Time",
 }
+if DISABLE_COLOR_REPLACE:
+    IMMERSIVE_TEXT_KEYWORDS = {}
 
 #Taken from https://emojicombos.com/dragon
 DRAGON = r"""
@@ -2135,7 +2142,9 @@ while True:
                 char_animation("2. Slot Machine, try your luck out, win upto 1000x your bet")
                 char_animation("3. Solve a riddle and win")
                 char_animation("4. Wordle, guess the word in 6 tries and win 10 gold")
-                choice = get_char_animation_in("Enter your choice: ",{'s':['0','shop'],'a':['1','quiz'],'b':['2','slot','machine'],'c':['3','trivia','quiz'],'d':['4','wordle']}, allow_save=True)
+                char_animation("5. Maze, find your way out and win 50 gold")
+                char_animation("6. Boss battle, practice your skills and win upto 100 gold")
+                choice = get_char_animation_in("Enter your choice: ",{'s':['0','shop'],'a':['1','quiz'],'b':['2','slot','machine'],'c':['3','trivia','quiz'],'d':['4','wordle'], 'k': ['5','maze'], 'm': ['6', 'battle']}, allow_save=True)
             else:
                 char_animation("Where do you want to go?")
                 char_animation("1. Farm")
@@ -2305,6 +2314,28 @@ while True:
                 situtation = 2
             elif choice == 'j':
                 situtation = 18
+            elif choice == 'k':
+                play_maze()
+                gold += 50
+            elif choice == 'm':
+                levels = {
+                    1: (100,5, 30),
+                    2: (200,3, 50),
+                    3: (400,1, 100),
+                }
+                char_animation("Which difficulty would you like to try?")
+                char_animation("1. Easy")
+                char_animation("2. Medium")
+                char_animation("3. Hard")
+                choice = get_char_animation_in("Enter your choice: ",{1:['1','easy'],2:['2','medium'],3:['3','hard']})
+                boss_health, player_health, gold_earned = levels[choice]
+                batt = real_fight_rahas(boss_health=boss_health, player_health=player_health)
+                if batt:
+                    gold += gold_earned
+                    char_animation(f"You win! + {gold_earned} gold")
+                else:
+                    char_animation("You lose! Better luck next time!")
+
         else:
             if previous_choices['told_ghost'] != 1:
                 char_animation("You walk into the shop and the shopkeeper looks at you and says -  'What happened to you! You are a ghost, you are in a different plane of existence... I don't know much about ghosts but you should try finding the priest of the Castle of the Day Before.'")
@@ -4261,19 +4292,36 @@ while True:
         char_animation("You won!")
         char_animation("The battle is over. The evil spirit's hold on Malcor is weakened.")
 
-        #Malcor entire sacrficie thing -> never realm both of them
+        #Malcor sacrifice and stuff
 
         char_animation("The Warrior walks into the cave. But he looks different.")
         char_animation("He is no longer under the control of the evil spirit.")
         char_animation("He walks up to you and says, I am proud of you. You have single handedly rescued our realm from a hundred years of darkness.")
         char_animation("The Warrior/Good King look at you and says: 'We are forever indebted to you. You have saved us all.'")
-        char_animation("You ask: 'But what of Malcor, Kallisto and the evil spirit?'")
+        char_animation("\nYou ask: 'But what of Malcor, Kallisto and the evil spirit?'")
         char_animation("Ahh yes, a truly curious outcome. Perhaps a story for another time...{PAUSE} Nah I'm just kidding, you should see the look on your face...")
 
-        #Explain the outcome here
+        char_animation("\nYou see the Never Realm is the realm of the good spirit and evil spirit.")
+        char_animation("They are forever locked in a battle but a hundred years ago the evil spirit escaped.")
+        char_animation("It possessed Malcor and the rest is history.")
+        char_animation("Today Malcor sacrificed his heart to open the portal.")
+        char_animation("He then held the evil spirit and threw it in, along with himself.")
+        char_animation("Without any dragon heart left in this world, the portal can never be opened again.")
 
-        char_animation("The End.")
+        char_animation("\nIt is poetic don't you think?")
+        char_animation("The evil and good spirits back in their realm fighting away.")
+        char_animation("And Malcor and Kallisto reuinited - even if in spirit form - for the first time in a hundred years.")
+        char_animation("They will help the good spirit fight the evil spirit till the end of time... together.")
+    
+        char_animation(f"{PAUSE*5}\nThe End.")
+
+        char_animation("\n\n\nThank you for playing {NAME}!")
         get_review()
+
+        char_animation("The first trilogy is over - but you can still continue!")
+        char_animation("Enjoy the minigames!")
+        situtation = 10
+        career = 'victor'
 
 
 char_animation("Goodbye!")
