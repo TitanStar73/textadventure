@@ -54,5 +54,4 @@ Even if its a small one, write it up in a seperate text, markdown or image file 
  - Do I need to wait for the next book to come out before downloading the releases of the next chapters?: New binary releases will be released after every book is released. However you can always play the chapters already released by downloading and running the `main.py` script - They are interchangable!
  - Does my book 1 progress `game.data` work with book 2?: Yes! Book 2 release will include Book 1 in it and will be backward compatable.
  - Some text is dissapeared: Your terminal should ideally be either black with white text for best results. If you would like to have a different color terminal, you may be better off disabling color
- - I see wierd numbers in between: Your terminal MUST support color codes for it to work correctly, even if you disable color. On Windows, Microsoft's "Terminal" application, which is pre-installed on Windows 11 works great!
-Some
+ - I see wierd numbers in between: Your terminal MUST support color codes for it to work correctly, even if you disable color. On Windows, Microsoft's "Terminal" application, which is pre-installed on Windows 11 works great! It is also available on Windows 10 through the Microsoft Store, available from Microsoft's official account.
