@@ -4512,7 +4512,33 @@ while True:
         choice = get_char_animation_in("Enter your choice: ",{'a':['1','left','leaves'],'b':['2','right','stream']})
         if choice == 'a':
             char_animation("You go left and walk through the forest.")
-            #Dwarf Mines related adventure
+            char_animation("You walk through the forest and see a short man.")
+            char_animation("You call out to him 'hey!', he turns around and you see he is a gnome.")
+            char_animation("Frightened he runs away.")
+            char_animation("The three of you chase after him, and follow him through the forest.")
+            char_animation("You reach a opening in a tree trunk and see a ladder.")
+            char_animation("You climb down the ladder, atleast 50 feet down.")
+            char_animation("You reach a chamber and see the dwarf.")
+            char_animation("He speaks in a deep voice: 'Don't hurt me!'")
+            char_animation(f"You say: 'I am {NAME}. We aren't here to hurt you. We are looking for the Dark Temple.'")
+            char_animation("The dwarf gasps and says: 'The Dark Temple is a place of evil. You must not go there.'")
+            char_animation("You say: 'We must, if we want to take down Marcor.'")
+            char_animation("The dwarf looks at you and says: 'Very well. I will take you to our chief.'")
+            char_animation("You follow the dwarf through the tunnels and reach a massive cave.")
+            char_animation("In the center of the cave is a massive throne. On it sits a comically small chief dwarf.")
+            char_animation("He looks at you and asks the dwarf: 'Why have you brought them here?'")
+            char_animation("The dwarf says: 'They are looking for the Dark Temple... They say they will defeat Marcor.'")
+            char_animation("The chief looks at you and says: 'What makes you think you can defeat Marcor?'")
+            char_animation("You say: 'We seek the Good King's armor. We believe it is in the Dark Temple.'")
+            char_animation(f"Twilia chimes in: '{NAME} is the only one who can defeat Marcor - as the prophecy says only an outside saviour can save us'")
+            char_animation(f"Igor adds on: 'Yes {NAME} is from another realm'")
+
+            char_animation("\nThe chief looks at you and says: 'Marcor is the enemy of the dwarves'")
+            char_animation("A century ago, we lived in peace with all other beings. But Marcor couldn't control us like he could control humans'")
+            char_animation("So he drove us underground. We have been living here ever since.")
+
+            char_animation("The chief looks at you and says: 'Very well. I will help you.'")
+            char_animation("He gives you instructions on how to reach the Dark Temple.")
         elif choice == 'b':
             char_animation("You go right and walk through the forest.")
             #Alantian Related Adventure
