@@ -4360,7 +4360,51 @@ while True:
                 char_animation("A nagging thought in the back of your head shows you the spell.")
                 char_animation("You mutter 'convertat horologium' and the mirror pulls you in.")
 
-        char_animation("You are back in time and you see the mage infront of you...")
+        char_animation("\nYou are pulled back in time and you see the mage infront of you...")
+        char_animation("You appear infront of the mage as an apparation and he says: ")
+        char_animation("'You have come again?'")
+        char_animation("You says: 'Yes, I need to know where the Good King's armor is.'")
+        char_animation("The mage says:")
+        char_animation("'Ahh the Kings armor. A curious thing. Given to the King by Kallisto herself.'")
+        char_animation("'Unfortunately I believe the King has been defeated. The evil spirit has hidden away the King's armor in the Dark Temple.'")
+        char_animation("'The Dark Temple is the temple of the evil spirit. It is bound to be protected by enchantments of all kinds.'")
+        char_animation("'Be warned - those who enter the Dark Temple never return.'")
+        char_animation("'Luckily I have spent the remainder of my life trying to find its location.'")
+        char_animation("'Simply open up the third floorboard from the window in my room and you will find a map to the Dark Temple.'")
+        char_animation(f"'Good luck {NAME} - you will need it.'")
+        char_animation(f"You are pulled back to the present.{PAUSE*3}")
+
+        char_animation("\nYou open up the third floorboard from the window and find a map to the Dark Temple.")
+        char_animation("You look at Igor and Twilia and tell them what the mage said.")
+        char_animation(f"All three of you head towards the Dark Temple...{PAUSE*4}")
+
+        char_animation("\nYou reach the Dark Forest, in it is the Dark Temple.")
+        char_animation("The map shows nothing more than that the Dark Temple is in the forest.")
+        char_animation("You three walk through the forest and reach a fork in the road.")
+        char_animation("Wht do you do?")
+        char_animation("1. Go left towards a path with dry leaves on the ground.")
+        char_animation("2. Go right towards a path with a stream running besides it.")
+        choice = get_char_animation_in("Enter your choice: ",{'a':['1','left','leaves'],'b':['2','right','stream']})
+        if choice == 'a':
+            char_animation("You go left and walk through the forest.")
+            #Dwarf Mines related adventure
+        elif choice == 'b':
+            char_animation("You go right and walk through the forest.")
+            #Alantian Related Adventure
+        
+        char_animation("You reach the Dark Temple. It is a massive structure - pitch black in color - yes pitch black, that is the only way to describe it.")
+        char_animation("You walk through the entrance and see a massive room.")
+        char_animation("You walk around it, trying to find an entrance but none is to be found.")
+        while True:
+            char_animation("What do you do?")
+            char_animation("1. Walk around it looking for clues")
+            char_animation("2. Say something")
+            char_animation("3. Ask Igor and Twilia for help")
+            choice = get_char_animation_in("Enter your choice: ",{'a':['1','walk'],'b':['2','say'],'c':['3','ask']})
+            if choice == 'b':
+                ans = char_animation_in("You say: ")
+                if ans.lower() == "malum est via vitae": #Latin for "Evil is the way of life"
+                    break
 
         situtation = 32
 
