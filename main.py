@@ -498,7 +498,11 @@ def sleep_check_keys(sleeptime,keys):
 def wait_till_presses(keys):
     for i in itercycle(keys):
         if keyboard.is_pressed(i):
-            return i
+            key = i
+            break
+    for _ in itercycle(keys):
+        if not keyboard.is_pressed(key): #Wait till key is released
+            return key
 
 def real_fight_rahas(boss_health = 100, player_health = 5, max_iterations = 1_000_000, max_health = None):
     my_board = Board()
@@ -804,7 +808,13 @@ def play_memory_game():
     current_pattern = [] #1 = Q, 2 = W, 3 = A, 4 = S
     refresh = f"\033[{len(get_asset().split('\n')) + 3}A"
     print(HIDE_CURSOR)
+    for key in ["q","w","a","s"]:
+        keyboard.block_key(key)
     while True:
+        if current_gold > 1:
+            multiplier = 1.8
+        if current_gold > 3:
+            multiplier = 1.75
         if current_gold > 5:
             multiplier = 1.5
         if current_gold > 10:
@@ -824,13 +834,19 @@ def play_memory_game():
             elif i == 4:
                 print(get_asset(c4=YELLOW))
             
-            print("Check out the pattern!                            ")
+            print(f"{RED}Check out the pattern!{DEFAULT_COLOR}                            ")
             print(f"Current gold: {str(int(current_gold))} | Next multiplier: +{int((multiplier-1)*100)}%           ")
             print(refresh, flush=True)
-            sleep(1)
+            sleep(0.9)
+
+            print(get_asset())
+            print(f"{RED}Check out the pattern!{DEFAULT_COLOR}                            ")
+            print(f"Current gold: {str(int(current_gold))} | Next multiplier: +{int((multiplier-1)*100)}%           ")
+            print(refresh, flush=True)
+            sleep(0.2)
         
         print(get_asset())
-        print("Your turn now! Start pressing the buttons!")
+        print(f"{BLUE}Your turn now! Start pressing the buttons!{DEFAULT_COLOR}")
         print(f"Current gold: {str(int(current_gold))} | Next multiplier: +{int((multiplier-1)*100)}%           ") #These spaces are required to make sure the prev. text is written over correctly
         print(refresh, flush=True)
 
@@ -849,18 +865,20 @@ def play_memory_game():
             elif response == "s":
                 print(get_asset(c4=YELLOW))
 
-            print("Correct! Keep going!                                          ")
+            print(f"{GREEN}Correct! Keep going!                                          {DEFAULT_COLOR}")
             print(f"Current gold: {str(int(current_gold))} | Next multiplier: +{int((multiplier-1)*100)}%           ")
             print(refresh, flush=True)
-            sleep(0.8)
 
         if not correct:
             break
+        sleep(1)
         current_gold *= multiplier
-
 
     print("\n" * (len(get_asset().split('\n')) + 3))
     print(SHOW_CURSOR)
+    
+    for key in ["q","w","a","s"]:
+        keyboard.unblock_key(key)
     char_animation(f"Sorry, Game Over! You got {int(current_gold)} gold.")
     return int(current_gold)
 
@@ -1662,7 +1680,6 @@ ENCHANTMENT_BOOKS = {
     "enchantmentBook Poison": "Covers your sword in poison",
 }
 
-play_memory_game()
 
 while True:
     if career == None: #Standard Careers (not including ghost)
