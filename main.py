@@ -495,6 +495,11 @@ def sleep_check_keys(sleeptime,keys):
         if timenow() - start > sleeptime:
             return last_pressed
 
+def wait_till_presses(keys):
+    for i in itercycle(keys):
+        if keyboard.is_pressed(i):
+            return i
+
 def real_fight_rahas(boss_health = 100, player_health = 5, max_iterations = 1_000_000, max_health = None):
     my_board = Board()
 
@@ -795,22 +800,69 @@ def get_review(retried = False):
 
 def play_memory_game():
     current_gold = 1
-    multiplier = 1.1
+    multiplier = 2.0
     current_pattern = [] #1 = Q, 2 = W, 3 = A, 4 = S
-    refresh = f"\033[{len(get_asset().split('\n')) + 2}A"
+    refresh = f"\033[{len(get_asset().split('\n')) + 3}A"
     print(HIDE_CURSOR)
     while True:
+        if current_gold > 5:
+            multiplier = 1.5
+        if current_gold > 10:
+            multiplier = 1.1
+        if current_gold > 100:
+            multiplier = 1.03
+        if current_gold > 1000:
+            multiplier = 1.01
         current_pattern.append(randint(1,4))
         for i in current_pattern:
-            #print out pattern
-            print("Check out the pattern!")
-            print(refresh)
-    
+            if i == 1:
+                print(get_asset(c1=RED))
+            elif i == 2:
+                print(get_asset(c2=BLUE))
+            elif i == 3:
+                print(get_asset(c3=GREEN))
+            elif i == 4:
+                print(get_asset(c4=YELLOW))
+            
+            print("Check out the pattern!                            ")
+            print(f"Current gold: {str(int(current_gold))} | Next multiplier: +{int((multiplier-1)*100)}%           ")
+            print(refresh, flush=True)
+            sleep(1)
+        
+        print(get_asset())
+        print("Your turn now! Start pressing the buttons!")
+        print(f"Current gold: {str(int(current_gold))} | Next multiplier: +{int((multiplier-1)*100)}%           ") #These spaces are required to make sure the prev. text is written over correctly
+        print(refresh, flush=True)
+
+        correct = True
+        for i in current_pattern:
+            response = wait_till_presses(["q","w","a","s"])
+            if (response == "q" and i != 1) or (response == "w" and i != 2) or (response == "a" and i != 3) or (response == "s" and i != 4):
+                correct = False
+                break
+            elif response == "q":
+                print(get_asset(c1=RED))
+            elif response == "w":
+                print(get_asset(c2=BLUE))
+            elif response == "a":
+                print(get_asset(c3=GREEN))
+            elif response == "s":
+                print(get_asset(c4=YELLOW))
+
+            print("Correct! Keep going!                                          ")
+            print(f"Current gold: {str(int(current_gold))} | Next multiplier: +{int((multiplier-1)*100)}%           ")
+            print(refresh, flush=True)
+            sleep(0.8)
+
+        if not correct:
+            break
+        current_gold *= multiplier
+
+
     print("\n" * (len(get_asset().split('\n')) + 3))
     print(SHOW_CURSOR)
-    char_animation(f"Sorry, Game Over! You got {current_gold} gold.")        
-
-
+    char_animation(f"Sorry, Game Over! You got {int(current_gold)} gold.")
+    return int(current_gold)
 
 class InventoryManager:
     def __init__(self, inventory = {}):
@@ -1609,6 +1661,8 @@ ENCHANTMENT_BOOKS = {
     "enchantmentBook Fire": "Covers your sword in an eternal flame",
     "enchantmentBook Poison": "Covers your sword in poison",
 }
+
+play_memory_game()
 
 while True:
     if career == None: #Standard Careers (not including ghost)
